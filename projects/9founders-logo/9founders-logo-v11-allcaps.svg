@@ -1,0 +1,25 @@
+<svg width="400" height="120" viewBox="0 0 400 120" xmlns="http://www.w3.org/2000/svg">
+  <!-- 9founders Logo - v11: All Caps + Wide Tracking -->
+  <!-- Bold "9", "FOUNDERS" with wide letter spacing -->
+  
+  <defs>
+    <style>
+      .digit { 
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; 
+        font-weight: 800;
+        font-size: 68px;
+        fill: #FF2800;
+      }
+      .word {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        font-weight: 700;
+        font-size: 52px;
+        fill: #333333;
+        letter-spacing: 0.08em;
+      }
+    </style>
+  </defs>
+  
+  <text x="50" y="78" class="digit">9</text>
+  <text x="98" y="75" class="word">FOUNDERS</text>
+</svg>

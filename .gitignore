@@ -1,0 +1,30 @@
+# OpenClaw internal
+.openclaw/
+
+# Sensitive files
+*.env
+*.secret
+secrets/
+.env.*
+
+# Node modules
+node_modules/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.temp
+*.log
+
+# Media files (large)
+*.mp4
+*.mp3
+*.wav
+*.mov
+
+# Build outputs
+dist/
+build/

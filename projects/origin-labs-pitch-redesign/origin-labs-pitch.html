@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Origin Labs — Investor Deck</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #fafafa;
+      color: #111;
+      line-height: 1.6;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 60px 40px;
+    }
+    h1 { font-size: 3rem; font-weight: 800; line-height: 1.1; margin-bottom: 1rem; letter-spacing: -0.02em; }
+    h2 { font-size: 2rem; font-weight: 700; margin: 2.5rem 0 1rem; letter-spacing: -0.01em; }
+    h3 { font-size: 1.25rem; font-weight: 600; margin: 1.5rem 0 0.75rem; }
+    p { margin-bottom: 1rem; color: #333; }
+    .tagline { font-size: 1.5rem; color: #666; margin-bottom: 3rem; font-weight: 400; }
+    .section { margin: 4rem 0; border-top: 1px solid #e5e5e5; padding-top: 2rem; }
+    .highlight { color: #6366f1; font-weight: 600; }
+    .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; margin: 2rem 0; }
+    .stat { text-align: center; padding: 1.5rem; background: #fff; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+    .stat-number { font-size: 2.5rem; font-weight: 800; color: #111; display: block; }
+    .stat-label { font-size: 0.875rem; color: #666; margin-top: 0.5rem; display: block; }
+    .product-card { background: #fff; padding: 2rem; border-radius: 12px; margin: 1.5rem 0; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+    .product-name { font-size: 1.25rem; font-weight: 700; color: #6366f1; margin-bottom: 0.5rem; }
+    .phase { display: flex; gap: 2rem; margin: 2rem 0; }
+    .phase-item { flex: 1; background: #fff; padding: 1.5rem; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+    .phase-year { font-size: 0.875rem; font-weight: 600; color: #6366f1; margin-bottom: 0.5rem; }
+    .phase-title { font-weight: 700; margin-bottom: 0.75rem; }
+    .phase-item ul { list-style: none; font-size: 0.875rem; color: #555; }
+    .phase-item li { padding: 0.25rem 0; padding-left: 1rem; position: relative; }
+    .phase-item li::before { content: "→"; position: absolute; left: 0; color: #6366f1; }
+    table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; font-size: 0.9rem; background: #fff; border-radius: 12px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+    th, td { padding: 1rem; text-align: left; border-bottom: 1px solid #e5e5e5; }
+    th { background: #f9fafb; font-weight: 600; }
+    .ask-box { background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%); color: #fff; padding: 2.5rem; border-radius: 16px; margin: 2rem 0; }
+    .ask-amount { font-size: 2.5rem; font-weight: 800; margin-bottom: 0.5rem; }
+    .ask-detail { opacity: 0.9; font-size: 0.95rem; }
+    .tranche { display: flex; gap: 2rem; margin-top: 1.5rem; }
+    .tranche-item { flex: 1; background: rgba(255,255,255,0.15); padding: 1.5rem; border-radius: 12px; }
+    .tranche-amount { font-size: 1.5rem; font-weight: 700; margin-bottom: 0.25rem; }
+    .tranche-label { font-size: 0.875rem; opacity: 0.9; }
+    .closing { text-align: center; margin: 4rem 0 2rem; padding: 3rem; background: #fff; border-radius: 16px; }
+    .closing-text { font-size: 1.5rem; font-weight: 600; color: #111; margin-bottom: 1rem; }
+    .closing-tagline { color: #666; font-size: 1.1rem; }
+    .logo { font-size: 1.25rem; font-weight: 800; color: #6366f1; margin-bottom: 0.5rem; }
+    .emoji { font-style: normal; margin-right: 0.5rem; }
+    @media (max-width: 640px) {
+      body { padding: 40px 20px; }
+      h1 { font-size: 2rem; }
+      .stats { grid-template-columns: 1fr; }
+      .phase { flex-direction: column; }
+      .tranche { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="logo">ORIGIN LABS</div>
+<h1>AI is here.<br>The infrastructure isn't.</h1>
+<p class="tagline">Building the infrastructure layer for human-AI collaboration.</p>
+
+<div class="section">
+<h2><span class="emoji">⚡</span>The AI integration gap</h2>
+
+<p>Every company wants AI. Most are stuck.</p>
+
+<p>AI models have advanced rapidly. ChatGPT, Claude, Midjourney — accessible to anyone. But when companies try to put AI to work in their actual operations, they hit a wall.</p>
+
+<div class="stats">
+  <div class="stat">
+    <span class="stat-number">85%</span>
+    <span class="stat-label">of companies experimenting with AI</span>
+  </div>
+  <div class="stat">
+    <span class="stat-number">12%</span>
+    <span class="stat-label">have AI in production workflows</span>
+  </div>
+  <div class="stat">
+    <span class="stat-number">$100B+</span>
+    <span class="stat-label">AI automation market by 2027</span>
+  </div>
+</div>
+
+<p><strong>The gap isn't the AI. It's the infrastructure to deploy it.</strong></p>
+</div>
+
+<div class="section">
+<h2><span class="emoji">🔧</span>What teams use today</h2>
+
+<p><strong>Chaos.</strong></p>
+
+<ul style="margin: 1rem 0 1rem 1.5rem; color: #555;">
+  <li>Copy-pasting between ChatGPT, Claude, and Gemini</li>
+  <li>Manual workflows — export, transform, import, repeat</li>
+  <li>No visibility into what AI agents are doing</li>
+  <li>Security concerns — AI tools outside enterprise networks</li>
+  <li>Building custom integrations for every new model</li>
+</ul>
+
+<p>Creators face the same problem. Five AI tools to make one piece of content. No unified pipeline. Hours lost to manual handoffs.</p>
+
+<p><strong>There's no infrastructure layer. Until now.</strong></p>
+</div>
+
+<div class="section">
+<h2><span class="emoji">🚀</span>Introducing Origin Labs</h2>
+
+<p style="font-size: 1.25rem; font-weight: 600; color: #111; margin-bottom: 1.5rem;">
+  The infrastructure layer for human-AI collaboration.
+</p>
+
+<p>Two platforms. One mission: Make AI work inside real workflows.</p>
+
+<div class="product-card">
+  <div class="product-name">Crosspath — Enterprise AI Workflow Engine</div>
+  <p>Deploy AI agents that operate inside your secure enterprise network. Natural language prompts → automated workflows.</p>
+  <ul style="margin: 0.75rem 0 0 1.5rem; color: #555; font-size: 0.9rem;">
+    <li>Read and process emails automatically</li>
+    <li>Extract data from documents</li>
+    <li>Interact with web apps and internal systems</li>
+    <li>Browser automation — even without APIs</li>
+    <li>Private network tunnels, VPN connectivity</li>
+  </ul>
+</div>
+
+<div class="product-card">
+  <div class="product-name">Mimphes — Multi-LLM Creative Workflow Platform</div>
+  <p>Orchestrate multiple AI models in a single pipeline. For creators, marketers, and media teams.</p>
+  <ul style="margin: 0.75rem 0 0 1.5rem; color: #555; font-size: 0.9rem;">
+    <li>Visual workflow canvas</li>
+    <li>Chain models: Prompt → Image → Style → Edit → Output</li>
+    <li>Share and remix workflows</li>
+    <li>Collaborative ecosystem</li>
+  </ul>
+</div>
+</div>
+
+<div class="section">
+<h2><span class="emoji">📅</span>Phased execution</h2>
+<p>Focus first. Scale second.</p>
+
+<div class="phase">
+  <div class="phase-item">
+    <div class="phase-year">Phase 1 • 2026</div>
+    <div class="phase-title">Crosspath MVP + Mimphes Beta</div>
+    <ul>
+      <li>Crosspath enterprise pilot</li>
+      <li>Mimphes creator beta</li>
+      <li>First paying customers</li>
+      <li>Security certifications</li>
+    </ul>
+  </div>
+  <div class="phase-item">
+    <div class="phase-year">Phase 2 • 2027</div>
+    <div class="phase-title">Scale + Ecosystem</div>
+    <ul>
+      <li>Self-serve onboarding</li>
+      <li>Workflow marketplace</li>
+      <li>Partner integrations</li>
+      <li>ASEAN expansion</li>
+    </ul>
+  </div>
+  <div class="phase-item">
+    <div class="phase-year">Phase 3 • 2028+</div>
+    <div class="phase-title">Platform</div>
+    <ul>
+      <li>Third-party agent developers</li>
+      <li>Industry-specific solutions</li>
+      <li>Regional data centers</li>
+      <li>Enterprise partnerships</li>
+    </ul>
+  </div>
+</div>
+</div>
+
+<div class="section">
+<h2><span class="emoji">💎</span>Why us. Why now.</h2>
+
+<p><strong>First-mover in workflow orchestration.</strong></p>
+
+<ul style="margin: 1rem 0 1rem 1.5rem; color: #555;">
+  <li><strong>Infrastructure gap</strong> — AI tools exist, but the layer to deploy them doesn't</li>
+  <li><strong>Enterprise-ready</strong> — Built for secure networks, not just consumer apps</li>
+  <li><strong>Dual engine</strong> — B2B (Crosspath) + B2C (Mimphes) = diversified revenue</li>
+  <li><strong>Team expertise</strong> — Deep experience in AI, enterprise software, and creative tools</li>
+</ul>
+
+<p>The window is now. Every month, more companies experiment with AI and hit the same wall. We're building the ladder.</p>
+</div>
+
+<div class="section">
+<h2><span class="emoji">💰</span>Market opportunity</h2>
+
+<div class="stats">
+  <div class="stat">
+    <span class="stat-number">$100B+</span>
+    <span class="stat-label">TAM — AI automation market</span>
+  </div>
+  <div class="stat">
+    <span class="stat-number">$2B</span>
+    <span class="stat-label">SAM — Workflow orchestration (APAC)</span>
+  </div>
+  <div class="stat">
+    <span class="stat-number">$50M</span>
+    <span class="stat-label">SOM — Year 5 target</span>
+  </div>
+</div>
+
+<p><strong>Creator economy overlay:</strong> $480B+ globally. Mimphes targets the AI-assisted segment — creators, marketers, independent professionals.</p>
+</div>
+
+<div class="section">
+<h2><span class="emoji">💵</span>Revenue model</h2>
+
+<p>Two engines. Diversified revenue.</p>
+
+<table>
+  <tr>
+    <th>Product</th>
+    <th>Model</th>
+    <th>Target Customer</th>
+  </tr>
+  <tr>
+    <td><strong>Crosspath</strong></td>
+    <td>B2B SaaS — per-seat + usage</td>
+    <td>SMEs, enterprises with operational workflows</td>
+  </tr>
+  <tr>
+    <td><strong>Mimphes</strong></td>
+    <td>B2C SaaS — subscription tiers</td>
+    <td>Creators, marketers, agencies</td>
+  </tr>
+</table>
+
+<p><strong>Revenue trajectory:</strong></p>
+
+<div class="stats">
+  <div class="stat">
+    <span class="stat-number">$100K</span>
+    <span class="stat-label">Year 1 ARR</span>
+  </div>
+  <div class="stat">
+    <span class="stat-number">$2M</span>
+    <span class="stat-label">Year 3 ARR</span>
+  </div>
+  <div class="stat">
+    <span class="stat-number">$10M+</span>
+    <span class="stat-label">Year 5 ARR</span>
+  </div>
+</div>
+</div>
+
+<div class="section">
+<h2><span class="emoji">📊</span>Pricing</h2>
+
+<div class="product-card">
+  <div class="product-name">Crosspath — Enterprise</div>
+  <table style="margin: 0; box-shadow: none;">
+    <tr>
+      <th>Tier</th>
+      <th>Price</th>
+      <th>Includes</th>
+    </tr>
+    <tr>
+      <td><strong>Starter</strong></td>
+      <td>$499/mo</td>
+      <td>Up to 5 agents, basic integrations</td>
+    </tr>
+    <tr>
+      <td><strong>Business</strong></td>
+      <td>$1,499/mo</td>
+      <td>Unlimited agents, advanced workflows, priority support</td>
+    </tr>
+    <tr>
+      <td><strong>Enterprise</strong></td>
+      <td>Custom</td>
+      <td>Private deployment, custom integrations, SLA</td>
+    </tr>
+  </table>
+</div>
+
+<div class="product-card">
+  <div class="product-name">Mimphes — Creator</div>
+  <table style="margin: 0; box-shadow: none;">
+    <tr>
+      <th>Tier</th>
+      <th>Price</th>
+      <th>Includes</th>
+    </tr>
+    <tr>
+      <td><strong>Free</strong></td>
+      <td>$0</td>
+      <td>Limited workflows, community templates</td>
+    </tr>
+    <tr>
+      <td><strong>Pro</strong></td>
+      <td>$29/mo</td>
+      <td>Unlimited workflows, priority models, collaboration</td>
+    </tr>
+    <tr>
+      <td><strong>Team</strong></td>
+      <td>$99/mo</td>
+      <td>Shared workspaces, admin controls, API access</td>
+    </tr>
+  </table>
+</div>
+</div>
+
+<div class="section">
+<h2><span class="emoji">📍</span>Where we are now</h2>
+
+<div class="stats">
+  <div class="stat">
+    <span class="stat-number">MVP</span>
+    <span class="stat-label">Crosspath in development</span>
+  </div>
+  <div class="stat">
+    <span class="stat-number">Beta</span>
+    <span class="stat-label">Mimphes alpha testing</span>
+  </div>
+  <div class="stat">
+    <span class="stat-number">$0</span>
+    <span class="stat-label">External funding spent</span>
+  </div>
+</div>
+
+<p><strong>Next milestones:</strong></p>
+<ul style="margin: 1rem 0 0 1.5rem; color: #555;">
+  <li>Crosspath pilot with 3 enterprise partners — Q2 2026</li>
+  <li>Mimphes public beta — Q3 2026</li>
+  <li>First paying customers — Q3 2026</li>
+  <li>$100K ARR — Q4 2026</li>
+</ul>
+</div>
+
+<div class="section">
+<h2><span class="emoji">👥</span>The team</h2>
+
+<p><strong>Built by builders.</strong></p>
+
+<p>Origin Labs is founded by a team with deep expertise in AI, enterprise software, and creative tools. We've shipped products used by thousands, built infrastructure at scale, and understand both the technical and business challenges of operationalizing AI.</p>
+
+<p><em>Detailed team bios available upon request.</em></p>
+</div>
+
+<div class="section">
+<h2><span class="emoji">🎯</span>The ask</h2>
+
+<div class="ask-box">
+  <div class="ask-amount">$500K – $1M</div>
+  <div class="ask-detail">Seed round for 12–18 months runway • Path to $2M ARR</div>
+
+  <div class="tranche">
+    <div class="tranche-item">
+      <div class="tranche-amount">$250K</div>
+      <div class="tranche-label">Tranche 1 • $2.5M valuation<br>MVP launch, first pilots, initial revenue</div>
+    </div>
+    <div class="tranche-item">
+      <div class="tranche-amount">$250K–750K</div>
+      <div class="tranche-label">Tranche 2 • $5M valuation<br>Scale, team expansion, ASEAN entry</div>
+    </div>
+  </div>
+</div>
+
+<p><strong>Use of funds:</strong></p>
+<ul style="margin: 1rem 0 0 1.5rem; color: #555;">
+  <li>60% — Product development & engineering</li>
+  <li>20% — Go-to-market & sales</li>
+  <li>15% — Infrastructure & operations</li>
+  <li>5% — Legal & compliance</li>
+</ul>
+</div>
+
+<div class="closing">
+  <div class="closing-text">AI is the future of work.<br>We're building the infrastructure to make it work.</div>
+  <div class="closing-tagline">Origin Labs — The infrastructure layer for human-AI collaboration.</div>
+</div>
+
+</body>
+</html>

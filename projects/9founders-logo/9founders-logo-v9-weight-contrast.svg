@@ -1,0 +1,25 @@
+<svg width="400" height="120" viewBox="0 0 400 120" xmlns="http://www.w3.org/2000/svg">
+  <!-- 9founders Logo - v9: Weight Contrast -->
+  <!-- "9" extra bold, "founders" medium weight for elegance -->
+  
+  <defs>
+    <style>
+      .digit { 
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; 
+        font-weight: 900;
+        font-size: 72px;
+        fill: #FF2800;
+      }
+      .word {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        font-weight: 600;
+        font-size: 58px;
+        fill: #333333;
+        letter-spacing: 0.02em;
+      }
+    </style>
+  </defs>
+  
+  <text x="50" y="80" class="digit">9</text>
+  <text x="100" y="77" class="word">founders</text>
+</svg>

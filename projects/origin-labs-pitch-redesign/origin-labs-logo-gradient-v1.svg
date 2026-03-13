@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 140" width="500" height="140">
+  <defs>
+    <!-- Main gradient: Electric blue to cyan -->
+    <linearGradient id="mainGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#0052FF"/>
+      <stop offset="50%" style="stop-color:#00A8FF"/>
+      <stop offset="100%" style="stop-color:#00D4FF"/>
+    </linearGradient>
+
+    <!-- Accent gradient: Purple-blue for variety -->
+    <linearGradient id="accentGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#6366F1"/>
+      <stop offset="100%" style="stop-color:#00D4FF"/>
+    </linearGradient>
+
+    <!-- Glow effect -->
+    <filter id="glow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background accent elements -->
+  <g opacity="0.15">
+    <!-- Left circuit node -->
+    <circle cx="30" cy="70" r="15" fill="none" stroke="url(#mainGradient)" stroke-width="2"/>
+    <circle cx="30" cy="70" r="5" fill="url(#mainGradient)"/>
+
+    <!-- Right circuit node -->
+    <circle cx="470" cy="70" r="15" fill="none" stroke="url(#mainGradient)" stroke-width="2"/>
+    <circle cx="470" cy="70" r="5" fill="url(#mainGradient)"/>
+
+    <!-- Connection lines -->
+    <line x1="45" y1="70" x2="100" y2="70" stroke="url(#mainGradient)" stroke-width="1.5"/>
+    <line x1="400" y1="70" x2="455" y2="70" stroke="url(#mainGradient)" stroke-width="1.5"/>
+
+    <!-- Top decorative elements -->
+    <circle cx="150" cy="20" r="4" fill="#00D4FF"/>
+    <circle cx="350" cy="20" r="4" fill="#0052FF"/>
+    <line x1="154" y1="20" x2="346" y2="20" stroke="url(#mainGradient)" stroke-width="1" opacity="0.5"/>
+
+    <!-- Bottom decorative elements -->
+    <circle cx="200" cy="120" r="3" fill="#00A8FF"/>
+    <circle cx="300" cy="120" r="3" fill="#00D4FF"/>
+    <line x1="203" y1="120" x2="297" y2="120" stroke="url(#mainGradient)" stroke-width="1" opacity="0.5"/>
+  </g>
+
+  <!-- Main text -->
+  <g transform="translate(100, 50)">
+    <!-- "Origin" with gradient -->
+    <text x="0" y="48"
+          font-family="Inter, -apple-system, system-ui, sans-serif"
+          font-size="48"
+          font-weight="800"
+          fill="url(#mainGradient)"
+          letter-spacing="-1"
+          filter="url(#glow)">Origin</text>
+
+    <!-- "Labs" with gradient -->
+    <text x="185" y="48"
+          font-family="Inter, -apple-system, system-ui, sans-serif"
+          font-size="48"
+          font-weight="800"
+          fill="url(#accentGradient)"
+          letter-spacing="2"
+          filter="url(#glow)">Labs</text>
+  </g>
+
+  <!-- Decorative accent bar underneath -->
+  <rect x="100" y="105" width="300" height="3" rx="1.5" fill="url(#mainGradient)" opacity="0.6"/>
+
+  <!-- Small accent dots -->
+  <g fill="url(#mainGradient)">
+    <circle cx="100" cy="120" r="2"/>
+    <circle cx="400" cy="120" r="2"/>
+  </g>
+</svg>

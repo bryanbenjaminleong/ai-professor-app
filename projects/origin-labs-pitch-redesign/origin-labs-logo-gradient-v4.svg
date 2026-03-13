@@ -1,0 +1,116 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 160" width="600" height="160">
+  <defs>
+    <!-- Main gradient for Origin (sharper, more electric) -->
+    <linearGradient id="originGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#0052FF"/>
+      <stop offset="50%" style="stop-color:#00A8FF"/>
+      <stop offset="100%" style="stop-color:#00D4FF"/>
+    </linearGradient>
+
+    <!-- Thicker gradient for Labs (bolder presence) -->
+    <linearGradient id="labsGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#6366F1"/>
+      <stop offset="100%" style="stop-color:#00D4FF"/>
+    </linearGradient>
+
+    <!-- Glow -->
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <!-- Stronger glow for text -->
+    <filter id="textGlow">
+      <feGaussianBlur stdDeviation="5" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Flowing lines / data streams around text -->
+  <g opacity="0.25">
+    <!-- Top flowing line -->
+    <path d="M 50 20 Q 150 5 300 15 T 550 20"
+          stroke="url(#originGradient)" stroke-width="2" fill="none"/>
+    <circle cx="50" cy="20" r="3" fill="#00D4FF"/>
+    <circle cx="300" cy="15" r="4" fill="#00A8FF"/>
+    <circle cx="550" cy="20" r="3" fill="#0052FF"/>
+
+    <!-- Bottom flowing line -->
+    <path d="M 50 140 Q 200 155 300 145 T 550 140"
+          stroke="url(#originGradient)" stroke-width="2" fill="none"/>
+    <circle cx="50" cy="140" r="3" fill="#0052FF"/>
+    <circle cx="300" cy="145" r="4" fill="#00A8FF"/>
+    <circle cx="550" cy="140" r="3" fill="#00D4FF"/>
+  </g>
+
+  <!-- Circuit/node pattern on sides -->
+  <g opacity="0.3">
+    <!-- Left nodes -->
+    <circle cx="40" cy="60" r="5" fill="url(#originGradient)"/>
+    <line x1="45" y1="60" x2="75" y2="60" stroke="url(#originGradient)" stroke-width="1.5"/>
+    <circle cx="75" cy="60" r="3" fill="#00D4FF"/>
+
+    <circle cx="40" cy="100" r="4" fill="url(#labsGradient)"/>
+    <line x1="44" y1="100" x2="70" y2="100" stroke="url(#labsGradient)" stroke-width="1.5"/>
+    <line x1="70" y1="100" x2="70" y2="80" stroke="url(#labsGradient)" stroke-width="1"/>
+    <circle cx="70" cy="80" r="2" fill="#6366F1"/>
+
+    <!-- Right nodes -->
+    <circle cx="560" cy="60" r="5" fill="url(#originGradient)"/>
+    <line x1="555" y1="60" x2="525" y2="60" stroke="url(#originGradient)" stroke-width="1.5"/>
+    <circle cx="525" cy="60" r="3" fill="#00D4FF"/>
+
+    <circle cx="560" cy="100" r="4" fill="url(#labsGradient)"/>
+    <line x1="556" y1="100" x2="530" y2="100" stroke="url(#labsGradient)" stroke-width="1.5"/>
+    <line x1="530" y1="100" x2="530" y2="80" stroke="url(#labsGradient)" stroke-width="1"/>
+    <circle cx="530" cy="80" r="2" fill="#6366F1"/>
+  </g>
+
+  <!-- Geometric hexagon accents -->
+  <g opacity="0.2" fill="none" stroke="url(#originGradient)" stroke-width="1">
+    <polygon points="120,10 130,5 140,10 140,20 130,25 120,20"/>
+    <polygon points="460,135 470,130 480,135 480,145 470,150 460,145"/>
+  </g>
+
+  <!-- Particle dots scattered around -->
+  <g opacity="0.4">
+    <circle cx="150" cy="30" r="2" fill="#00D4FF"/>
+    <circle cx="450" cy="30" r="2" fill="#0052FF"/>
+    <circle cx="180" cy="130" r="2" fill="#00A8FF"/>
+    <circle cx="420" cy="130" r="2" fill="#00D4FF"/>
+    <circle cx="100" cy="80" r="1.5" fill="#00A8FF"/>
+    <circle cx="500" cy="80" r="1.5" fill="#00A8FF"/>
+  </g>
+
+  <!-- Main text -->
+  <g transform="translate(120, 55)" filter="url(#textGlow)">
+    <!-- "Origin" - Sharp, tight letter-spacing -->
+    <text x="0" y="55"
+          font-family="Inter, -apple-system, system-ui, sans-serif"
+          font-size="56"
+          font-weight="700"
+          fill="url(#originGradient)"
+          letter-spacing="-3">Origin</text>
+
+    <!-- "Labs" - Bold, thick, wider spacing -->
+    <text x="210" y="55"
+          font-family="Inter, -apple-system, system-ui, sans-serif"
+          font-size="56"
+          font-weight="900"
+          fill="url(#labsGradient)"
+          letter-spacing="4">Labs</text>
+  </g>
+
+  <!-- Decorative underline -->
+  <rect x="120" y="118" width="360" height="4" rx="2" fill="url(#originGradient)" opacity="0.6"/>
+
+  <!-- End caps for underline -->
+  <circle cx="120" cy="120" r="5" fill="url(#originGradient)"/>
+  <circle cx="480" cy="120" r="5" fill="url(#originGradient)"/>
+</svg>

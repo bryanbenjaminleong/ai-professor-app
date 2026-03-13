@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 80" width="400" height="80">
+  <defs>
+    <!-- Futuristic gradient for text -->
+    <linearGradient id="futuristicGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#0066FF;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#00D4FF;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#0066FF;stop-opacity:1" />
+    </linearGradient>
+
+    <!-- Glow effect -->
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <!-- Subtle inner glow for the O -->
+    <radialGradient id="originGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#00D4FF;stop-opacity:0.3" />
+      <stop offset="100%" style="stop-color:#0066FF;stop-opacity:0" />
+    </radialGradient>
+  </defs>
+
+  <!-- Main wordmark with integrated design -->
+  <g filter="url(#glow)">
+    <!-- "O" as origin point - the signature element -->
+    <g transform="translate(0, 0)">
+      <!-- Outer ring -->
+      <circle cx="24" cy="40" r="22" fill="none" stroke="url(#futuristicGradient)" stroke-width="2.5"/>
+
+      <!-- Inner node connections forming a network pattern -->
+      <circle cx="24" cy="40" r="8" fill="url(#futuristicGradient)"/>
+
+      <!-- Neural network nodes -->
+      <circle cx="24" cy="28" r="2" fill="#00D4FF"/>
+      <circle cx="33" cy="40" r="2" fill="#00D4FF"/>
+      <circle cx="24" cy="52" r="2" fill="#00D4FF"/>
+      <circle cx="15" cy="40" r="2" fill="#00D4FF"/>
+
+      <!-- Connection lines -->
+      <line x1="24" y1="28" x2="24" y2="32" stroke="#00D4FF" stroke-width="1" opacity="0.6"/>
+      <line x1="31" y1="40" x2="33" y2="40" stroke="#00D4FF" stroke-width="1" opacity="0.6"/>
+      <line x1="24" y1="48" x2="24" y2="52" stroke="#00D4FF" stroke-width="1" opacity="0.6"/>
+      <line x1="17" y1="40" x2="15" y2="40" stroke="#00D4FF" stroke-width="1" opacity="0.6"/>
+    </g>
+
+    <!-- "rigin" text -->
+    <text x="52" y="48" font-family="Inter, -apple-system, system-ui, sans-serif" font-size="32" font-weight="700" fill="url(#futuristicGradient)" letter-spacing="-0.5">rigin</text>
+
+    <!-- " Labs" with different treatment -->
+    <text x="150" y="48" font-family="Inter, -apple-system, system-ui, sans-serif" font-size="32" font-weight="300" fill="#64748B" letter-spacing="1">Labs</text>
+
+    <!-- Accent line underneath - represents infrastructure/foundation -->
+    <line x1="0" y1="58" x2="220" y2="58" stroke="url(#futuristicGradient)" stroke-width="1.5" opacity="0.3"/>
+  </g>
+
+  <!-- Tagline (optional) -->
+  <text x="0" y="72" font-family="Inter, -apple-system, system-ui, sans-serif" font-size="9" fill="#94A3B8" letter-spacing="2" font-weight="500">INFRASTRUCTURE FOR AI</text>
+</svg>

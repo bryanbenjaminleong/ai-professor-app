@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Origin Labs — Investor Deck</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --font-body: 'Instrument Serif', Georgia, serif;
+    --font-mono: 'JetBrains Mono', 'SF Mono', Consolas, monospace;
+    --bg: #FAFAF7;
+    --surface: #ffffff;
+    --surface2: #F3F4F0;
+    --surface-elevated: #ffffff;
+    --border: rgba(20, 60, 60, 0.08);
+    --border-bright: rgba(20, 60, 60, 0.14);
+    --text: #1a2a2a;
+    --text-dim: #6b7a78;
+    --accent: #6366f1;
+    --accent-dim: rgba(99, 102, 241, 0.07);
+    --gold: #c08b30;
+    --gold-dim: rgba(192, 139, 48, 0.08);
+    --red: #c53030;
+    --red-dim: rgba(197, 48, 48, 0.06);
+    --green: #2e8b57;
+    --green-dim: rgba(46, 139, 87, 0.07);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: var(--font-body);
+    color: var(--text);
+    background: var(--bg);
+    overflow: hidden;
+  }
+
+  .deck {
+    height: 100dvh;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .slide {
+    height: 100dvh;
+    width: 100%;
+    overflow: hidden;
+    position: absolute;
+    top: 0; left: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: clamp(40px, 6vh, 80px) clamp(32px, 6vw, 120px) clamp(70px, 10vh, 100px);
+    isolation: isolate;
+    opacity: 0;
+    transform: translateY(100%);
+    transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    z-index: 0;
+    background: var(--bg);
+  }
+
+  .slide:first-child {
+    opacity: 1;
+    transform: translateY(0);
+    z-index: 1;
+  }
+
+  .slide.visible { opacity: 1; transform: translateY(0); z-index: 1; }
+
+  .slide .reveal {
+    opacity: 0; transform: translateY(20px);
+    transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1), transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .slide.visible .reveal { opacity: 1; transform: none; }
+  .slide.visible .reveal:nth-child(1) { transition-delay: 0.15s; }
+  .slide.visible .reveal:nth-child(2) { transition-delay: 0.35s; }
+  .slide.visible .reveal:nth-child(3) { transition-delay: 0.55s; }
+  .slide.visible .reveal:nth-child(4) { transition-delay: 0.75s; }
+  .slide.visible .reveal:nth-child(5) { transition-delay: 0.95s; }
+  .slide.visible .reveal:nth-child(6) { transition-delay: 1.15s; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .slide, .slide .reveal { opacity: 1 !important; transform: none !important; transition: none !important; }
+  }
+
+  /* Chrome */
+  .deck-progress { position: fixed; top: 0; left: 0; height: 3px; background: var(--accent); z-index: 100; transition: width 0.3s ease; pointer-events: none; }
+  .deck-counter { position: fixed; bottom: clamp(12px, 2vh, 24px); right: clamp(12px, 2vw, 24px); font-family: var(--font-mono); font-size: 12px; color: var(--text-dim); z-index: 100; font-variant-numeric: tabular-nums; text-shadow: 0 1px 3px rgba(0,0,0,0.3); }
+
+  /* Typography */
+  .slide__display {
+    font-size: clamp(48px, 9vw, 110px);
+    font-weight: 400; letter-spacing: -2px; line-height: 0.95; text-wrap: balance;
+  }
+  .slide__heading {
+    font-size: clamp(28px, 5vw, 52px);
+    font-weight: 400; letter-spacing: -0.5px; line-height: 1.15; text-wrap: balance;
+  }
+  .slide__body { font-size: clamp(16px, 2.2vw, 24px); line-height: 1.6; color: var(--text-dim); text-wrap: pretty; }
+  .slide__subtitle { font-family: var(--font-mono); font-size: clamp(12px, 1.5vw, 18px); color: var(--text-dim); letter-spacing: 1px; text-transform: uppercase; }
+  .slide__label { font-family: var(--font-mono); font-size: clamp(10px, 1.2vw, 13px); font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px; color: var(--accent); margin-bottom: 12px; }
+  .slide__decor { position: absolute; pointer-events: none; z-index: 0; }
+
+  /* Gut-punch */
+  .slide--gutpunch {
+    justify-content: center; align-items: center; text-align: center;
+    background: var(--bg);
+  }
+  .slide--gutpunch .slide__display { color: var(--text); max-width: 90vw; }
+
+  /* Question slide */
+  .slide--question {
+    justify-content: center; align-items: center; text-align: center;
+    background-image: radial-gradient(ellipse at 50% 50%, rgba(99, 102, 241, 0.06) 0%, transparent 50%);
+  }
+
+  /* Stat reveal */
+  .slide--stat {
+    justify-content: center; align-items: center; text-align: center;
+  }
+  .stat-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(16px, 3vw, 40px);
+    max-width: 900px; width: 100%;
+  }
+  .stat-item { text-align: center; }
+  .stat-val {
+    font-size: clamp(42px, 8vw, 80px); font-weight: 400; letter-spacing: -2px; line-height: 1;
+    color: var(--accent); font-variant-numeric: tabular-nums;
+  }
+  .stat-label { font-family: var(--font-mono); font-size: clamp(10px, 1.2vw, 14px); color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; margin-top: 8px; line-height: 1.4; }
+
+  /* Failure slide */
+  .failure-list {
+    list-style: none; padding: 0; max-width: 700px; overflow-y: auto;
+  }
+  .failure-list li {
+    font-size: clamp(16px, 2.5vw, 32px); line-height: 1.4; padding: clamp(4px,0.8vh,8px) 0;
+    color: var(--text-dim); border-bottom: 1px solid var(--border);
+  }
+  .failure-list li span { color: var(--red); }
+
+  /* Reveal / answer */
+  .slide--reveal {
+    justify-content: center; align-items: center; text-align: center;
+    background-image: radial-gradient(ellipse at 50% 40%, rgba(99, 102, 241, 0.12) 0%, transparent 50%);
+  }
+  .slide--reveal .slide__display { color: var(--accent); }
+
+  /* Product ecosystem */
+  .product-grid {
+    display: grid; grid-template-columns: repeat(2, 1fr); gap: clamp(12px, 2vw, 24px);
+    max-width: 800px; width: 100%;
+  }
+  .product-card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+    padding: clamp(20px, 3vh, 32px) clamp(16px, 2vw, 24px);
+    border-top: 3px solid var(--accent);
+  }
+  .product-card h3 { font-size: clamp(20px, 2.5vw, 28px); margin-bottom: 8px; font-weight: 400; }
+  .product-card p { font-size: clamp(13px, 1.5vw, 17px); color: var(--text-dim); line-height: 1.5; }
+
+  /* Comparison */
+  .compare-row {
+    display: flex; align-items: center; justify-content: center; gap: clamp(24px, 4vw, 60px);
+    flex-wrap: wrap;
+  }
+  .compare-box { text-align: center; }
+  .compare-val { font-size: clamp(48px, 8vw, 90px); font-weight: 400; letter-spacing: -2px; line-height: 1; }
+  .compare-label { font-family: var(--font-mono); font-size: clamp(10px, 1.2vw, 14px); color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; margin-top: 8px; }
+  .compare-vs { font-size: clamp(24px, 3vw, 40px); color: var(--text-dim); font-style: italic; }
+
+  /* Holy shit moment */
+  .slide--holyshit {
+    justify-content: center; align-items: center; text-align: center;
+    background: var(--surface2);
+  }
+  .slide--holyshit .big-text {
+    font-size: clamp(28px, 4.5vw, 56px); line-height: 1.4; max-width: 800px;
+    text-wrap: balance; color: var(--text);
+  }
+  .slide--holyshit .big-text em { font-style: italic; color: var(--accent); }
+
+  /* Revenue / model */
+  .revenue-flow {
+    display: flex; align-items: center; gap: clamp(8px, 1.5vw, 16px); flex-wrap: wrap;
+    justify-content: center;
+  }
+  .rev-step {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
+    padding: clamp(12px, 2vh, 20px) clamp(12px, 1.5vw, 20px); text-align: center;
+    min-width: 100px;
+  }
+  .rev-step .rev-val { font-size: clamp(24px, 3vw, 36px); color: var(--accent); font-variant-numeric: tabular-nums; }
+  .rev-step .rev-label { font-family: var(--font-mono); font-size: clamp(9px, 1vw, 12px); color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; margin-top: 4px; }
+  .rev-arrow { color: var(--accent); opacity: 0.4; font-size: 20px; }
+
+  /* Ask slide */
+  .ask-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: clamp(16px, 3vw, 32px);
+    max-width: 700px; width: 100%;
+  }
+  .ask-card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+    padding: clamp(20px, 3vh, 32px) clamp(16px, 2vw, 24px); text-align: center;
+  }
+  .ask-card .ask-amount { font-size: clamp(32px, 5vw, 52px); color: var(--gold); font-variant-numeric: tabular-nums; }
+  .ask-card .ask-detail { font-family: var(--font-mono); font-size: clamp(10px, 1.2vw, 14px); color: var(--text-dim); margin-top: 8px; text-transform: uppercase; letter-spacing: 1px; }
+
+  /* Close slide */
+  .slide--close {
+    justify-content: center; align-items: center; text-align: center;
+    background-image: radial-gradient(ellipse at 50% 60%, rgba(99, 102, 241, 0.08) 0%, transparent 50%);
+  }
+  .slide--close .slide__heading { max-width: 700px; font-style: italic; }
+
+  /* Roadmap / phased */
+  .roadmap-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(12px, 2vw, 24px);
+    max-width: 850px; width: 100%;
+  }
+  .roadmap-phase {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+    padding: clamp(16px, 2vh, 28px) clamp(12px, 1.5vw, 20px);
+    border-top: 3px solid var(--accent);
+    position: relative;
+  }
+  .roadmap-phase.active { border-top-color: var(--gold); background: var(--gold-dim); }
+  .roadmap-phase h3 { font-size: clamp(16px, 2vw, 22px); margin-bottom: 4px; font-weight: 400; }
+  .roadmap-phase .phase-date { font-family: var(--font-mono); font-size: clamp(9px, 1vw, 12px); color: var(--accent); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+  .roadmap-phase ul { list-style: none; padding: 0; }
+  .roadmap-phase li { font-size: clamp(12px, 1.3vw, 16px); color: var(--text-dim); line-height: 1.6; padding-left: 16px; position: relative; }
+  .roadmap-phase li::before { content: '>'; position: absolute; left: 0; color: var(--accent); font-weight: 700; }
+
+  /* Traction / milestones */
+  .traction-grid {
+    display: grid; grid-template-columns: repeat(2, 1fr); gap: clamp(12px, 2vw, 24px);
+    max-width: 800px; width: 100%;
+  }
+  .traction-item {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+    padding: clamp(16px, 2vh, 24px) clamp(12px, 1.5vw, 20px);
+    text-align: center;
+  }
+  .traction-item .traction-val { font-size: clamp(28px, 4vw, 44px); color: var(--accent); font-variant-numeric: tabular-nums; }
+  .traction-item .traction-label { font-family: var(--font-mono); font-size: clamp(10px, 1.1vw, 13px); color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; margin-top: 6px; line-height: 1.4; }
+
+  /* TAM/SAM/SOM funnel */
+  .tam-funnel {
+    display: flex; flex-direction: column; align-items: center; gap: clamp(8px, 1.5vh, 16px);
+    max-width: 700px; width: 100%;
+  }
+  .tam-bar {
+    display: flex; align-items: center; justify-content: center; gap: clamp(12px, 2vw, 24px);
+    border-radius: 12px; padding: clamp(12px, 2vh, 20px) clamp(16px, 2vw, 32px);
+    text-align: center;
+  }
+  .tam-bar .tam-val { font-size: clamp(32px, 5vw, 56px); font-weight: 400; letter-spacing: -1px; line-height: 1; font-variant-numeric: tabular-nums; }
+  .tam-bar .tam-detail { text-align: left; }
+  .tam-bar .tam-label { font-family: var(--font-mono); font-size: clamp(11px, 1.2vw, 15px); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+  .tam-bar .tam-desc { font-size: clamp(11px, 1.2vw, 14px); color: var(--text-dim); margin-top: 2px; }
+
+  /* Competitive pricing table */
+  .compete-table {
+    width: 100%; max-width: 800px; border-collapse: collapse;
+    font-size: clamp(12px, 1.3vw, 16px);
+  }
+  .compete-table th {
+    font-family: var(--font-mono); font-size: clamp(9px, 1vw, 12px);
+    text-transform: uppercase; letter-spacing: 1px; color: var(--text-dim);
+    padding: 8px 12px; text-align: left; border-bottom: 2px solid var(--border-bright);
+  }
+  .compete-table td {
+    padding: 12px; border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+  .compete-table tr.highlight td {
+    background: var(--accent-dim); font-weight: 400;
+  }
+  .compete-table .price-tag {
+    font-family: var(--font-mono); font-weight: 700;
+  }
+  .compete-table .price-tag.green { color: var(--accent); }
+  .compete-table .price-tag.red { color: var(--red); }
+
+  /* Team grid */
+  .team-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: clamp(16px, 2vw, 28px);
+    max-width: 800px; width: 100%;
+  }
+  .team-card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+    padding: clamp(16px, 2vh, 24px) clamp(14px, 1.5vw, 20px);
+  }
+  .team-card h3 { font-size: clamp(16px, 2vw, 22px); font-weight: 400; margin-bottom: 4px; color: var(--accent); }
+  .team-card p { font-size: clamp(12px, 1.3vw, 16px); color: var(--text-dim); line-height: 1.5; }
+
+  /* Moat list */
+  .moat-list { list-style: none; padding: 0; max-width: 700px; }
+  .moat-list li {
+    font-size: clamp(18px, 2.5vw, 28px); line-height: 1.5; padding: 12px 0 12px 28px;
+    position: relative; border-bottom: 1px solid var(--border);
+  }
+  .moat-list li::before {
+    content: ''; position: absolute; left: 0; top: 22px;
+    width: 8px; height: 8px; border-radius: 50%; background: var(--accent);
+  }
+  .moat-list li strong { color: var(--accent); font-weight: 400; }
+
+  @media (max-width: 768px) {
+    .roadmap-grid { grid-template-columns: 1fr; }
+    .traction-grid { grid-template-columns: 1fr; }
+    .team-grid { grid-template-columns: 1fr; }
+    .stat-grid { grid-template-columns: 1fr; gap: 24px; }
+    .product-grid { grid-template-columns: 1fr; }
+    .compare-row { flex-direction: column; }
+    .ask-grid { grid-template-columns: 1fr; }
+  }
+
+  /* Header & Footer */
+  .slide-header {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px clamp(24px, 4vw, 48px);
+    z-index: 10;
+    pointer-events: none;
+  }
+  .slide-header .header-left {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+  }
+  .slide-header .header-brand {
+    font-family: var(--font-mono);
+    font-size: clamp(16px, 1.8vw, 22px);
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: 0.5px;
+  }
+  .slide-header .header-tagline {
+    font-family: var(--font-mono);
+    font-size: clamp(10px, 1.1vw, 14px);
+    color: var(--text-dim);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    opacity: 0.7;
+  }
+
+  .slide-footer {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 clamp(24px, 4vw, 48px) 20px;
+    z-index: 10;
+    pointer-events: none;
+    gap: 5px;
+  }
+  .slide-footer .footer-products {
+    display: flex;
+    gap: clamp(20px, 3vw, 40px);
+    align-items: center;
+  }
+  .slide-footer .footer-product {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+  }
+  .slide-footer .footer-product-name {
+    font-family: var(--font-mono);
+    font-size: clamp(9px, 1vw, 12px);
+    font-weight: 600;
+    color: var(--text-dim);
+    opacity: 0.5;
+    letter-spacing: 0.3px;
+  }
+  .slide-footer .footer-sep {
+    width: 1px;
+    height: clamp(24px, 3vh, 36px);
+    background: var(--text-dim);
+    opacity: 0.15;
+  }
+  .slide-footer .footer-company {
+    font-family: var(--font-mono);
+    font-size: clamp(10px, 1.1vw, 14px);
+    color: var(--text-dim);
+    opacity: 0.4;
+    letter-spacing: 1px;
+  }
+
+  .deck-nav { position: fixed; bottom: clamp(16px, 3vh, 32px); right: clamp(16px, 3vw, 32px); display: flex; gap: 8px; z-index: 200; }
+  .deck-nav button { width: 48px; height: 48px; border-radius: 50%; border: 1px solid var(--border-bright); background: color-mix(in srgb, var(--bg) 80%, transparent); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); color: var(--text); font-size: 20px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.2s, border-color 0.2s, transform 0.15s; }
+  .deck-nav button:hover { background: var(--surface); border-color: var(--accent); }
+  .deck-nav button:active { transform: scale(0.92); }
+  @media (max-width: 768px) { .deck-nav button { width: 40px; height: 40px; font-size: 16px; } }
+</style>
+</head>
+<body>
+<div class="deck">
+
+  <!-- 1. COLD OPEN -->
+  <section class="slide slide--gutpunch">
+    <h1 class="slide__display reveal" style="font-style:italic;">AI is here.<br>The infrastructure isn't.</h1>
+    <p class="reveal" style="margin-top:clamp(20px,3vh,40px);font-size:clamp(18px,2.5vw,30px);color:var(--gold);font-style:italic;">The gap between AI and operations.</p>
+  </section>
+
+  <!-- 2. THE REALITY -->
+  <section class="slide slide--question">
+    <p class="slide__heading reveal" style="font-style:italic;max-width:700px;">Every company wants AI. Most are stuck.</p>
+    <p class="reveal" style="margin-top:clamp(20px,3vh,40px);font-size:clamp(16px,2vw,22px);color:var(--text-dim);max-width:600px;text-align:center;">
+      AI models are accessible. ChatGPT, Claude, Midjourney — anyone can use them. But when companies try to put AI to work in their actual operations, they hit a wall.
+    </p>
+  </section>
+
+  <!-- 3. THE NUMBERS -->
+  <section class="slide slide--stat" style="background-image:radial-gradient(ellipse at 30% 70%, var(--accent-dim) 0%, transparent 45%);">
+    <p class="slide__label reveal">The AI integration gap</p>
+    <div class="stat-grid">
+      <div class="stat-item reveal">
+        <div class="stat-val">85%</div>
+        <div class="stat-label">Companies experimenting<br>with AI</div>
+      </div>
+      <div class="stat-item reveal">
+        <div class="stat-val">12%</div>
+        <div class="stat-label">Have AI in<br>production workflows</div>
+      </div>
+      <div class="stat-item reveal">
+        <div class="stat-val">$100B+</div>
+        <div class="stat-label">AI automation market<br>by 2027</div>
+      </div>
+    </div>
+    <p class="reveal" style="margin-top:clamp(16px,2vh,24px);font-family:var(--font-mono);font-size:clamp(8px,0.8vw,10px);color:var(--text-dim);text-align:center;opacity:0.6;">
+      Sources: McKinsey Global Survey on AI 2024 &bull; Gartner AI Hype Cycle 2024 &bull; IDC Worldwide AI Spending Guide
+    </p>
+  </section>
+
+  <!-- 4. THE FAILURE -->
+  <section class="slide" style="justify-content:center;">
+    <p class="slide__label reveal">What teams use today</p>
+    <h2 class="slide__heading reveal" style="margin-bottom:clamp(16px,2vh,32px);">Chaos.</h2>
+    <ul class="failure-list">
+      <li class="reveal"><span>Copy-pasting</span> between ChatGPT, Claude, and Gemini</li>
+      <li class="reveal"><span>Manual workflows</span> — export, transform, import, repeat</li>
+      <li class="reveal"><span>No visibility</span> into what AI agents are doing</li>
+      <li class="reveal"><span>Security concerns</span> — AI tools outside enterprise networks</li>
+    </ul>
+  </section>
+
+  <!-- 5. THE ANSWER -->
+  <section class="slide slide--reveal">
+    <p class="slide__subtitle reveal" style="margin-bottom:clamp(12px,2vh,24px);">Introducing</p>
+    <h1 class="slide__display reveal" style="color:var(--accent);">Origin Labs</h1>
+    <p class="reveal" style="margin-top:clamp(16px,2vh,32px);font-size:clamp(20px,3vw,36px);font-style:italic;max-width:600px;text-align:center;">
+      The infrastructure layer for human-AI collaboration.
+    </p>
+  </section>
+
+  <!-- 6. THE ECOSYSTEM -->
+  <section class="slide" style="justify-content:center;align-items:center;">
+    <p class="slide__label reveal">Two platforms. One mission.</p>
+    <div class="product-grid" style="margin-top:clamp(12px,2vh,24px);">
+      <div class="product-card reveal" style="border-top:3px solid #6366f1;background:rgba(99, 102, 241, 0.06);">
+        <h3 style="color:#6366f1;">Crosspath</h3>
+        <p>Enterprise AI workflow engine. Deploy AI agents that operate inside secure networks. Natural language prompts → automated workflows.</p>
+      </div>
+      <div class="product-card reveal" style="border-top:3px solid #E8913A;background:rgba(232,145,58,0.06);">
+        <h3 style="color:#E8913A;">Mimphes</h3>
+        <p>Multi-LLM creative workflow platform. Orchestrate multiple AI models in structured pipelines. For creators, marketers, media teams.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7. ROADMAP -->
+  <section class="slide" style="justify-content:center;align-items:center;">
+    <p class="slide__label reveal">Phased execution</p>
+    <h2 class="slide__heading reveal" style="margin-bottom:clamp(12px,2vh,24px);text-align:center;">Focus first. Scale second.</h2>
+    <div class="roadmap-grid">
+      <div class="roadmap-phase active reveal">
+        <div class="phase-date">Phase 1 &bull; 2026</div>
+        <h3 style="color:var(--gold);">Crosspath MVP + Mimphes Beta</h3>
+        <ul>
+          <li>Enterprise pilots</li>
+          <li>Creator beta launch</li>
+          <li>First paying customers</li>
+          <li>Security certifications</li>
+        </ul>
+      </div>
+      <div class="roadmap-phase reveal">
+        <div class="phase-date">Phase 2 &bull; 2027</div>
+        <h3>Scale + Ecosystem</h3>
+        <ul>
+          <li>Self-serve onboarding</li>
+          <li>Workflow marketplace</li>
+          <li>Partner integrations</li>
+          <li>ASEAN expansion</li>
+        </ul>
+      </div>
+      <div class="roadmap-phase reveal">
+        <div class="phase-date">Phase 3 &bull; 2028+</div>
+        <h3>Platform</h3>
+        <ul>
+          <li>Third-party developers</li>
+          <li>Industry solutions</li>
+          <li>Regional data centers</li>
+          <li>Enterprise partnerships</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8. WHY US -->
+  <section class="slide" style="justify-content:center;align-items:center;background-image:radial-gradient(ellipse at 70% 30%, var(--accent-dim) 0%, transparent 40%);">
+    <p class="slide__label reveal">Why us. Why now.</p>
+    <h2 class="slide__heading reveal" style="margin-bottom:clamp(12px,2vh,20px);text-align:center;">First-mover in workflow orchestration.</h2>
+    <ul class="moat-list">
+      <li class="reveal"><strong>Infrastructure gap</strong> — AI tools exist, but the layer to deploy them doesn't</li>
+      <li class="reveal"><strong>Enterprise-ready</strong> — Built for secure networks, not just consumer apps</li>
+      <li class="reveal"><strong>Dual engine</strong> — B2B (Crosspath) + B2C (Mimphes) = diversified revenue</li>
+      <li class="reveal"><strong>Team expertise</strong> — Deep experience in AI, enterprise software, creative tools</li>
+    </ul>
+  </section>
+
+  <!-- 9. MARKET -->
+  <section class="slide" style="justify-content:center;align-items:center;text-align:center;background-image:radial-gradient(ellipse at 50% 80%, var(--accent-dim) 0%, transparent 45%);">
+    <p class="slide__label reveal">The opportunity</p>
+    <div class="tam-funnel" style="margin-top:clamp(12px,2vh,24px);">
+      <div class="tam-bar reveal" style="width:100%;background:var(--gold-dim);border:1px solid rgba(192,139,48,0.15);">
+        <div class="tam-val" style="color:var(--gold);">$100B+</div>
+        <div class="tam-detail">
+          <div class="tam-label" style="color:var(--gold);">TAM</div>
+          <div class="tam-desc">AI automation market</div>
+        </div>
+      </div>
+      <div class="tam-bar reveal" style="width:80%;background:var(--accent-dim);border:1px solid rgba(99,102,241,0.12);">
+        <div class="tam-val" style="color:var(--accent);">$2B</div>
+        <div class="tam-detail">
+          <div class="tam-label" style="color:var(--accent);">SAM (APAC)</div>
+          <div class="tam-desc">Workflow orchestration</div>
+        </div>
+      </div>
+      <div class="tam-bar reveal" style="width:55%;background:var(--green-dim);border:1px solid rgba(46,139,87,0.12);">
+        <div class="tam-val" style="color:var(--green);">$50M</div>
+        <div class="tam-detail">
+          <div class="tam-label" style="color:var(--green);">SOM</div>
+          <div class="tam-desc">Year 5 target</div>
+        </div>
+      </div>
+    </div>
+    <p class="reveal" style="margin-top:clamp(8px,1.5vh,14px);font-family:var(--font-mono);font-size:clamp(10px,1.1vw,13px);color:var(--text-dim);">
+      Creator economy overlay: $480B+ globally
+    </p>
+  </section>
+
+  <!-- 10. REVENUE TRAJECTORY -->
+  <section class="slide" style="justify-content:center;align-items:center;">
+    <p class="slide__label reveal">Revenue trajectory</p>
+    <div class="revenue-flow" style="margin-top:clamp(12px,2vh,20px);">
+      <div class="rev-step reveal">
+        <div class="rev-val">$100K</div><div class="rev-label">Year 1</div>
+        <div style="font-family:var(--font-mono);font-size:clamp(8px,0.9vw,11px);color:var(--text-dim);margin-top:4px;opacity:0.7;">ARR</div>
+      </div>
+      <div class="rev-arrow reveal">></div>
+      <div class="rev-step reveal">
+        <div class="rev-val">$2M</div><div class="rev-label">Year 3</div>
+        <div style="font-family:var(--font-mono);font-size:clamp(8px,0.9vw,11px);color:var(--text-dim);margin-top:4px;opacity:0.7;">ARR</div>
+      </div>
+      <div class="rev-arrow reveal">></div>
+      <div class="rev-step reveal">
+        <div class="rev-val">$10M+</div><div class="rev-label">Year 5</div>
+        <div style="font-family:var(--font-mono);font-size:clamp(8px,0.9vw,11px);color:var(--text-dim);margin-top:4px;opacity:0.7;">ARR</div>
+      </div>
+    </div>
+    <div class="stat-grid reveal" style="max-width:700px;margin-top:clamp(20px,3vh,32px);">
+      <div class="stat-item">
+        <div class="stat-val" style="font-size:clamp(28px,4vw,44px);color:var(--accent);">80%</div>
+        <div class="stat-label">Gross margin</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-val" style="font-size:clamp(28px,4vw,44px);color:var(--gold);">$500</div>
+        <div class="stat-label">Avg LTV</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-val" style="font-size:clamp(28px,4vw,44px);color:var(--green);">2</div>
+        <div class="stat-label">Revenue engines</div>
+      </div>
+    </div>
+    <p class="reveal" style="margin-top:clamp(10px,1.5vh,16px);font-family:var(--font-mono);font-size:clamp(9px,1vw,12px);color:var(--text-dim);text-align:center;max-width:700px;">
+      B2B SaaS (Crosspath) + B2C Subscription (Mimphes)
+    </p>
+  </section>
+
+  <!-- 11. PRICING -->
+  <section class="slide" style="justify-content:center;align-items:center;">
+    <p class="slide__label reveal">Simple, accessible pricing</p>
+    <h2 class="slide__heading reveal" style="margin-bottom:clamp(8px,1.5vh,14px);text-align:center;">Two products. Two markets.</h2>
+    <div class="reveal" style="display:flex;gap:clamp(8px,1.5vw,14px);justify-content:center;flex-wrap:wrap;max-width:850px;margin-top:clamp(8px,1.5vh,14px);">
+      <!-- Crosspath -->
+      <div style="flex:1;min-width:175px;max-width:210px;background:var(--surface);border:2px solid var(--accent);border-radius:14px;padding:clamp(12px,1.8vh,20px) clamp(10px,1.2vw,16px);text-align:center;position:relative;box-shadow:0 4px 20px rgba(99,102,241,0.12);">
+        <div style="font-family:var(--font-mono);font-size:clamp(9px,0.9vw,11px);color:var(--accent);text-transform:uppercase;letter-spacing:0.06em;font-weight:600;margin-top:4px;">Crosspath</div>
+        <div style="font-size:clamp(24px,3vw,36px);font-weight:700;color:var(--accent);margin:6px 0;">$499<span style="font-size:0.4em;font-weight:400;color:var(--text-dim);">/mo</span></div>
+        <div style="font-family:var(--font-mono);font-size:clamp(7px,0.7vw,9px);color:var(--text-dim);margin-bottom:6px;">Starter tier</div>
+        <div style="width:30px;height:2px;background:var(--accent);margin:8px auto;opacity:0.3;"></div>
+        <div style="font-family:var(--font-mono);font-size:clamp(7px,0.8vw,10px);color:var(--text-dim);line-height:1.8;text-align:left;padding:0 4px;">
+          Up to 5 agents<br>
+          Basic integrations<br>
+          Email support
+        </div>
+      </div>
+      <!-- Mimphes -->
+      <div style="flex:1;min-width:175px;max-width:210px;background:var(--surface);border:2px solid #E8913A;border-radius:14px;padding:clamp(12px,1.8vh,20px) clamp(10px,1.2vw,16px);text-align:center;position:relative;box-shadow:0 4px 20px rgba(232,145,58,0.12);">
+        <div style="font-family:var(--font-mono);font-size:clamp(9px,0.9vw,11px);color:#E8913A;text-transform:uppercase;letter-spacing:0.06em;font-weight:600;margin-top:4px;">Mimphes</div>
+        <div style="font-size:clamp(24px,3vw,36px);font-weight:700;color:#E8913A;margin:6px 0;">$29<span style="font-size:0.4em;font-weight:400;color:var(--text-dim);">/mo</span></div>
+        <div style="font-family:var(--font-mono);font-size:clamp(7px,0.7vw,9px);color:var(--text-dim);margin-bottom:6px;">Pro tier</div>
+        <div style="width:30px;height:2px;background:#E8913A;margin:8px auto;opacity:0.3;"></div>
+        <div style="font-family:var(--font-mono);font-size:clamp(7px,0.8vw,10px);color:var(--text-dim);line-height:1.8;text-align:left;padding:0 4px;">
+          Unlimited workflows<br>
+          Priority models<br>
+          Collaboration
+        </div>
+      </div>
+    </div>
+    <p class="reveal" style="margin-top:clamp(12px,2vh,18px);font-family:var(--font-mono);font-size:clamp(9px,1vw,12px);color:var(--text-dim);text-align:center;max-width:650px;">
+      Enterprise and Team tiers available for larger deployments.
+    </p>
+  </section>
+
+  <!-- 12. TRACTION -->
+  <section class="slide" style="justify-content:center;align-items:center;">
+    <p class="slide__label reveal">Where we are now</p>
+    <h2 class="slide__heading reveal" style="margin-bottom:clamp(12px,2vh,24px);text-align:center;">Building with urgency.</h2>
+    <div class="traction-grid">
+      <div class="traction-item reveal">
+        <div class="traction-val">MVP</div>
+        <div class="traction-label">Crosspath in<br>development</div>
+      </div>
+      <div class="traction-item reveal">
+        <div class="traction-val">Beta</div>
+        <div class="traction-label">Mimphes alpha<br>testing</div>
+      </div>
+      <div class="traction-item reveal">
+        <div class="traction-val">$0</div>
+        <div class="traction-label">External funding<br>spent</div>
+      </div>
+      <div class="traction-item reveal">
+        <div class="traction-val">Q2</div>
+        <div class="traction-label">Pilot launch<br>target</div>
+      </div>
+    </div>
+    <p class="reveal" style="margin-top:clamp(16px,2vh,24px);font-family:var(--font-mono);font-size:clamp(10px,1.1vw,13px);color:var(--text-dim);text-align:center;max-width:600px;">
+      Pilot Q2 2026 &bull; Public beta Q3 2026 &bull; First revenue Q3 2026
+    </p>
+  </section>
+
+  <!-- 13. TEAM -->
+  <section class="slide" style="justify-content:center;align-items:center;">
+    <p class="slide__label reveal">The team</p>
+    <h2 class="slide__heading reveal" style="margin-bottom:clamp(12px,2vh,24px);text-align:center;">Built by builders.</h2>
+    <div class="team-grid">
+      <div class="team-card reveal" style="border-top:3px solid var(--gold);">
+        <h3 style="color:var(--gold);">Deep AI Expertise</h3>
+        <p>Team with experience in AI, enterprise software, and creative tools. We've shipped products used by thousands.</p>
+      </div>
+      <div class="team-card reveal" style="border-top:3px solid var(--accent);">
+        <h3>Technical Depth</h3>
+        <p>From infrastructure to interfaces. We understand both the engineering and business challenges of operationalizing AI.</p>
+      </div>
+      <div class="team-card reveal">
+        <h3 style="color:var(--green);">Skin in the Game</h3>
+        <p>All progress on sweat equity. Your investment goes to product and growth, not founder salaries.</p>
+      </div>
+      <div class="team-card reveal">
+        <h3 style="color:var(--red);">Domain Expertise</h3>
+        <p>Enterprise workflows, creator tools, AI orchestration. We know the problems because we've lived them.</p>
+      </div>
+    </div>
+    <p class="reveal" style="margin-top:clamp(12px,2vh,20px);font-family:var(--font-mono);font-size:clamp(10px,1.1vw,13px);color:var(--text-dim);text-align:center;">
+      Detailed team bios available upon request.
+    </p>
+  </section>
+
+  <!-- 14. THE ASK -->
+  <section class="slide" style="justify-content:center;align-items:center;text-align:center;">
+    <p class="slide__label reveal">The ask</p>
+    <h2 class="slide__heading reveal" style="margin-bottom:clamp(8px,1vh,12px);">$500K – $1M</h2>
+    <p class="reveal" style="font-family:var(--font-mono);font-size:clamp(11px,1.2vw,14px);color:var(--text-dim);margin-bottom:clamp(12px,2vh,20px);">12–18 months runway &bull; Path to $2M ARR</p>
+    <div class="ask-grid">
+      <div class="ask-card reveal">
+        <div class="ask-amount">$250K</div>
+        <div class="ask-detail">Tranche 1 &bull; $2.5M valuation</div>
+        <p style="font-size:clamp(12px,1.3vw,15px);color:var(--text-dim);margin-top:12px;">MVP launch, first pilots, initial revenue</p>
+        <p style="font-family:var(--font-mono);font-size:clamp(9px,1vw,12px);color:var(--accent);margin-top:8px;opacity:0.8;">USE: Product dev &bull; Pilot ops</p>
+      </div>
+      <div class="ask-card reveal">
+        <div class="ask-amount">$250K–750K</div>
+        <div class="ask-detail">Tranche 2 &bull; $5M valuation</div>
+        <p style="font-size:clamp(12px,1.3vw,15px);color:var(--text-dim);margin-top:12px;">Scale, team expansion, ASEAN entry</p>
+        <p style="font-family:var(--font-mono);font-size:clamp(9px,1vw,12px);color:var(--gold);margin-top:8px;opacity:0.8;">UNLOCKS AFTER: $100K ARR</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 15. THE CLOSE -->
+  <section class="slide slide--close">
+    <h2 class="slide__heading reveal" style="font-size:clamp(24px,4vw,48px);line-height:1.4;">
+      AI is the future of work.
+    </h2>
+    <p class="reveal" style="margin-top:clamp(20px,3vh,40px);font-size:clamp(18px,2.5vw,30px);color:var(--gold);max-width:700px;">
+      We're building the infrastructure to make it work.
+    </p>
+    <p class="reveal" style="margin-top:clamp(32px,4vh,56px);font-family:var(--font-mono);font-size:clamp(11px,1.3vw,15px);color:var(--text-dim);letter-spacing:1px;text-transform:uppercase;">
+      Origin Labs &mdash; The infrastructure layer for human-AI collaboration
+    </p>
+  </section>
+
+</div>
+
+<script>
+// Inject header + footer into every slide
+(function(){
+  var headerHTML = '<div class="slide-header">'
+    + '<div class="header-left">'
+    + '<div class="header-brand">ORIGIN LABS</div>'
+    + '<div class="header-tagline">Powering the AI Workforce</div>'
+    + '</div>'
+    + '</div>';
+
+  var footerHTML = '<div class="slide-footer">'
+    + '<div class="footer-products">'
+    + '<div class="footer-product"><span class="footer-product-name">Crosspath</span></div>'
+    + '<div class="footer-sep"></div>'
+    + '<div class="footer-product"><span class="footer-product-name">Mimphes</span></div>'
+    + '</div>'
+    + '<div class="footer-company">© 2026 Origin Labs &bull; Confidential &bull; Not For Distribution</div>'
+    + '</div>';
+
+  var slides = document.querySelectorAll('.slide');
+  for (var i = 0; i < slides.length; i++) {
+    slides[i].insertAdjacentHTML('afterbegin', headerHTML);
+    slides[i].insertAdjacentHTML('beforeend', footerHTML);
+  }
+})();
+</script>
+<script>
+(function(){
+  var deck = document.querySelector('.deck');
+  var slides = [].slice.call(document.querySelectorAll('.slide'));
+  var current = 0;
+  var total = slides.length;
+  var isAnimating = false;
+  var TRANSITION_MS = 600;
+
+  slides[0].classList.add('visible');
+
+  var bar = document.createElement('div'); bar.className = 'deck-progress'; document.body.appendChild(bar);
+  var ctr = document.createElement('div'); ctr.className = 'deck-counter'; document.body.appendChild(ctr);
+
+  function update() {
+    bar.style.width = ((current + 1) / total * 100) + '%';
+    ctr.textContent = (current + 1) + ' / ' + total;
+  }
+
+  function goTo(target) {
+    if (target === current || target < 0 || target >= total || isAnimating) return;
+    isAnimating = true;
+    var dir = target > current ? 1 : -1;
+    var leaving = slides[current];
+    var entering = slides[target];
+
+    entering.style.transition = 'none';
+    entering.style.transform = 'translateY(' + (dir * 100) + '%)';
+    entering.style.opacity = '0';
+    entering.style.zIndex = '2';
+    entering.offsetHeight;
+
+    entering.style.transition = 'transform ' + TRANSITION_MS + 'ms cubic-bezier(0.16, 1, 0.3, 1), opacity ' + TRANSITION_MS + 'ms cubic-bezier(0.16, 1, 0.3, 1)';
+    entering.style.transform = 'translateY(0)';
+    entering.style.opacity = '1';
+    entering.classList.add('visible');
+
+    leaving.style.zIndex = '1';
+    leaving.style.transform = 'translateY(' + (-dir * 40) + '%)';
+    leaving.style.opacity = '0';
+
+    current = target;
+    update();
+
+    setTimeout(function() {
+      leaving.classList.remove('visible');
+      leaving.style.zIndex = '0';
+      entering.style.zIndex = '1';
+      leaving.style.transition = 'none';
+      leaving.style.transform = 'translateY(100%)';
+      isAnimating = false;
+    }, TRANSITION_MS);
+  }
+
+  function next() { goTo(current + 1); }
+  function prev() { goTo(current - 1); }
+
+  document.addEventListener('keydown', function(e) {
+    if (['ArrowDown','ArrowRight',' ','PageDown'].indexOf(e.key) > -1) { e.preventDefault(); next(); }
+    else if (['ArrowUp','ArrowLeft','PageUp'].indexOf(e.key) > -1) { e.preventDefault(); prev(); }
+    else if (e.key === 'Home') { e.preventDefault(); goTo(0); }
+    else if (e.key === 'End') { e.preventDefault(); goTo(total - 1); }
+  });
+
+  var wheelTimeout = null;
+  deck.addEventListener('wheel', function(e) {
+    e.preventDefault();
+    if (wheelTimeout) return;
+    if (Math.abs(e.deltaY) < 15) return;
+    if (e.deltaY > 0) next(); else prev();
+    wheelTimeout = setTimeout(function() { wheelTimeout = null; }, TRANSITION_MS + 100);
+  }, { passive: false });
+
+  var touchY = null;
+  deck.addEventListener('touchstart', function(e) { touchY = e.touches[0].clientY; }, { passive: true });
+  deck.addEventListener('touchend', function(e) {
+    if (touchY === null) return;
+    var dy = touchY - e.changedTouches[0].clientY;
+    if (Math.abs(dy) > 40) { dy > 0 ? next() : prev(); }
+    touchY = null;
+  });
+
+  update();
+  window.__deckEngine = { next: next, prev: prev, goTo: goTo };
+})();
+</script>
+<div class="deck-nav"><button onclick="window.__deckEngine.prev()" title="Previous">^</button><button onclick="window.__deckEngine.next()" title="Next">v</button></div>
+</body>
+</html>

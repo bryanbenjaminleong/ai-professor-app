@@ -1,0 +1,27 @@
+<svg width="400" height="120" viewBox="0 0 400 120" xmlns="http://www.w3.org/2000/svg">
+  <!-- 9founders Logo - Version 3 -->
+  <!-- "9" in teal (similar to Origin Labs), "founders" in dark gray -->
+  
+  <defs>
+    <style>
+      .digit { 
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; 
+        font-weight: 800;
+        font-size: 66px;
+        fill: #40E0D0;
+      }
+      .word {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        font-weight: 800;
+        font-size: 62px;
+        fill: #2d2d2d;
+      }
+    </style>
+  </defs>
+  
+  <!-- 9 -->
+  <text x="50" y="77" class="digit">9</text>
+  
+  <!-- founders -->
+  <text x="100" y="76" class="word">founders</text>
+</svg>
