@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 120" width="500" height="120">
+  <defs>
+    <linearGradient id="turquoise-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#40E0D0;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#2DD4BF;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Icon: Two overlapping circles -->
+  <g transform="translate(10, 20)">
+    <!-- Human circle (left) -->
+    <circle cx="28" cy="40" r="20" fill="none" stroke="url(#turquoise-grad)" stroke-width="3" opacity="0.6"/>
+    <!-- AI circle (right) -->
+    <circle cx="52" cy="40" r="20" fill="none" stroke="#000000" stroke-width="3"/>
+    <!-- Connection point -->
+    <circle cx="40" cy="40" r="6" fill="url(#turquoise-grad)"/>
+    <circle cx="40" cy="40" r="3" fill="#000000"/>
+  </g>
+  
+  <!-- Wordmark: Origin Labs (with proper spacing) -->
+  <text x="100" y="70" font-family="Inter, -apple-system, sans-serif" font-size="48" font-weight="700" fill="#40E0D0" letter-spacing="-1">Origin</text>
+  <text x="280" y="70" font-family="Inter, -apple-system, sans-serif" font-size="48" font-weight="800" fill="#000000" letter-spacing="0">Labs</text>
+  
+  <!-- Tagline: Human . AI -->
+  <text x="200" y="100" font-family="Inter, -apple-system, sans-serif" font-size="14" font-weight="500" fill="#64748B" letter-spacing="2">Human . AI</text>
+</svg>
