@@ -1,12 +1,12 @@
 {
-  "lastReminderTime": 1743864980,
+  "lastReminderTime": 1741969200,
   "intervalHours": 2,
   "outstandingItems": [
     {
       "id": "origin-labs-pitch",
       "description": "Origin Labs pitch deck - actively being worked on",
       "status": "active",
-      "note": "Bryan making changes via opencode"
+      "note": "Hero text reduced, Bryan making changes via opencode"
     }
   ]
 }
