@@ -13,7 +13,6 @@ interface Course {
   difficulty: string
   duration_weeks: number
   lesson_count: number
-  enrolled_count: number
   image_url?: string
 }
 
@@ -23,34 +22,29 @@ const DIFFICULTY_COLORS: Record<string, string> = {
   advanced: 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400',
 }
 
-export default function CoursesPage() {
-  const [courses, setCourses] = useState<Course[]>([])
-  const [loading, setLoading] = useState(true)
+interface Props {
+  initialCourses: Course[]
+}
 
+export default function CoursesClient({ initialCourses }: Props) {
+  const [courses, setCourses] = useState<Course[]>(initialCourses || [])
+
+  // Optional: refresh courses on client-side mount
   useEffect(() => {
-    fetchCourses()
+    if (initialCourses.length === 0) {
+      fetchCourses()
+    }
   }, [])
 
   const fetchCourses = async () => {
     try {
       const response = await fetch('/api/courses')
       const data = await response.json()
-      
       const coursesData = data.data?.courses || data.courses || data || []
       setCourses(Array.isArray(coursesData) ? coursesData : [])
     } catch (error) {
       console.error('Error fetching courses:', error)
-    } finally {
-      setLoading(false)
     }
-  }
-
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-950 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
-      </div>
-    )
   }
 
   return (
@@ -78,61 +72,60 @@ export default function CoursesPage() {
 
       {/* Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {courses.map((course) => (
-            <Card key={course.id} className="overflow-hidden hover:shadow-xl transition-all duration-300 group">
-              {/* Header with gradient */}
-              <div className="bg-gradient-to-r from-primary-600 to-primary-700 p-6 text-white">
-                <div className="flex items-center justify-between mb-4">
-                  <Badge className={DIFFICULTY_COLORS[course.difficulty] || DIFFICULTY_COLORS.beginner}>
-                    {course.difficulty || 'beginner'}
-                  </Badge>
-                  <div className="flex items-center gap-1">
-                    <Star className="w-4 h-4 fill-yellow-300 text-yellow-300" />
-                    <span className="text-sm">4.8</span>
+        {courses.length > 0 ? (
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {courses.map((course) => (
+              <Card key={course.id} className="overflow-hidden hover:shadow-xl transition-all duration-300 group">
+                {/* Header with gradient */}
+                <div className="bg-gradient-to-r from-primary-600 to-primary-700 p-6 text-white">
+                  <div className="flex items-center justify-between mb-4">
+                    <Badge className={DIFFICULTY_COLORS[course.difficulty] || DIFFICULTY_COLORS.beginner}>
+                      {course.difficulty || 'beginner'}
+                    </Badge>
+                    <div className="flex items-center gap-1">
+                      <Star className="w-4 h-4 fill-yellow-300 text-yellow-300" />
+                      <span className="text-sm">4.8</span>
+                    </div>
+                  </div>
+                  
+                  <h3 className="text-xl font-bold mb-2">{course.title}</h3>
+                  
+                  <div className="flex items-center gap-4 text-sm text-white/90">
+                    <div className="flex items-center gap-1">
+                      <Clock className="w-4 h-4" />
+                      <span>{course.duration_weeks || 8} weeks</span>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <BookOpen className="w-4 h-4" />
+                      <span>{course.lesson_count || 10} lessons</span>
+                    </div>
                   </div>
                 </div>
-                
-                <h3 className="text-xl font-bold mb-2">{course.title}</h3>
-                
-                {/* Stats */}
-                <div className="flex items-center gap-4 text-sm text-white/90">
-                  <div className="flex items-center gap-1">
-                    <Clock className="w-4 h-4" />
-                    <span>{course.duration_weeks || 8} weeks</span>
+
+                {/* Content */}
+                <div className="p-6">
+                  <p className="text-gray-600 dark:text-gray-400 mb-4 line-clamp-2">
+                    {course.description}
+                  </p>
+
+                  <div className="flex items-center justify-between mb-4">
+                    <span className="text-2xl font-bold text-gray-900 dark:text-white">$14.99</span>
+                    <Badge className="bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-400">
+                      {course.topic}
+                    </Badge>
                   </div>
-                  <div className="flex items-center gap-1">
-                    <BookOpen className="w-4 h-4" />
-                    <span>{course.lesson_count || 10} lessons</span>
-                  </div>
+
+                  <Link href={`/courses/${course.id}`}>
+                    <Button className="w-full group-hover:bg-primary-600 transition-colors">
+                      View Course
+                      <ChevronRight className="w-4 h-4 ml-2" />
+                    </Button>
+                  </Link>
                 </div>
-              </div>
-
-              {/* Content */}
-              <div className="p-6">
-                <p className="text-gray-600 dark:text-gray-400 mb-4 line-clamp-2">
-                  {course.description}
-                </p>
-
-                <div className="flex items-center justify-between mb-4">
-                  <span className="text-2xl font-bold text-gray-900 dark:text-white">$14.99</span>
-                  <Badge className="bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-400">
-                    {course.topic}
-                  </Badge>
-                </div>
-
-                <Link href={`/courses/${course.id}`}>
-                  <Button className="w-full group-hover:bg-primary-600 transition-colors">
-                    View Course
-                    <ChevronRight className="w-4 h-4 ml-2" />
-                  </Button>
-                </Link>
-              </div>
-            </Card>
-          ))}
-        </div>
-
-        {courses.length === 0 && (
+              </Card>
+            ))}
+          </div>
+        ) : (
           <div className="text-center py-12">
             <BookOpen className="w-16 h-16 text-gray-400 mx-auto mb-4" />
             <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
