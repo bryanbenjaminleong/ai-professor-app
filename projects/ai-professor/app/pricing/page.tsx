@@ -83,7 +83,7 @@ const faqs = [
   },
   {
     question: 'Can I get a refund?',
-    answer: 'Yes, 30-day money-back guarantee if you are not satisfied.',
+    answer: 'Yes, if you complete less than 20% of the course and are not satisfied, contact us within 7 days for a full refund.',
   },
   {
     question: 'Do you offer team discounts?',
