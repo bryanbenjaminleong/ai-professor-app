@@ -6,7 +6,6 @@ import { usePathname } from 'next/navigation';
 import {
   LayoutDashboard,
   BookOpen,
-  Award,
   Settings,
   HelpCircle,
   ChevronLeft,
@@ -21,7 +20,6 @@ interface SidebarProps {
 const menuItems = [
   { href: '/dashboard', icon: LayoutDashboard, label: 'Overview' },
   { href: '/dashboard/courses', icon: BookOpen, label: 'My Courses' },
-  { href: '/dashboard/certificates', icon: Award, label: 'Certificates' },
   { href: '/dashboard/settings', icon: Settings, label: 'Settings' },
   { href: '/dashboard/help', icon: HelpCircle, label: 'Help & Support' },
 ];
@@ -87,11 +85,13 @@ export function Sidebar({ isCollapsed = false, onToggle }: SidebarProps) {
                 Need Help?
               </h3>
               <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
-                Get instant answers from our AI assistant.
+                Browse our quick guides for answers.
               </p>
-              <button className="w-full bg-primary-600 hover:bg-primary-700 text-white text-sm font-medium py-2 rounded-lg transition-colors">
-                Start Chat
-              </button>
+              <Link href="/guides" className="block">
+                <button className="w-full bg-primary-600 hover:bg-primary-700 text-white text-sm font-medium py-2 rounded-lg transition-colors">
+                  Browse Guides
+                </button>
+              </Link>
             </div>
           </div>
         )}

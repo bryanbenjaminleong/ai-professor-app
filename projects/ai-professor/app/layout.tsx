@@ -2,6 +2,8 @@ import type { Metadata, Viewport } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
 import { Providers } from './providers';
+import { OrganizationJsonLd, WebSiteJsonLd } from '@/components/seo';
+import BackToTop from '@/components/ui/BackToTop';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 
@@ -104,7 +106,14 @@ export default function RootLayout({
         <meta name="msapplication-tap-highlight" content="no" />
       </head>
       <body className={`${inter.variable} font-sans antialiased`}>
+        {/* SEO & AEO Structured Data */}
+        <OrganizationJsonLd />
+        <WebSiteJsonLd />
+        
         <Providers>{children}</Providers>
+        
+        {/* Back to Top Button */}
+        <BackToTop />
         
         {/* Service Worker Registration */}
         <script

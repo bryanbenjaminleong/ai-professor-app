@@ -7,6 +7,9 @@ export const metadata: Metadata = {
   description: 'Master AI with expert-led courses. From fundamentals to advanced topics.',
 }
 
+// Force dynamic rendering to always fetch fresh data
+export const dynamic = 'force-dynamic'
+
 async function getCourses() {
   try {
     const courses = await db.courses.getAll({ is_published: true })

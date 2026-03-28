@@ -5,6 +5,7 @@ import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Calendar, Clock, ExternalLink, User, ArrowLeft, Share2 } from 'lucide-react';
 import { Button, Card, Badge } from '@/components/ui';
+import { NewsArticleJsonLd, BreadcrumbJsonLd } from '@/components/seo';
 import type { NewsItem } from '@/types/news';
 import { NEWS_CATEGORY_LABELS as categoryLabels, NEWS_CATEGORY_COLORS as categoryColors } from '@/types/news';
 import {
@@ -92,16 +93,34 @@ export default function NewsArticlePage() {
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
+      {/* SEO Structured Data */}
+      <NewsArticleJsonLd
+        headline={article.title}
+        description={article.summary || article.title}
+        url={`https://pulseaiprofessor.com/news/${article.id}`}
+        datePublished={article.published_at || article.created_at || new Date().toISOString()}
+        dateModified={article.updated_at}
+        category={categoryLabels[article.category]}
+        sourceName={article.source_name}
+      />
+      <BreadcrumbJsonLd
+        items={[
+          { name: 'Home', url: 'https://pulseaiprofessor.com' },
+          { name: 'AI News', url: 'https://pulseaiprofessor.com/news' },
+          { name: article.title, url: `https://pulseaiprofessor.com/news/${article.id}` },
+        ]}
+      />
+      
       {/* Header */}
       <div className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <button
-            onClick={() => router.back()}
+          <Link
+            href="/news"
             className="flex items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white mb-6 transition-colors"
           >
             <ArrowLeft className="w-5 h-5" />
             Back to News
-          </button>
+          </Link>
 
           <Badge variant={categoryColors[article.category] as any} className="mb-4">
             {categoryLabels[article.category]}

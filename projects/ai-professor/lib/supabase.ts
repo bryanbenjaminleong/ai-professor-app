@@ -443,6 +443,188 @@ export const db = {
       return data
     },
   },
+
+  // Rating operations
+  ratings: {
+    async getByCourse(courseId: string) {
+      const admin = getSupabaseAdmin()
+      const { data, error } = await admin
+        .from('ratings')
+        .select(`
+          *,
+          profiles!ratings_user_id_fkey(full_name, avatar_url)
+        `)
+        .eq('course_id', courseId)
+        .order('created_at', { ascending: false })
+      
+      if (error) throw error
+      return data
+    },
+
+    async getById(id: string) {
+      const admin = getSupabaseAdmin()
+      const { data, error } = await admin
+        .from('ratings')
+        .select('*')
+        .eq('id', id)
+        .single()
+      
+      if (error) throw error
+      return data
+    },
+
+    async getByUserAndCourse(userId: string, courseId: string) {
+      const admin = getSupabaseAdmin()
+      const { data, error } = await admin
+        .from('ratings')
+        .select('*')
+        .eq('user_id', userId)
+        .eq('course_id', courseId)
+        .maybeSingle()
+      
+      if (error) throw error
+      return data
+    },
+
+    async create(rating: Database['public']['Tables']['ratings']['Insert']) {
+      const admin = getSupabaseAdmin()
+      const { data, error } = await admin
+        .from('ratings')
+        .insert(rating)
+        .select()
+        .single()
+      
+      if (error) throw error
+      return data
+    },
+
+    async update(id: string, updates: Database['public']['Tables']['ratings']['Update']) {
+      const admin = getSupabaseAdmin()
+      const { data, error } = await admin
+        .from('ratings')
+        .update(updates)
+        .eq('id', id)
+        .select()
+        .single()
+      
+      if (error) throw error
+      return data
+    },
+
+    async delete(id: string) {
+      const admin = getSupabaseAdmin()
+      const { error } = await admin
+        .from('ratings')
+        .delete()
+        .eq('id', id)
+      
+      if (error) throw error
+    },
+
+    async getStats() {
+      const admin = getSupabaseAdmin()
+      
+      const { data: ratings, error } = await admin
+        .from('ratings')
+        .select('rating')
+      
+      if (error) throw error
+      
+      const total = ratings.length
+      const average = total > 0 
+        ? ratings.reduce((sum, r) => sum + r.rating, 0) / total 
+        : 0
+      
+      return { total, average: Math.round(average * 10) / 10 }
+    },
+  },
+
+  // Analytics operations
+  analytics: {
+    async getDashboardStats() {
+      const admin = getSupabaseAdmin()
+      
+      // Get counts in parallel
+      const [
+        { count: totalUsers },
+        { count: totalCourses },
+        { count: totalLessons },
+        { count: totalEnrollments },
+        { data: ratings },
+      ] = await Promise.all([
+        admin.from('profiles').select('*', { count: 'exact', head: true }),
+        admin.from('courses').select('*', { count: 'exact', head: true }).eq('is_published', true),
+        admin.from('lessons').select('*', { count: 'exact', head: true }),
+        admin.from('enrollments').select('*', { count: 'exact', head: true }),
+        admin.from('ratings').select('rating'),
+      ])
+      
+      const avgRating = ratings && ratings.length > 0
+        ? ratings.reduce((sum, r) => sum + r.rating, 0) / ratings.length
+        : 0
+      
+      return {
+        totalUsers: totalUsers || 0,
+        totalCourses: totalCourses || 0,
+        totalLessons: totalLessons || 0,
+        totalEnrollments: totalEnrollments || 0,
+        averageRating: Math.round(avgRating * 10) / 10,
+        totalRatings: ratings?.length || 0,
+      }
+    },
+
+    async getRecentActivity(limit: number = 10) {
+      const admin = getSupabaseAdmin()
+      
+      const [enrollments, ratings] = await Promise.all([
+        admin
+          .from('enrollments')
+          .select(`
+            created_at,
+            profiles(full_name),
+            courses(title)
+          `)
+          .order('created_at', { ascending: false })
+          .limit(limit),
+        admin
+          .from('ratings')
+          .select(`
+            created_at,
+            rating,
+            review,
+            profiles(full_name),
+            courses(title)
+          `)
+          .order('created_at', { ascending: false })
+          .limit(limit),
+      ])
+      
+      return { enrollments: enrollments.data || [], ratings: ratings.data || [] }
+    },
+
+    async getPopularCourses(limit: number = 5) {
+      const admin = getSupabaseAdmin()
+      
+      const { data, error } = await admin
+        .from('courses')
+        .select(`
+          id,
+          title,
+          enrollments(count)
+        `)
+        .eq('is_published', true)
+        .order('created_at', { ascending: false })
+        .limit(limit)
+      
+      if (error) throw error
+      
+      return data.map((course: any) => ({
+        id: course.id,
+        title: course.title,
+        enrollments: course.enrollments?.[0]?.count || 0,
+      }))
+    },
+  },
 }
 
 // Error handling

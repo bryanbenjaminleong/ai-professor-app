@@ -1,9 +1,9 @@
 'use client'
 
-import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { ArrowLeft, Clock, BookOpen, ChevronRight, ChevronLeft, CheckCircle, ExternalLink } from 'lucide-react'
 import { Button, Card, Badge } from '@/components/ui'
+import { LessonJsonLd, BreadcrumbJsonLd } from '@/components/seo'
 import ReactMarkdown from 'react-markdown'
 
 interface Lesson {
@@ -30,8 +30,6 @@ interface Props {
 }
 
 export default function LessonClient({ lesson, course, courseId }: Props) {
-  const router = useRouter()
-
   if (!lesson) {
     return (
       <div className="min-h-screen bg-gray-50 dark:bg-gray-950 flex items-center justify-center">
@@ -53,16 +51,34 @@ export default function LessonClient({ lesson, course, courseId }: Props) {
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
+      {/* SEO Structured Data */}
+      <LessonJsonLd
+        name={lesson.title}
+        description={lesson.content?.substring(0, 160) || 'Learn with AI Professor'}
+        courseName={course?.title || 'Course'}
+        courseUrl={`https://pulseaiprofessor.com/courses/${courseId}`}
+        url={`https://pulseaiprofessor.com/courses/${courseId}/lessons/${lesson.id}`}
+        position={currentIndex + 1}
+      />
+      <BreadcrumbJsonLd
+        items={[
+          { name: 'Home', url: 'https://pulseaiprofessor.com' },
+          { name: 'Courses', url: 'https://pulseaiprofessor.com/courses' },
+          { name: course?.title || 'Course', url: `https://pulseaiprofessor.com/courses/${courseId}` },
+          { name: lesson.title, url: `https://pulseaiprofessor.com/courses/${courseId}/lessons/${lesson.id}` },
+        ]}
+      />
+      
       {/* Header */}
       <div className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 sticky top-0 z-40">
         <div className="max-w-4xl mx-auto px-4 py-4">
-          <button
-            onClick={() => router.push(`/courses/${courseId}`)}
+          <Link
+            href={`/courses/${courseId}`}
             className="flex items-center gap-2 text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200 mb-4"
           >
             <ArrowLeft className="w-5 h-5" />
             Back to {course?.title || 'Course'}
-          </button>
+          </Link>
         </div>
       </div>
 

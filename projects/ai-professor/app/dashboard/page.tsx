@@ -6,7 +6,6 @@ import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import {
   BookOpen,
-  Award,
   Clock,
   TrendingUp,
   Calendar,
@@ -52,21 +51,6 @@ const enrolledCourses = [
   },
 ];
 
-const certificates = [
-  {
-    id: '1',
-    title: 'Machine Learning Basics',
-    issuedAt: '2024-01-15',
-    credentialUrl: '#',
-  },
-  {
-    id: '2',
-    title: 'Python for Data Science',
-    issuedAt: '2024-02-20',
-    credentialUrl: '#',
-  },
-];
-
 const upcomingLessons = [
   {
     id: '1',
@@ -105,13 +89,6 @@ const stats = [
     icon: CheckCircle,
     color: 'text-green-600 dark:text-green-400',
     bgColor: 'bg-green-100 dark:bg-green-900/30',
-  },
-  {
-    label: 'Certificates',
-    value: '2',
-    icon: Award,
-    color: 'text-purple-600 dark:text-purple-400',
-    bgColor: 'bg-purple-100 dark:bg-purple-900/30',
   },
   {
     label: 'Hours Learned',
@@ -323,51 +300,6 @@ export default function DashboardPage() {
                           <span>•</span>
                           <span>{lesson.duration}</span>
                         </div>
-                      </div>
-                    ))}
-                  </div>
-                </Card>
-              </motion.div>
-
-              {/* Certificates */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.5 }}
-              >
-                <Card>
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="flex items-center gap-2">
-                      <Award className="w-5 h-5 text-primary-600 dark:text-primary-400" />
-                      <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
-                        Certificates
-                      </h2>
-                    </div>
-                    <Link
-                      href="/dashboard/certificates"
-                      className="text-primary-600 dark:text-primary-400 hover:underline text-sm"
-                    >
-                      View All
-                    </Link>
-                  </div>
-
-                  <div className="space-y-3">
-                    {certificates.map((cert) => (
-                      <div
-                        key={cert.id}
-                        className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800 rounded-lg"
-                      >
-                        <div>
-                          <p className="font-medium text-gray-900 dark:text-white text-sm">
-                            {cert.title}
-                          </p>
-                          <p className="text-xs text-gray-600 dark:text-gray-400">
-                            Issued {new Date(cert.issuedAt).toLocaleDateString()}
-                          </p>
-                        </div>
-                        <Button variant="ghost" size="sm">
-                          View
-                        </Button>
                       </div>
                     ))}
                   </div>

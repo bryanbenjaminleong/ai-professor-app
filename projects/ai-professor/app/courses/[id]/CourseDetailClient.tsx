@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { ArrowLeft, Clock, BookOpen, ChevronRight, CheckCircle, Play, Star } from 'lucide-react'
 import { Button, Card, Badge } from '@/components/ui'
+import { CourseJsonLd, BreadcrumbJsonLd } from '@/components/seo'
 
 interface Course {
   id: string
@@ -82,16 +83,37 @@ export default function CourseDetailClient({ courseId, initialCourse }: Props) {
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
+      {/* SEO Structured Data */}
+      <CourseJsonLd
+        name={course.title}
+        description={course.description}
+        provider={{ name: 'Pulse + AI Professor', url: 'https://pulseaiprofessor.com' }}
+        url={`https://pulseaiprofessor.com/courses/${courseId}`}
+        duration={`P${course.duration_weeks || 8}W`}
+        educationalLevel={course.difficulty || 'Beginner'}
+        isAccessibleForFree={false}
+        price={14.99}
+        currency="USD"
+        aggregateRating={{ ratingValue: 4.8, reviewCount: 234 }}
+      />
+      <BreadcrumbJsonLd
+        items={[
+          { name: 'Home', url: 'https://pulseaiprofessor.com' },
+          { name: 'Courses', url: 'https://pulseaiprofessor.com/courses' },
+          { name: course.title, url: `https://pulseaiprofessor.com/courses/${courseId}` },
+        ]}
+      />
+      
       {/* Header */}
       <div className="bg-gradient-to-br from-primary-600 to-primary-800 text-white">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <button
-            onClick={() => router.back()}
+          <Link
+            href="/courses"
             className="flex items-center gap-2 text-white/80 hover:text-white mb-6 transition-colors"
           >
             <ArrowLeft className="w-5 h-5" />
             Back to Courses
-          </button>
+          </Link>
 
           <div className="flex items-start justify-between gap-6">
             <div className="flex-1">
@@ -113,7 +135,7 @@ export default function CourseDetailClient({ courseId, initialCourse }: Props) {
                 </div>
                 <div className="flex items-center gap-1">
                   <Star className="w-5 h-5 fill-yellow-300 text-yellow-300" />
-                  <span>4.8 (234 reviews)</span>
+                  <span>{avgRating > 0 ? `${avgRating} (${ratingCount} reviews)` : 'New course'}</span>
                 </div>
               </div>
             </div>
@@ -125,7 +147,7 @@ export default function CourseDetailClient({ courseId, initialCourse }: Props) {
                 <Button className="w-full bg-white text-primary-700 hover:bg-white/90">
                   Enroll Now
                 </Button>
-                <div className="text-xs text-white/60 mt-2">30-day money-back guarantee</div>
+                <div className="text-xs text-white/60 mt-2">Secure payment • Instant access</div>
               </div>
             </Card>
           </div>

@@ -63,7 +63,6 @@ const featureComparison = [
   { feature: 'Full Courses', free: '1 lesson', single: 'All 3 courses', bundle: 'All 3 courses' },
   { feature: 'Hands-on Projects', free: false, single: '3 projects', bundle: '9 projects' },
   { feature: 'Assessments', free: false, single: 'Pass/fail quizzes', bundle: 'All quizzes' },
-  { feature: 'Certificates', free: false, single: '✓', bundle: '✓' },
   { feature: 'Community Challenges', free: false, single: '✓', bundle: '✓' },
   { feature: 'Support', free: 'Email', single: 'Priority', bundle: 'Priority' },
 ];

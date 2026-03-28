@@ -128,11 +128,18 @@ Curated memories, decisions, and context worth keeping across sessions.
 - Static site generation
 - API integration
 
-**Specialized Agents Available (can spawn on demand):**
-- Security scanning agents
-- Design specialists
-- Code review agents
-- Research agents
+**Specialized Agent Team (spawn on demand):**
+
+| Agent Name | Label | Specialty |
+|------------|-------|-----------|
+| **Frontend Dev** | `frontend-dev-ui` | React, Next.js, Tailwind CSS, UI components |
+| **Backend Dev** | `backend-api-dev` | Node.js APIs, Supabase, authentication |
+| **Content Writer** | `content-writer-courses` | Course lessons, projects, assessments |
+| **Security Guard** | `security-audit-guard` | OWASP, auth security, vulnerability audits |
+| **Stripe Specialist** | `stripe-payments-integration` | Stripe Checkout, webhooks, subscriptions |
+| **QA Tester** | `qa-tester-debugger` | Testing, bug reproduction, edge cases |
+
+**Usage:** Spawn with `sessions_spawn` + agent label when specialized help needed
 
 ---
 

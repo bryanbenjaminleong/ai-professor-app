@@ -10,7 +10,8 @@ import {
   Sparkles,
   TrendingUp,
   Target,
-  Clock
+  Clock,
+  GraduationCap
 } from 'lucide-react'
 import { Button } from '@/components/ui'
 
@@ -88,9 +89,9 @@ export default function HomePage() {
             {/* Quick Stats */}
             <div className="grid grid-cols-4 gap-4 max-w-2xl mx-auto">
               {[
-                { value: '103', label: 'Articles' },
-                { value: '6', label: 'Free Guides' },
-                { value: '3', label: 'Courses' },
+                { value: '100+', label: 'Articles' },
+                { value: '24', label: 'Quick Guides' },
+                { value: '5', label: 'Full Courses' },
                 { value: '24/7', label: 'Updates' },
               ].map((stat, i) => (
                 <motion.div
@@ -126,7 +127,7 @@ export default function HomePage() {
             </p>
           </motion.div>
 
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             {[
               {
                 icon: Newspaper,
@@ -151,6 +152,14 @@ export default function HomePage() {
                 link: '/guides',
                 color: 'from-purple-500 to-pink-500',
                 cta: 'Start Learning Free'
+              },
+              {
+                icon: GraduationCap,
+                title: 'Full Courses',
+                description: '8-12 week comprehensive programs. Master AI with hands-on projects.',
+                link: '/courses',
+                color: 'from-blue-500 to-indigo-500',
+                cta: 'Browse Courses'
               },
             ].map((item, i) => (
               <motion.div
