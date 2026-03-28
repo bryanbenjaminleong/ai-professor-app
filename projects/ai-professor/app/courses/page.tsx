@@ -1,5 +1,6 @@
 import { Metadata } from 'next'
 import CoursesClient from './CoursesClient'
+import { db } from '@/lib/supabase'
 
 export const metadata: Metadata = {
   title: 'Courses - AI Professor',
@@ -8,15 +9,18 @@ export const metadata: Metadata = {
 
 async function getCourses() {
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || process.env.VERCEL_URL 
-      ? `https://${process.env.VERCEL_URL}` 
-      : 'http://localhost:3000'
-    
-    const res = await fetch(`${baseUrl}/api/courses`, {
-      cache: 'no-store',
-    })
-    const data = await res.json()
-    return data.data?.courses || data.courses || data || []
+    const courses = await db.courses.getAll({ is_published: true })
+    // Transform to include lesson_count
+    return courses.map(c => ({
+      id: c.id,
+      title: c.title,
+      description: c.description,
+      topic: c.topic,
+      difficulty: c.difficulty,
+      duration_weeks: c.duration_weeks,
+      lesson_count: c.lessons?.[0]?.count || 0,
+      image_url: c.image_url,
+    }))
   } catch (error) {
     console.error('Failed to fetch courses:', error)
     return []
