@@ -3,15 +3,23 @@
 
 import { NextRequest, NextResponse } from 'next/server'
 import { scrapeAllNews } from '@/lib/news/scraper'
+import { processAllUnprocessed } from '@/lib/news/summarizer'
 
 export async function GET(request: NextRequest) {
   // Verify this is a legitimate cron request
   const authHeader = request.headers.get('authorization')
   const cronSecret = process.env.CRON_SECRET
   
-  // In production, require the secret
-  // In development, allow without secret for testing
-  if (process.env.NODE_ENV === 'production' && cronSecret) {
+  // CRON_SECRET is mandatory in production
+  if (process.env.NODE_ENV === 'production') {
+    if (!cronSecret) {
+      console.error('[Cron] CRON_SECRET not configured in production')
+      return NextResponse.json(
+        { success: false, error: 'Server configuration error' },
+        { status: 500 }
+      )
+    }
+    
     if (authHeader !== `Bearer ${cronSecret}`) {
       return NextResponse.json(
         { success: false, error: 'Unauthorized' },
@@ -26,6 +34,16 @@ export async function GET(request: NextRequest) {
     const result = await scrapeAllNews()
     
     console.log('[Cron] Scrape complete:', result)
+    
+    // Process unprocessed items (generate AI summaries)
+    console.log('[Cron] Starting AI summarization...')
+    try {
+      await processAllUnprocessed(50)
+      console.log('[Cron] Summarization complete')
+    } catch (summarizeError) {
+      console.error('[Cron] Summarization failed (non-fatal):', summarizeError)
+      // Don't fail the whole cron if summarization fails
+    }
     
     return NextResponse.json({
       success: true,

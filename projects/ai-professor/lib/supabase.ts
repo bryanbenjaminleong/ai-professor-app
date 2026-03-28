@@ -539,6 +539,20 @@ export const db = {
     },
   },
 
+  // News operations
+  news: {
+    async getRecent(limit: number = 50) {
+      const admin = getSupabaseAdmin()
+      const { data, error } = await admin
+        .from('news_items')
+        .select('*')
+        .order('published_at', { ascending: false })
+        .limit(limit)
+      if (error) throw error
+      return data
+    },
+  },
+
   // Analytics operations
   analytics: {
     async getDashboardStats() {

@@ -1,5 +1,6 @@
 'use client'
 
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { 
@@ -15,7 +16,26 @@ import {
 } from 'lucide-react'
 import { Button } from '@/components/ui'
 
+interface Stats {
+  articles: number
+  guides: number
+  courses: number
+}
+
 export default function HomePage() {
+  const [stats, setStats] = useState<Stats>({
+    articles: 100,  // Fallback values
+    guides: 24,
+    courses: 5,
+  })
+
+  useEffect(() => {
+    fetch('/api/stats')
+      .then(res => res.json())
+      .then(data => setStats(data))
+      .catch(err => console.error('Failed to fetch stats:', err))
+  }, [])
+
   return (
     <div className="min-h-screen bg-white dark:bg-gray-950">
       {/* Hero Section - More Dynamic */}
@@ -89,9 +109,9 @@ export default function HomePage() {
             {/* Quick Stats */}
             <div className="grid grid-cols-4 gap-4 max-w-2xl mx-auto">
               {[
-                { value: '100+', label: 'Articles' },
-                { value: '24', label: 'Quick Guides' },
-                { value: '5', label: 'Full Courses' },
+                { value: `${stats.articles}+`, label: 'Articles' },
+                { value: `${stats.guides}`, label: 'Quick Guides' },
+                { value: `${stats.courses}`, label: 'Full Courses' },
                 { value: '24/7', label: 'Updates' },
               ].map((stat, i) => (
                 <motion.div

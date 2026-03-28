@@ -64,7 +64,8 @@
     "node_modules",
     "dist",
     "**/*.test.ts",
-    "**/*.spec.ts"
+    "**/*.spec.ts",
+    "scripts/voice-cron.ts"
   ],
   "ts-node": {
     "compilerOptions": {

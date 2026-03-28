@@ -903,6 +903,28 @@ ${parameters?.topic || 'General topic'}`,
 
 ## Fix 10: Redis Rate Limiting
 
+> **⚠️ Important Note for Serverless Environments (Vercel, Netlify, etc.)**
+> 
+> In serverless environments, in-memory rate limiting is **not effective** because:
+> - Each function invocation runs in a separate container
+> - Memory is not shared between invocations
+> - Rate limit state is lost between requests
+>
+> **Recommended Solution: Upstash Redis**
+> 
+> For serverless deployments, we strongly recommend using [Upstash Redis](https://upstash.com):
+> - ✅ Serverless-friendly Redis with HTTP-based API
+> - ✅ Global replication for low latency
+> - ✅ Pay-per-request pricing
+> - ✅ Built-in rate limiting SDK
+> - ✅ No connection pool limits
+>
+> ```bash
+> npm install @upstash/redis @upstash/ratelimit
+> ```
+>
+> Alternative: Use Vercel Edge Config or KV (if on Vercel)
+
 ### Step 1: Install Redis client
 
 ```bash
