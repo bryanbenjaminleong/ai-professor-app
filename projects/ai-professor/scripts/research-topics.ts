@@ -18,6 +18,8 @@ import type {
   Trend
 } from '../types/content';
 
+import type { ResearchSourceType } from '../types/ai';
+
 // ============================================
 // Configuration
 // ============================================
@@ -159,7 +161,7 @@ export class TopicResearcher {
       topic,
       category,
       [],
-      ['documentation', 'article', 'paper', 'news']
+      ['documentation', 'blogs', 'arxiv', 'news'] as ResearchSourceType[]
     );
 
     // Analyze and present findings
@@ -194,7 +196,7 @@ export class TopicResearcher {
       for (const trend of trends) {
         if (trend.momentum === 'rising') {
           emerging.push({
-            topic: trend.topic,
+            topic: trend.name,
             category,
             momentum: trend.momentum,
             confidence: trend.relevance,
@@ -237,15 +239,15 @@ export class TopicResearcher {
 
     for (const trend of trendingTopics) {
       const coverage = currentContent.filter(c => 
-        c.topic.toLowerCase().includes(trend.topic.toLowerCase())
+        c.topic.toLowerCase().includes(trend.name.toLowerCase())
       ).length;
 
       if (coverage === 0) {
-        notCovered.push(trend.topic);
+        notCovered.push(trend.name);
       } else if (coverage < 2 && trend.momentum === 'rising') {
-        underCovered.push(trend.topic);
+        underCovered.push(trend.name);
       } else if (coverage > 5) {
-        overCovered.push(trend.topic);
+        overCovered.push(trend.name);
       }
     }
 
@@ -278,7 +280,7 @@ export class TopicResearcher {
       const topTrends = trends
         .filter(t => t.momentum === 'rising')
         .slice(0, 3)
-        .map(t => t.topic);
+        .map(t => t.name);
 
       const research = await this.researchAgent.researchLatestDevelopments(
         `${category} latest`,
@@ -403,13 +405,13 @@ export class TopicResearcher {
     for (const trend of trends) {
       if (trend.momentum === 'rising') {
         const hasContent = existingContent.some(topic =>
-          topic.toLowerCase().includes(trend.topic.toLowerCase())
+          topic.toLowerCase().includes(trend.name.toLowerCase())
         );
 
         if (!hasContent) {
           gaps.push({
             existingContent: '',
-            missingTopic: trend.topic,
+            missingTopic: trend.name,
             category,
             impact: 'high'
           });
@@ -427,7 +429,7 @@ export class TopicResearcher {
     const risingTrends = report.trendsIdentified.filter(t => t.momentum === 'rising');
     if (risingTrends.length > 0) {
       recommendations.push(
-        `Create content for rising trend: ${risingTrends[0].topic}`
+        `Create content for rising trend: ${risingTrends[0].name}`
       );
     }
 
@@ -497,7 +499,7 @@ export class TopicResearcher {
     if (result.trends.length > 0) {
       console.log('\n📈 Trends:');
       result.trends.forEach(trend => {
-        console.log(`  • ${trend.topic} (${trend.momentum})`);
+        console.log(`  • ${trend.name} (${trend.momentum})`);
       });
     }
 
@@ -555,7 +557,7 @@ export class TopicResearcher {
       report.trendsIdentified
         .filter(t => t.momentum === 'rising')
         .slice(0, 5)
-        .forEach(t => console.log(`  • ${t.topic}`));
+        .forEach(t => console.log(`  • ${t.name}`));
     }
 
     if (report.opportunities.length > 0) {

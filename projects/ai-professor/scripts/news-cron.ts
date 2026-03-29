@@ -29,9 +29,7 @@ async function runScraping() {
 
   try {
     // Scrape all sources
-    await scrapeAllNews({
-      maxItemsPerSource: parseInt(process.env.NEWS_MAX_ITEMS_PER_SOURCE || '10'),
-    })
+    await scrapeAllNews()
     console.log('✓ Scraping completed')
 
     // Process summaries with AI
@@ -41,8 +39,9 @@ async function runScraping() {
 
     // Show stats
     const stats = await getScrapingStats()
-    console.log(`Total news items: ${stats.totalItems}`)
-    console.log(`Recent errors (24h): ${stats.recentErrors}`)
+    console.log(`Total news items: ${stats.totalArticles}`)
+    console.log(`AI articles: ${stats.aiArticles}`)
+    console.log(`Breaking news: ${stats.breakingArticles}`)
   } catch (error) {
     console.error('Error during scraping:', error)
   } finally {

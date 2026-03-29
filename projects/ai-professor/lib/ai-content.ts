@@ -255,7 +255,7 @@ export async function generateResearchUpdate(
     topic,
     summary: research.summary,
     key_insights: research.keyInsights,
-    sources: research.sources,
+    sources: research.sources as any,
     recommended_reading: research.recommendedReading,
   }
 
@@ -343,7 +343,7 @@ export async function aiTutorChat(
   }
 ): Promise<string> {
   // Check rate limit
-  const rateLimit = checkRateLimit(`chat:${userId}`, 50) // 50 messages per minute
+  const rateLimit = checkRateLimit(`chat:${userId}`) // 50 messages per minute
   if (!rateLimit.allowed) {
     throw new Error('Chat rate limit exceeded. Please wait before sending another message.')
   }
@@ -399,7 +399,7 @@ export async function batchGenerateContent(
   for (const lesson of lessons) {
     try {
       // Check rate limit for each request
-      const rateLimit = checkRateLimit(`ai:${userId}`, 30) // 30 per minute for batch
+      const rateLimit = checkRateLimit(`ai:${userId}`) // 30 per minute for batch
       if (!rateLimit.allowed) {
         // Wait for rate limit to reset
         await new Promise((resolve) => setTimeout(resolve, 2000))

@@ -25,40 +25,20 @@ async function main() {
     if (statsOnly) {
       const stats = await getScrapingStats()
       console.log('Scraping Statistics:')
-      console.log(`  Total Items: ${stats.totalItems}`)
-      console.log(`  Recent Errors (24h): ${stats.recentErrors}`)
-      console.log('\nSources:')
-      stats.sources.forEach(source => {
-        const lastScraped = source.last_scraped_at
-          ? new Date(source.last_scraped_at).toLocaleString()
-          : 'Never'
-        console.log(`  ${source.name}:`)
-        console.log(`    - Status: ${source.enabled ? 'Enabled' : 'Disabled'}`)
-        console.log(`    - Items Scraped: ${source.items_scraped}`)
-        console.log(`    - Last Scraped: ${lastScraped}`)
-        if (source.last_error) {
-          console.log(`    - Last Error: ${source.last_error}`)
-        }
-      })
+      console.log(`  Total Articles: ${stats.totalArticles}`)
+      console.log(`  AI Articles: ${stats.aiArticles}`)
+      console.log(`  Breaking Articles: ${stats.breakingArticles}`)
       return
     }
 
     // Scrape specific source or all sources
     if (sourceName) {
       console.log(`Scraping source: ${sourceName}\n`)
-      const result = await scrapeSpecificSource(sourceName, {
-        maxItemsPerSource: 10,
-      })
-      console.log(`\n✓ Scraped ${result.items.length} items from ${sourceName}`)
-      if (result.errors.length > 0) {
-        console.log(`\n⚠ ${result.errors.length} errors occurred`)
-        result.errors.forEach(err => console.log(`  - ${err.error}`))
-      }
+      const result = await scrapeSpecificSource(sourceName)
+      console.log(`\n✓ ${result.message}`)
     } else {
       console.log('Scraping all enabled sources...\n')
-      await scrapeAllNews({
-        maxItemsPerSource: parseInt(process.env.NEWS_MAX_ITEMS_PER_SOURCE || '10'),
-      })
+      await scrapeAllNews()
       console.log('\n✓ Scraping completed')
     }
 
@@ -71,7 +51,7 @@ async function main() {
 
     // Show final stats
     const stats = await getScrapingStats()
-    console.log(`\nTotal news items in database: ${stats.totalItems}`)
+    console.log(`\nTotal news items in database: ${stats.totalArticles}`)
   } catch (error) {
     console.error('\n❌ Error:', error)
     process.exit(1)

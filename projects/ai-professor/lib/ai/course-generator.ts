@@ -210,13 +210,25 @@ export class CourseGenerator {
     
     return {
       ...metadata,
+      id: metadata.id || '',
+      title: metadata.title || 'Untitled Course',
+      description: metadata.description || '',
+      slug: metadata.slug || '',
+      tags: metadata.tags || [],
+      prerequisites: metadata.prerequisites || [],
+      learningObjectives: metadata.learningObjectives || [],
+      estimatedHours: metadata.estimatedHours || 10,
       category,
       skillLevel,
       author: 'AI Professor',
+      createdAt: metadata.createdAt || new Date(),
+      updatedAt: metadata.updatedAt || new Date(),
+      status: metadata.status || 'draft',
+      version: metadata.version || '1.0.0',
       seoMetadata: {
-        title: metadata.title,
-        description: metadata.description,
-        keywords: metadata.tags
+        title: metadata.title || '',
+        description: metadata.description || '',
+        keywords: metadata.tags || []
       }
     };
   }

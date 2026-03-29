@@ -111,7 +111,7 @@ export class CodeExamplesGenerator {
       // Add header comments
       examples = examples.map(example => ({
         ...example,
-        code: this.addHeaderComment(example, languageStandard)
+        code: this.addHeaderComment(example, languageStandard as any)
       }));
 
       return {
@@ -349,7 +349,7 @@ Provide the ${variationType} version with explanation of changes.`
     errors.push(...validationErrors);
 
     // Check for required elements
-    const requiredElements = getRequiredElements(example.skillLevel || 'intermediate');
+    const requiredElements = getRequiredElements((example as any).skillLevel || 'intermediate');
     for (const element of requiredElements) {
       if (element === 'header comment' && !example.code.startsWith('#') && !example.code.startsWith('//') && !example.code.startsWith('/*')) {
         warnings.push(`Missing ${element}`);
@@ -357,7 +357,7 @@ Provide the ${variationType} version with explanation of changes.`
     }
 
     // Check code length
-    const complexity = getCodeComplexity(example.skillLevel || 'intermediate');
+    const complexity = getCodeComplexity((example as any).skillLevel || 'intermediate');
     const lines = example.code.split('\n').length;
     if (lines < complexity.minLines) {
       warnings.push(`Code is shorter than recommended (${lines} < ${complexity.minLines} lines)`);

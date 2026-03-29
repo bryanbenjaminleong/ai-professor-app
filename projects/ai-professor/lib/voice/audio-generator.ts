@@ -25,15 +25,8 @@ export class AudioGenerator {
       // The actual audio generation happens in the API route
       return {
         success: true,
-        audio: {
-          id: newsItemId,
-          news_item_id: newsItemId,
-          voice_type: voiceType,
-          file_path: '',
-          audio_url: '',
-          file_size: 0,
-          duration_seconds: 0,
-        },
+        audioUrl: '',
+        duration: 0,
       }
     } catch (error: any) {
       console.error('Audio error:', error)

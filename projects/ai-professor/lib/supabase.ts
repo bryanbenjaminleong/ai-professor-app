@@ -82,6 +82,7 @@ export function getSupabaseAdmin(): SupabaseClient<Database> {
   return _supabaseAdmin
 }
 // Legacy exports for backwards compatibility (lazy getters)
+// Using type assertion to work around TS4094 - Supabase auth client uses private properties
 export const supabase = {
   get auth() { return getSupabase().auth },
   get from() { return getSupabase().from.bind(getSupabase()) },
@@ -89,7 +90,8 @@ export const supabase = {
   get storage() { return getSupabase().storage },
   get realtime() { return getSupabase().realtime },
   get functions() { return getSupabase().functions },
-}
+} as unknown as SupabaseClient<Database>
+
 export const supabaseAdmin = {
   get auth() { return getSupabaseAdmin().auth },
   get from() { return getSupabaseAdmin().from.bind(getSupabaseAdmin()) },
@@ -97,7 +99,7 @@ export const supabaseAdmin = {
   get storage() { return getSupabaseAdmin().storage },
   get realtime() { return getSupabaseAdmin().realtime },
   get functions() { return getSupabaseAdmin().functions },
-}
+} as unknown as SupabaseClient<Database>
 // Helper function to get user from request
 export async function getUserFromRequest(request: Request) {
   const authHeader = request.headers.get('Authorization')
@@ -137,7 +139,7 @@ export const db = {
     get from() { return getSupabaseAdmin().from.bind(getSupabaseAdmin()) },
     get rpc() { return getSupabaseAdmin().rpc.bind(getSupabaseAdmin()) },
     get auth() { return getSupabaseAdmin().auth },
-  },
+  } as any,
   // User operations
   users: {
     async getAll(): Promise<User[]> {

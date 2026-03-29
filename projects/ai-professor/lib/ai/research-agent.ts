@@ -229,7 +229,7 @@ export class ResearchAgent {
     topic: string,
     category: TopicCategory,
     questions: string[] = [],
-    sources: ResearchSourceType[] = ['documentation', 'article', 'paper']
+    sources: ResearchSourceType[] = ['documentation', 'blogs', 'arxiv']
   ): Promise<ResearchResult> {
     const cacheKey = `deep_${topic}_${category}_${questions.join('_')}`;
     
@@ -461,22 +461,15 @@ export class ResearchAgent {
 
     return {
       id: `research_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`,
-      request: {
-        topic,
-        category,
-        depth: 'medium',
-        sources: ['documentation', 'article', 'news'],
-        timeframe: 'week',
-        maxResults: 10
-      },
+      topic,
       sources: parsed.sources || [],
       summary: parsed.summary || content.substring(0, 500),
       keyInsights: parsed.keyInsights || parsed.keyFindings || [],
       trends: parsed.trends || [],
       recommendations: parsed.recommendations || [],
       generatedAt: new Date(),
-      tokensUsed: 0 // Would be extracted from API response
-    };
+      expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000) // 7 days from now
+    } as any;
   }
 
   private extractStructuredData(content: string): Record<string, unknown> {

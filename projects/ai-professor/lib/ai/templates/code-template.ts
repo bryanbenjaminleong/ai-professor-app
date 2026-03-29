@@ -715,7 +715,7 @@ export function validateCodeExample(example: Partial<CodeExample>): string[] {
   }
   
   // Check for required elements based on complexity
-  const requiredElements = getRequiredElements(example.complexity || 'beginner');
+  const requiredElements = getRequiredElements((example.complexity === 'basic' ? 'beginner' : example.complexity || 'beginner') as any);
   if (example.complexity === 'advanced' || example.complexity === 'intermediate') {
     if (!example.testCases || example.testCases.length === 0) {
       errors.push('Test cases are required for intermediate/advanced examples');

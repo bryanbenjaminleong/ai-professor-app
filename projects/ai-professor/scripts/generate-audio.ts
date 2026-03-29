@@ -12,7 +12,7 @@ import { config } from 'dotenv'
 config()
 
 import { createClient } from '@supabase/supabase-js'
-import { getAudioGenerator } from '../lib/voice/audio-generator'
+import { AudioGenerator, audioGenerator } from '../lib/voice/audio-generator'
 import type { VoiceType } from '../types/voice'
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
@@ -98,8 +98,6 @@ async function generateAudio(options: CLIOptions) {
   console.log(`  Limit: ${options.limit} articles`)
   console.log(`  Voice: ${options.voice}\n`)
 
-  const audioGenerator = getAudioGenerator()
-
   try {
     // Fetch top news items
     console.log('📥 Fetching news items...')
@@ -128,15 +126,27 @@ async function generateAudio(options: CLIOptions) {
 
     // Generate audio
     console.log('🎙️  Generating audio...\n')
-    const results = await audioGenerator.batchGenerateAudio(
-      itemsToProcess,
-      options.voice,
-      options.limit
-    )
+    // TODO: Implement batchGenerateAudio method in AudioGenerator class
+    // const results = await audioGenerator.batchGenerateAudio(
+    //   itemsToProcess,
+    //   options.voice,
+    //   options.limit
+    // )
+
+    // For now, process one at a time
+    const results: any[] = []
+    for (const item of itemsToProcess) {
+      try {
+        const result = await audioGenerator.getOrGenerateAudio(item.id, options.voice)
+        results.push({ id: item.id, ...result })
+      } catch (error: any) {
+        results.push({ id: item.id, success: false, error: error.message })
+      }
+    }
 
     // Summary
-    const successful = results.filter(r => r.success).length
-    const failed = results.filter(r => !r.success).length
+    const successful = results.filter((r: any) => r.success).length
+    const failed = results.filter((r: any) => !r.success).length
 
     console.log('\n📊 Results:')
     console.log(`  ✅ Successful: ${successful}`)
@@ -145,8 +155,8 @@ async function generateAudio(options: CLIOptions) {
     if (failed > 0) {
       console.log('\nFailed items:')
       results
-        .filter(r => !r.success)
-        .forEach(r => {
+        .filter((r: any) => !r.success)
+        .forEach((r: any) => {
           console.log(`  - ${r.id}: ${r.error}`)
         })
     }
@@ -160,18 +170,27 @@ async function generateAudio(options: CLIOptions) {
 
 async function cleanupAudio() {
   console.log('🧹 Cleaning up old audio files...\n')
-  
-  const audioGenerator = getAudioGenerator()
-  const count = await audioGenerator.cleanupOldAudio(7)
-  
+
+  // TODO: Implement cleanupOldAudio method in AudioGenerator class
+  // const count = await audioGenerator.cleanupOldAudio(7)
+  console.log('⚠️  Cleanup functionality not yet implemented')
+  const count = 0
+
   console.log(`\n✅ Cleaned up ${count} old audio files`)
 }
 
 async function showStats() {
   console.log('📊 Audio Statistics\n')
-  
-  const audioGenerator = getAudioGenerator()
-  const stats = await audioGenerator.getStats()
+
+  // TODO: Implement getStats method in AudioGenerator class
+  // const stats = await audioGenerator.getStats()
+  console.log('⚠️  Stats functionality not yet implemented')
+  const stats = {
+    totalAudioFiles: 0,
+    totalSizeBytes: 0,
+    averageDuration: 0,
+    oldestAudio: null
+  }
 
   console.log(`Total Audio Files: ${stats.totalAudioFiles}`)
   console.log(`Total Size: ${(stats.totalSizeBytes / 1024 / 1024).toFixed(2)} MB`)

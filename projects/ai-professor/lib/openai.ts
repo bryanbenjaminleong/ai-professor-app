@@ -365,7 +365,7 @@ export function handleOpenAIError(error: any): never {
   if (error instanceof OpenAI.APIError) {
     throw new OpenAIError(
       error.message,
-      error.code,
+      error.code ?? undefined,
       error.status
     )
   }
