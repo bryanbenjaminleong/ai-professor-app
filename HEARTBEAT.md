@@ -25,6 +25,32 @@
 - If agent already running → Continue, don't spawn another
 - If no agent running AND items pending → Spawn agent to work on highest priority
 - Update OUTSTANDING.md when tasks complete
+- **ALWAYS send list of outstanding items when checking** (even if empty)
+
+## Report Format:
+
+When checking, ALWAYS send:
+```
+📋 Outstanding Items Check
+
+| Item | Status | Progress |
+|------|--------|----------|
+| [item] | [status] | [details] |
+...
+
+Total: X items pending
+```
+
+If no items:
+```
+📋 Outstanding Items Check
+✅ All items complete!
+```
+
+## Notification:
+
+**When ALL items are done** → Notify Bryan immediately:
+"All outstanding items complete! Ready for your new ideas."
 
 ## Reminder Format:
 

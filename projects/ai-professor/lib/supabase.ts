@@ -189,9 +189,9 @@ export const db = {
 
     async update(id: string, updates: UserUpdate): Promise<User> {
       const admin = getSupabaseAdmin()
-      const { data, error } = await admin
+      const { data, error } = await (admin as any)
         .from('users')
-        .update(updates as any)
+        .update(updates)
         .eq('id', id)
         .select()
         .single()
@@ -261,9 +261,9 @@ export const db = {
     },
     async update(id: string, updates: CourseUpdate): Promise<Course> {
       const admin = getSupabaseAdmin()
-      const { data, error } = await admin
+      const { data, error } = await (admin as any)
         .from('courses')
-        .update(updates as any)
+        .update(updates)
         .eq('id', id)
         .select()
         .single()
@@ -319,9 +319,9 @@ export const db = {
     },
     async update(id: string, updates: LessonUpdate): Promise<Lesson> {
       const admin = getSupabaseAdmin()
-      const { data, error } = await admin
+      const { data, error } = await (admin as any)
         .from('lessons')
-        .update(updates as any)
+        .update(updates)
         .eq('id', id)
         .select()
         .single()
@@ -368,12 +368,12 @@ export const db = {
     },
     async markComplete(userId: string, courseId: string): Promise<Enrollment> {
       const admin = getSupabaseAdmin()
-      const { data, error } = await admin
+      const { data, error } = await (admin as any)
         .from('enrollments')
         .update({
           completed: true,
           completed_at: new Date().toISOString(),
-        } as any)
+        })
         .eq('user_id', userId)
         .eq('course_id', courseId)
         .select()
@@ -464,9 +464,9 @@ export const db = {
     },
     async update(id: string, updates: SubscriptionUpdate): Promise<Subscription> {
       const admin = getSupabaseAdmin()
-      const { data, error } = await admin
+      const { data, error } = await (admin as any)
         .from('subscriptions')
-        .update(updates as any)
+        .update(updates)
         .eq('id', id)
         .select()
         .single()
@@ -538,9 +538,9 @@ export const db = {
     },
     async update(id: string, updates: RatingUpdate): Promise<Rating> {
       const admin = getSupabaseAdmin()
-      const { data, error } = await admin
+      const { data, error } = await (admin as any)
         .from('ratings')
-        .update(updates as any)
+        .update(updates)
         .eq('id', id)
         .select()
         .single()

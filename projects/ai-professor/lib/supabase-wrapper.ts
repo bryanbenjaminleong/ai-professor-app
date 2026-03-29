@@ -17,7 +17,7 @@ export function typedUpsert<T extends Record<string, any>>(
   options?: { onConflict?: string }
 ): Promise<T> {
   const admin = getSupabaseAdmin()
-  return admin.from(table).upsert(data as any, options).select().single() as any
+  return (admin as any).from(table).upsert(data, options).select().single() as any
 }
 
 // Type-safe update function for typed tables
@@ -28,7 +28,7 @@ export async function typedUpdate<T extends Record<string, any>>(
 ): Promise<T | null> {
   const admin = getSupabaseAdmin()
   
-  let query = admin.from(table).update(data as any)
+  let query = (admin as any).from(table).update(data)
   
   for (const [key, value] of Object.entries(matchCondition)) {
     query = query.eq(key, value)

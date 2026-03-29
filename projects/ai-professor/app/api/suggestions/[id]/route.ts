@@ -60,9 +60,9 @@ export async function POST(
     
     if (action === 'reject') {
       // Mark as rejected
-      const { error } = await supabaseAdmin
+      const { error } = await (supabaseAdmin as any)
         .from('course_suggestions')
-        .update({ status: 'rejected', reviewed_at: new Date().toISOString() } as any)
+        .update({ status: 'rejected', reviewed_at: new Date().toISOString() })
         .eq('id', suggestionId)
       
       if (error) throw error
@@ -149,13 +149,13 @@ Return JSON with:
       }
       
       // Update suggestion
-      await supabaseAdmin
+      await (supabaseAdmin as any)
         .from('course_suggestions')
         .update({
           status: 'generated',
           reviewed_at: new Date().toISOString(),
           created_course_id: course.id,
-        } as any)
+        })
         .eq('id', suggestionId)
       
       return createSuccessResponse({

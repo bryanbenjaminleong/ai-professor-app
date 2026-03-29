@@ -75,9 +75,9 @@ export async function POST(request: NextRequest) {
     const supabase = getSupabaseAdmin()
 
     // Update user's voice preference
-    const { error } = await supabase
+    const { error } = await (supabase as any)
       .from('profiles')
-      .update({ preferred_voice: preferredVoice } as any)
+      .update({ preferred_voice: preferredVoice })
       .eq('id', user.id)
 
     if (error) {

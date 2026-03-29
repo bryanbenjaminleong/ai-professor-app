@@ -186,7 +186,7 @@ export async function processNewsItem(newsItem: NewsItem): Promise<void> {
       : await extractTags(newsItem.title, newsItem.content || newsItem.summary)
     
     // Update in database
-    const { error } = await getSupabaseAdmin()
+    const { error } = await (getSupabaseAdmin() as any)
       .from('news_items')
       .update({
         summary,
@@ -296,7 +296,7 @@ export async function summarizeBatch(
   const promises = items.map(async (item) => {
     const summary = await summarizeNewsItem(item.title, item.content)
     
-    await getSupabaseAdmin()
+    await (getSupabaseAdmin() as any)
       .from('news_items')
       .update({ summary })
       .eq('id', item.id)

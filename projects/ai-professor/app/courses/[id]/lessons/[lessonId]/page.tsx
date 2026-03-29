@@ -58,8 +58,8 @@ export default async function LessonPage({
   const canAccess = isAdmin || isEnrolled
   
   return <LessonClient 
-    lesson={lesson} 
-    course={course}
+    lesson={lesson as any} 
+    course={course as any}
     courseId={params.id}
     isEnrolled={isEnrolled}
     isAdmin={isAdmin}

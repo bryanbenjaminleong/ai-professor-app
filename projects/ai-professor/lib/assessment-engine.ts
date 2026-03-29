@@ -173,7 +173,7 @@ export class AssessmentEngine {
     const passed = percentage >= this.assessment.passing_score
 
     // Save attempt
-    const { data: attempt, error } = await supabase
+    const { data: attempt, error } = await (supabase as any)
       .from('assessment_attempts')
       .insert({
         user_id: this.userId,

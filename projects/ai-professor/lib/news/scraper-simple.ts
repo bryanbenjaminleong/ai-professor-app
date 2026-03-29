@@ -152,7 +152,7 @@ export async function scrapeAllNews(): Promise<{ message: string; count: number;
       
       for (const item of items.slice(0, 10)) {
         try {
-          await supabaseAdmin
+          await (supabaseAdmin as any)
             .from('news_items')
             .upsert(item, { onConflict: 'source_url' })
           
@@ -187,7 +187,7 @@ export async function scrapeAllNews(): Promise<{ message: string; count: number;
       
       for (const item of items.slice(0, 15)) {
         try {
-          await supabaseAdmin
+          await (supabaseAdmin as any)
             .from('news_items')
             .upsert(item, { onConflict: 'source_url' })
           
@@ -232,7 +232,7 @@ export async function scrapeBreakingNews(): Promise<{ message: string; count: nu
       
       for (const item of items.slice(0, 15)) {
         try {
-          await supabaseAdmin
+          await (supabaseAdmin as any)
             .from('news_items')
             .upsert(item, { onConflict: 'source_url' })
           
@@ -305,7 +305,7 @@ export async function scrapeSpecificSource(source: string): Promise<{ message: s
   let count = 0
   for (const item of items) {
     try {
-      await supabaseAdmin
+      await (supabaseAdmin as any)
         .from('news_items')
         .upsert(item, { onConflict: 'source_url' })
       count++
