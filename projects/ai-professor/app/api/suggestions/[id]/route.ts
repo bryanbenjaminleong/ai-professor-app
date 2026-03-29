@@ -5,6 +5,29 @@ import { getSupabaseAdmin } from '@/lib/supabase'
 import { createSuccessResponse, createErrorResponse, requireAuth } from '@/lib/auth'
 import OpenAI from 'openai'
 
+interface CourseSuggestion {
+  id: string
+  title: string
+  description: string | null
+  topic: string | null
+  difficulty: string | null
+  duration_weeks: number | null
+  reason: string | null
+  status: string
+  suggested_at: string
+  reviewed_at: string | null
+}
+
+interface Course {
+  id: string
+  title: string
+  description: string | null
+  topic: string
+  difficulty: string
+  duration_weeks: number
+  is_published: boolean
+}
+
 let _openai: OpenAI | null = null
 function getOpenAI(): OpenAI {
   if (!_openai) {
@@ -29,7 +52,7 @@ export async function POST(
       .from('course_suggestions')
       .select('*')
       .eq('id', suggestionId)
-      .single()
+      .single() as { data: CourseSuggestion | null; error: any }
     
     if (fetchError || !suggestion) {
       return createErrorResponse(new Error('Suggestion not found'), 'Not found')
@@ -39,7 +62,7 @@ export async function POST(
       // Mark as rejected
       const { error } = await supabaseAdmin
         .from('course_suggestions')
-        .update({ status: 'rejected', reviewed_at: new Date().toISOString() })
+        .update({ status: 'rejected', reviewed_at: new Date().toISOString() } as any)
         .eq('id', suggestionId)
       
       if (error) throw error
@@ -92,13 +115,13 @@ Return JSON with:
         .insert({
           title: courseData.title || suggestion.title,
           description: courseData.description || suggestion.description,
-          topic: suggestion.topic,
-          difficulty: suggestion.difficulty,
-          duration_weeks: suggestion.duration_weeks,
+          topic: suggestion.topic || 'General',
+          difficulty: suggestion.difficulty || 'intermediate',
+          duration_weeks: suggestion.duration_weeks || 4,
           is_published: action === 'generate', // Auto-publish if generate action
-        })
+        } as any)
         .select()
-        .single()
+        .single() as { data: Course; error: any }
       
       if (courseError) throw courseError
       
@@ -120,7 +143,7 @@ Return JSON with:
       if (lessons.length > 0) {
         const { error: lessonsError } = await supabaseAdmin
           .from('lessons')
-          .insert(lessons)
+          .insert(lessons as any)
         
         if (lessonsError) console.error('Error creating lessons:', lessonsError)
       }
@@ -132,7 +155,7 @@ Return JSON with:
           status: 'generated',
           reviewed_at: new Date().toISOString(),
           created_course_id: course.id,
-        })
+        } as any)
         .eq('id', suggestionId)
       
       return createSuccessResponse({

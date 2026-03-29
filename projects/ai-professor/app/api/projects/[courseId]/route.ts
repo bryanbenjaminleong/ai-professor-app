@@ -2,6 +2,32 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getSupabaseAdmin } from '@/lib/supabase'
 import { requireAuth } from '@/lib/auth'
 
+interface Project {
+  id: string
+  course_id: string
+  title: string
+  description: string | null
+  instructions: string | null
+  starter_code: string | null
+  order_index: number
+  created_at: string
+  updated_at: string
+}
+
+interface ProjectSubmission {
+  id: string
+  user_id: string
+  project_id: string
+  submission_url: string | null
+  submission_text: string | null
+  files: any
+  status: string
+  submitted_at: string
+  reviewed_at: string | null
+  passed: boolean | null
+  feedback: string | null
+}
+
 const supabase = getSupabaseAdmin()
 
 // GET /api/projects/[courseId] - Get projects for a course
@@ -14,7 +40,7 @@ export async function GET(
       .from('projects')
       .select('*')
       .eq('course_id', params.courseId)
-      .order('order_index', { ascending: true })
+      .order('order_index', { ascending: true }) as { data: Project[] | null; error: any }
 
     if (error) throw error
 
@@ -31,7 +57,7 @@ export async function GET(
         .from('project_submissions')
         .select('*')
         .eq('user_id', user.id)
-        .in('project_id', projects.map(p => p.id))
+        .in('project_id', projects.map(p => p.id)) as { data: ProjectSubmission[] | null }
 
       const submissionsMap = new Map(submissions?.map(s => [s.project_id, s]) || [])
 
@@ -100,7 +126,7 @@ export async function POST(
         files: files || [],
         status: 'submitted',
         submitted_at: new Date().toISOString(),
-      })
+      } as any)
       .select()
       .single()
 

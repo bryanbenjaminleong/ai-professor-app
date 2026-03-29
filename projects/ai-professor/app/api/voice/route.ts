@@ -5,30 +5,29 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server'
-import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs'
-import { cookies } from 'next/headers'
+import { getSupabaseAdmin } from '@/lib/supabase'
+import { getUserFromRequest } from '@/lib/supabase'
 import type { VoiceType } from '@/types/voice'
 
 export async function GET(request: NextRequest) {
   try {
-    const supabase = createRouteHandlerClient({ cookies })
+    const user = await getUserFromRequest(request)
     
-    // Check authentication
-    const { data: { session } } = await supabase.auth.getSession()
-    
-    if (!session) {
+    if (!user) {
       return NextResponse.json(
         { success: false, error: 'Unauthorized' },
         { status: 401 }
       )
     }
 
+    const supabase = getSupabaseAdmin()
+
     // Get user's voice preference
     const { data: profile, error } = await supabase
       .from('profiles')
       .select('preferred_voice')
-      .eq('id', session.user.id)
-      .single()
+      .eq('id', user.id)
+      .single() as any
 
     if (error) {
       console.error('Error fetching voice preference:', error)
@@ -53,12 +52,9 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
-    const supabase = createRouteHandlerClient({ cookies })
+    const user = await getUserFromRequest(request)
     
-    // Check authentication
-    const { data: { session } } = await supabase.auth.getSession()
-    
-    if (!session) {
+    if (!user) {
       return NextResponse.json(
         { success: false, error: 'Unauthorized' },
         { status: 401 }
@@ -76,11 +72,13 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    const supabase = getSupabaseAdmin()
+
     // Update user's voice preference
     const { error } = await supabase
       .from('profiles')
-      .update({ preferred_voice: preferredVoice })
-      .eq('id', session.user.id)
+      .update({ preferred_voice: preferredVoice } as any)
+      .eq('id', user.id)
 
     if (error) {
       console.error('Error updating voice preference:', error)

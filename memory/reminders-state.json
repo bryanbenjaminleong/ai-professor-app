@@ -1,7 +1,20 @@
 {
-  "lastReminderTime": 1743226200,
+  "lastReminderTime": 1743230400,
   "intervalHours": 2,
-  "outstandingItems": [],
+  "outstandingItems": [
+    {
+      "id": "typescript-errors",
+      "description": "Fix remaining 286 TypeScript errors (down from 329)",
+      "severity": "high",
+      "addedAt": 1743230400
+    },
+    {
+      "id": "stripe-payments",
+      "description": "Implement Stripe payment integration",
+      "severity": "medium",
+      "addedAt": 1743230400
+    }
+  ],
   "completedItems": [
     {
       "id": "openai-key-rotation",
@@ -22,6 +35,21 @@
       "id": "expand-skeletal-guides",
       "description": "Expand Gemini, Grok, and Kimi guides",
       "completedAt": 1743226500
+    },
+    {
+      "id": "paid-content-protection",
+      "description": "Protect paid course content with enrollment checks",
+      "completedAt": 1743230400
+    },
+    {
+      "id": "admin-dashboard",
+      "description": "Create admin dashboard at /admin",
+      "completedAt": 1743230400
+    },
+    {
+      "id": "cleanup-script",
+      "description": "Create database cleanup script",
+      "completedAt": 1743230400
     }
   ]
 }

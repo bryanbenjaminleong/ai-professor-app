@@ -12,6 +12,22 @@ const OPENAI_VOICES = {
   female: 'nova',
 }
 
+interface NewsAudioRecord {
+  id: string
+  news_item_id: string
+  voice_type: string
+  file_path: string
+  file_size: number
+  duration_seconds: number
+  generated_at: string
+}
+
+interface NewsItemRecord {
+  id: string
+  title: string
+  summary: string | null
+}
+
 export async function GET(
   request: NextRequest,
   { params }: { params: { id: string } }
@@ -40,7 +56,7 @@ export async function POST(
       .select('*')
       .eq('news_item_id', newsId)
       .eq('voice_type', voiceType)
-      .single()
+      .single() as { data: NewsAudioRecord | null }
 
     if (existingAudio) {
       // Check if file_path is already a full URL
@@ -65,7 +81,7 @@ export async function POST(
       .from('news_items')
       .select('title, summary')
       .eq('id', newsId)
-      .single()
+      .single() as { data: NewsItemRecord | null; error: any }
 
     if (newsError || !newsItem) {
       return NextResponse.json({ success: false, error: 'News item not found' }, { status: 404 })
@@ -141,7 +157,7 @@ export async function POST(
       file_size: audioBuffer.byteLength,
       duration_seconds: Math.ceil(audioBuffer.byteLength / 16000),
       generated_at: new Date().toISOString(),
-    }).then(({ error }) => {
+    } as any).then(({ error }) => {
       if (error) console.error('DB insert error:', error)
     })
 

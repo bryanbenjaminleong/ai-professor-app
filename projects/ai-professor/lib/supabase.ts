@@ -16,6 +16,8 @@ import {
   ProfileUpdate, RatingUpdate, CourseSuggestionUpdate
 } from '../types/database'
 
+import type { Json } from '../types/database'
+
 // Cached clients
 let _supabase: SupabaseClient<Database> | null = null
 let _supabaseAdmin: SupabaseClient<Database> | null = null
@@ -37,7 +39,6 @@ function getSupabaseAnonKey(): string {
   }
   return key
 }
-
 // Get service role key with fallback
 function getSupabaseServiceKey(): string {
   const key = process.env.SUPABASE_SERVICE_ROLE_KEY
@@ -64,7 +65,6 @@ export function getSupabase(): SupabaseClient<Database> {
   }
   return _supabase
 }
-
 // Get or create the admin Supabase client
 export function getSupabaseAdmin(): SupabaseClient<Database> {
   if (!_supabaseAdmin) {
@@ -81,7 +81,6 @@ export function getSupabaseAdmin(): SupabaseClient<Database> {
   }
   return _supabaseAdmin
 }
-
 // Legacy exports for backwards compatibility (lazy getters)
 export const supabase = {
   get auth() { return getSupabase().auth },
@@ -91,7 +90,6 @@ export const supabase = {
   get realtime() { return getSupabase().realtime },
   get functions() { return getSupabase().functions },
 }
-
 export const supabaseAdmin = {
   get auth() { return getSupabaseAdmin().auth },
   get from() { return getSupabaseAdmin().from.bind(getSupabaseAdmin()) },
@@ -100,14 +98,12 @@ export const supabaseAdmin = {
   get realtime() { return getSupabaseAdmin().realtime },
   get functions() { return getSupabaseAdmin().functions },
 }
-
 // Helper function to get user from request
 export async function getUserFromRequest(request: Request) {
   const authHeader = request.headers.get('Authorization')
   if (!authHeader?.startsWith('Bearer ')) {
     return null
   }
-
   const token = authHeader.substring(7)
   
   const admin = getSupabaseAdmin()
@@ -116,31 +112,24 @@ export async function getUserFromRequest(request: Request) {
   if (error || !user) {
     return null
   }
-
   return user
 }
-
 // Extended types for joined queries
 export interface CourseWithLessonsAndCounts extends Course {
   lessons: Lesson[]
   lessons_count?: number
   enrollments_count?: number
 }
-
 export interface EnrollmentWithCourse extends Enrollment {
   courses: Course
 }
-
 export interface ProgressWithLesson extends Progress {
   lessons: Lesson
 }
-
 export interface RatingWithProfile extends Rating {
   profiles: { full_name: string | null; avatar_url: string | null } | null
 }
-
 export interface CourseSuggestionRow extends CourseSuggestion {}
-
 // Database query helpers
 export const db = {
   // Direct Supabase admin access for advanced queries
@@ -149,9 +138,19 @@ export const db = {
     get rpc() { return getSupabaseAdmin().rpc.bind(getSupabaseAdmin()) },
     get auth() { return getSupabaseAdmin().auth },
   },
-
   // User operations
   users: {
+    async getAll(): Promise<User[]> {
+      const admin = getSupabaseAdmin()
+      const { data, error } = await admin
+        .from('users')
+        .select('*')
+        .order('created_at', { ascending: false })
+      
+      if (error) throw error
+      return data || []
+    },
+
     async getById(id: string): Promise<User> {
       const admin = getSupabaseAdmin()
       const { data, error } = await admin
@@ -161,7 +160,7 @@ export const db = {
         .single()
       
       if (error) throw error
-      return data
+      return data!
     },
 
     async getByEmail(email: string): Promise<User> {
@@ -173,23 +172,34 @@ export const db = {
         .single()
       
       if (error) throw error
-      return data
+      return data!
+    },
+
+    async create(user: NewUser): Promise<User> {
+      const admin = getSupabaseAdmin()
+      const { data, error } = await admin
+        .from('users')
+        .insert(user as any)
+        .select()
+        .single()
+      
+      if (error) throw error
+      return data!
     },
 
     async update(id: string, updates: UserUpdate): Promise<User> {
       const admin = getSupabaseAdmin()
       const { data, error } = await admin
         .from('users')
-        .update(updates)
+        .update(updates as any)
         .eq('id', id)
         .select()
         .single()
       
       if (error) throw error
-      return data
+      return data!
     },
   },
-
   // Course operations
   courses: {
     async getAll(filters?: Record<string, any>): Promise<CourseWithLessonsAndCounts[]> {
@@ -222,9 +232,8 @@ export const db = {
       const { data, error } = await query
       
       if (error) throw error
-      return data || []
+      return (data || []) as any
     },
-
     async getById(id: string): Promise<CourseWithLessonsAndCounts> {
       const admin = getSupabaseAdmin()
       const { data, error } = await admin
@@ -237,34 +246,31 @@ export const db = {
         .single()
       
       if (error) throw error
-      return data
+      return data!
     },
-
     async create(course: NewCourse): Promise<Course> {
       const admin = getSupabaseAdmin()
       const { data, error } = await admin
         .from('courses')
-        .insert(course)
+        .insert(course as any)
         .select()
         .single()
       
       if (error) throw error
-      return data
+      return data!
     },
-
     async update(id: string, updates: CourseUpdate): Promise<Course> {
       const admin = getSupabaseAdmin()
       const { data, error } = await admin
         .from('courses')
-        .update(updates)
+        .update(updates as any)
         .eq('id', id)
         .select()
         .single()
       
       if (error) throw error
-      return data
+      return data!
     },
-
     async delete(id: string): Promise<void> {
       const admin = getSupabaseAdmin()
       const { error } = await admin
@@ -275,7 +281,6 @@ export const db = {
       if (error) throw error
     },
   },
-
   // Lesson operations
   lessons: {
     async getByCourse(courseId: string): Promise<Lesson[]> {
@@ -288,9 +293,8 @@ export const db = {
         .order('order_index', { ascending: true })
       
       if (error) throw error
-      return data || []
+      return (data || []) as any
     },
-
     async getById(id: string): Promise<Lesson> {
       const admin = getSupabaseAdmin()
       const { data, error } = await admin
@@ -300,34 +304,31 @@ export const db = {
         .single()
       
       if (error) throw error
-      return data
+      return data!
     },
-
     async create(lesson: NewLesson): Promise<Lesson> {
       const admin = getSupabaseAdmin()
       const { data, error } = await admin
         .from('lessons')
-        .insert(lesson)
+        .insert(lesson as any)
         .select()
         .single()
       
       if (error) throw error
-      return data
+      return data!
     },
-
     async update(id: string, updates: LessonUpdate): Promise<Lesson> {
       const admin = getSupabaseAdmin()
       const { data, error } = await admin
         .from('lessons')
-        .update(updates)
+        .update(updates as any)
         .eq('id', id)
         .select()
         .single()
       
       if (error) throw error
-      return data
+      return data!
     },
-
     async delete(id: string): Promise<void> {
       const admin = getSupabaseAdmin()
       const { error } = await admin
@@ -338,7 +339,6 @@ export const db = {
       if (error) throw error
     },
   },
-
   // Enrollment operations
   enrollments: {
     async getByUser(userId: string): Promise<EnrollmentWithCourse[]> {
@@ -353,21 +353,19 @@ export const db = {
         .order('enrolled_at', { ascending: false })
       
       if (error) throw error
-      return data || []
+      return (data || []) as any
     },
-
     async create(enrollment: NewEnrollment): Promise<Enrollment> {
       const admin = getSupabaseAdmin()
       const { data, error } = await admin
         .from('enrollments')
-        .insert(enrollment)
+        .insert(enrollment as any)
         .select()
         .single()
       
       if (error) throw error
-      return data
+      return data!
     },
-
     async markComplete(userId: string, courseId: string): Promise<Enrollment> {
       const admin = getSupabaseAdmin()
       const { data, error } = await admin
@@ -375,16 +373,15 @@ export const db = {
         .update({
           completed: true,
           completed_at: new Date().toISOString(),
-        })
+        } as any)
         .eq('user_id', userId)
         .eq('course_id', courseId)
         .select()
         .single()
       
       if (error) throw error
-      return data
+      return data!
     },
-
     async checkEnrollment(userId: string, courseId: string): Promise<boolean> {
       const admin = getSupabaseAdmin()
       const { data, error } = await admin
@@ -398,7 +395,6 @@ export const db = {
       return !!data
     },
   },
-
   // Progress operations
   progress: {
     async getByUser(userId: string): Promise<ProgressWithLesson[]> {
@@ -412,9 +408,8 @@ export const db = {
         .eq('user_id', userId)
       
       if (error) throw error
-      return data || []
+      return (data || []) as any
     },
-
     async getByUserAndLesson(userId: string, lessonId: string): Promise<Progress | null> {
       const admin = getSupabaseAdmin()
       const { data, error } = await admin
@@ -425,24 +420,22 @@ export const db = {
         .single()
       
       if (error && error.code !== 'PGRST116') throw error
-      return data
+      return data || null
     },
-
     async upsert(progressData: NewProgress): Promise<Progress> {
       const admin = getSupabaseAdmin()
       const { data, error } = await admin
         .from('progress')
-        .upsert(progressData, {
+        .upsert(progressData as any, {
           onConflict: 'user_id,lesson_id',
         })
         .select()
         .single()
       
       if (error) throw error
-      return data
+      return data!
     },
   },
-
   // Subscription operations
   subscriptions: {
     async getByUser(userId: string): Promise<Subscription | null> {
@@ -456,34 +449,31 @@ export const db = {
         .single()
       
       if (error && error.code !== 'PGRST116') throw error
-      return data
+      return data || null
     },
-
     async create(subscription: NewSubscription): Promise<Subscription> {
       const admin = getSupabaseAdmin()
       const { data, error } = await admin
         .from('subscriptions')
-        .insert(subscription)
+        .insert(subscription as any)
         .select()
         .single()
       
       if (error) throw error
-      return data
+      return data!
     },
-
     async update(id: string, updates: SubscriptionUpdate): Promise<Subscription> {
       const admin = getSupabaseAdmin()
       const { data, error } = await admin
         .from('subscriptions')
-        .update(updates)
+        .update(updates as any)
         .eq('id', id)
         .select()
         .single()
       
       if (error) throw error
-      return data
+      return data!
     },
-
     async getByStripeCustomerId(customerId: string): Promise<Subscription | null> {
       const admin = getSupabaseAdmin()
       const { data, error } = await admin
@@ -493,10 +483,9 @@ export const db = {
         .single()
       
       if (error && error.code !== 'PGRST116') throw error
-      return data
+      return data || null
     },
   },
-
   // Rating operations
   ratings: {
     async getByCourse(courseId: string): Promise<RatingWithProfile[]> {
@@ -511,9 +500,8 @@ export const db = {
         .order('created_at', { ascending: false })
       
       if (error) throw error
-      return data || []
+      return (data || []) as any
     },
-
     async getById(id: string): Promise<Rating> {
       const admin = getSupabaseAdmin()
       const { data, error } = await admin
@@ -523,9 +511,8 @@ export const db = {
         .single()
       
       if (error) throw error
-      return data
+      return data!
     },
-
     async getByUserAndCourse(userId: string, courseId: string): Promise<Rating | null> {
       const admin = getSupabaseAdmin()
       const { data, error } = await admin
@@ -536,34 +523,31 @@ export const db = {
         .maybeSingle()
       
       if (error) throw error
-      return data
+      return data || null
     },
-
     async create(rating: NewRating): Promise<Rating> {
       const admin = getSupabaseAdmin()
       const { data, error } = await admin
         .from('ratings')
-        .insert(rating)
+        .insert(rating as any)
         .select()
         .single()
       
       if (error) throw error
-      return data
+      return data!
     },
-
     async update(id: string, updates: RatingUpdate): Promise<Rating> {
       const admin = getSupabaseAdmin()
       const { data, error } = await admin
         .from('ratings')
-        .update(updates)
+        .update(updates as any)
         .eq('id', id)
         .select()
         .single()
       
       if (error) throw error
-      return data
+      return data!
     },
-
     async delete(id: string): Promise<void> {
       const admin = getSupabaseAdmin()
       const { error } = await admin
@@ -573,7 +557,6 @@ export const db = {
       
       if (error) throw error
     },
-
     async getStats(): Promise<{ total: number; average: number }> {
       const admin = getSupabaseAdmin()
       
@@ -585,13 +568,12 @@ export const db = {
       
       const total = ratings?.length || 0
       const average = total > 0 
-        ? ratings!.reduce((sum, r) => sum + r.rating, 0) / total 
+        ? ratings!.reduce((sum: number, r: { rating: number }) => sum + r.rating, 0) / total 
         : 0
       
       return { total, average: Math.round(average * 10) / 10 }
     },
   },
-
   // News operations
   news: {
     async getRecent(limit: number = 50): Promise<NewsItem[]> {
@@ -602,10 +584,9 @@ export const db = {
         .order('published_at', { ascending: false })
         .limit(limit)
       if (error) throw error
-      return data || []
+      return (data || []) as any
     },
   },
-
   // Analytics operations
   analytics: {
     async getDashboardStats(): Promise<{
@@ -634,7 +615,7 @@ export const db = {
       ])
       
       const avgRating = ratings && ratings.length > 0
-        ? ratings.reduce((sum, r) => sum + r.rating, 0) / ratings.length
+        ? ratings.reduce((sum: number, r: { rating: number }) => sum + r.rating, 0) / ratings.length
         : 0
       
       return {
@@ -646,7 +627,6 @@ export const db = {
         totalRatings: ratings?.length || 0,
       }
     },
-
     async getRecentActivity(limit: number = 10): Promise<{
       enrollments: Array<{
         created_at: string
@@ -687,11 +667,10 @@ export const db = {
       ])
       
       return { 
-        enrollments: enrollmentsResult.data || [], 
-        ratings: ratingsResult.data || [] 
+        enrollments: (enrollmentsResult.data || []) as any, 
+        ratings: (ratingsResult.data || []) as any
       }
     },
-
     async getPopularCourses(limit: number = 5): Promise<Array<{
       id: string
       title: string
@@ -712,7 +691,7 @@ export const db = {
       
       if (error) throw error
       
-      return (data || []).map((course: any) => ({
+      return ((data || []) as any).map((course: any) => ({
         id: course.id,
         title: course.title,
         enrollments: course.enrollments?.[0]?.count || 0,
@@ -720,7 +699,6 @@ export const db = {
     },
   },
 }
-
 // Error handling
 export class SupabaseError extends Error {
   constructor(
@@ -732,7 +710,6 @@ export class SupabaseError extends Error {
     this.name = 'SupabaseError'
   }
 }
-
 export function handleSupabaseError(error: any): never {
   if (error.code === 'PGRST116') {
     throw new SupabaseError('Resource not found', error.code, error)

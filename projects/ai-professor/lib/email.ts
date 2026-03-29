@@ -39,7 +39,7 @@ export async function sendEmail(options: EmailOptions): Promise<{ id: string }> 
       subject: options.subject,
       html: options.html,
       text: options.text,
-      reply_to: options.replyTo,
+      replyTo: options.replyTo,
       attachments: options.attachments?.map((att) => ({
         filename: att.filename,
         content: att.content,

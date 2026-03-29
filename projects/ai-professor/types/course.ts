@@ -1,6 +1,6 @@
 // Course Types
 
-import { DifficultyLevel, Lesson, Course as DBCourse } from './database'
+import { DifficultyLevel, Lesson, Course as DBCourse, Json } from './database'
 
 export interface Course extends DBCourse {
   instructor?: {
@@ -21,21 +21,21 @@ export interface CourseListFilters {
 
 export interface CreateCourseInput {
   title: string
-  description?: string
+  description?: string | null
   topic: string
   difficulty?: DifficultyLevel
   duration_weeks?: number
-  image_url?: string
+  image_url?: string | null
   is_published?: boolean
 }
 
 export interface UpdateCourseInput {
   title?: string
-  description?: string
+  description?: string | null
   topic?: string
   difficulty?: DifficultyLevel
   duration_weeks?: number
-  image_url?: string
+  image_url?: string | null
   is_published?: boolean
 }
 
@@ -43,9 +43,9 @@ export interface CreateLessonInput {
   course_id: string
   week_number: number
   title: string
-  content?: string
-  video_url?: string
-  resources?: LessonResource[]
+  content?: string | null
+  video_url?: string | null
+  resources?: Json
   estimated_minutes?: number
   order_index?: number
 }
@@ -53,9 +53,9 @@ export interface CreateLessonInput {
 export interface UpdateLessonInput {
   week_number?: number
   title?: string
-  content?: string
-  video_url?: string
-  resources?: LessonResource[]
+  content?: string | null
+  video_url?: string | null
+  resources?: Json
   estimated_minutes?: number
   order_index?: number
 }
@@ -65,12 +65,7 @@ export interface LessonResource {
   url: string
   type: 'article' | 'video' | 'book' | 'tool' | 'other'
   description?: string
-  resources?: Json
-    estimated_minutes?: number
-    order_index?: number
-    created_at?: string
-    updated_at?: string
-  }
+}
 
 export interface CourseSyllabus {
   course: Course

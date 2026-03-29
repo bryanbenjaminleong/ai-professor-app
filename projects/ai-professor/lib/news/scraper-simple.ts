@@ -316,3 +316,206 @@ export async function scrapeSpecificSource(source: string): Promise<{ message: s
   
   return { message: `Scraped ${count} items from ${feed.name}`, count }
 }
+
+// ============================================
+// Helper functions for HTML parsing (used by news sources)
+// ============================================
+
+/**
+ * Fetch HTML content from URL
+ */
+export async function fetchHTML(url: string): Promise<string> {
+  try {
+    const response = await fetch(url, {
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (compatible; AI-Professor-Bot/1.0)',
+      },
+    })
+    
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}`)
+    }
+    
+    return await response.text()
+  } catch (error) {
+    console.error(`Failed to fetch ${url}:`, error)
+    return ''
+  }
+}
+
+/**
+ * Parse HTML string into a jQuery-like object
+ * Simple implementation using regex for server-side use
+ */
+export function parseHTML(html: string): (selector: string) => CheerioAPI {
+  // Simple regex-based parser for server-side
+  return function $(selector: string): CheerioAPI {
+    return createCheerioLike(html, selector)
+  }
+}
+
+// Type for jQuery-like API
+interface CheerioAPI {
+  each: (fn: (index: number, element: CheerioElement) => void | boolean) => void
+  find: (selector: string) => CheerioAPI
+  text: () => string
+  attr: (name: string) => string | undefined
+  first: () => CheerioAPI
+  length: number
+}
+
+interface CheerioElement {
+  text: () => string
+  attr: (name: string) => string | undefined
+  find: (selector: string) => CheerioAPI
+}
+
+function createCheerioLike(html: string, selector: string): CheerioAPI {
+  // Extract matching elements using regex
+  const elements: { html: string; content: string }[] = []
+  
+  // Handle different selector types
+  if (selector.includes(',')) {
+    // Multiple selectors
+    const selectors = selector.split(',').map(s => s.trim())
+    for (const sel of selectors) {
+      elements.push(...extractElements(html, sel))
+    }
+  } else {
+    elements.push(...extractElements(html, selector))
+  }
+  
+  return {
+    each: (fn) => {
+      for (let i = 0; i < elements.length; i++) {
+        const el = elements[i]
+        const result = fn(i, {
+          text: () => cleanText(el.content),
+          attr: (name: string) => extractAttr(el.html, name),
+          find: (sel: string) => createCheerioLike(el.html, sel)
+        })
+        if (result === false) break
+      }
+    },
+    find: (sel: string) => {
+      const found: { html: string; content: string }[] = []
+      for (const el of elements) {
+        found.push(...extractElements(el.html, sel))
+      }
+      return createCheerioLikeFromElements(found)
+    },
+    text: () => elements.map(e => cleanText(e.content)).join(' '),
+    attr: (name: string) => elements[0] ? extractAttr(elements[0].html, name) : undefined,
+    first: () => createCheerioLikeFromElements(elements.slice(0, 1)),
+    length: elements.length
+  }
+}
+
+function createCheerioLikeFromElements(elements: { html: string; content: string }[]): CheerioAPI {
+  return {
+    each: (fn) => {
+      for (let i = 0; i < elements.length; i++) {
+        const el = elements[i]
+        const result = fn(i, {
+          text: () => cleanText(el.content),
+          attr: (name: string) => extractAttr(el.html, name),
+          find: (sel: string) => createCheerioLike(el.html, sel)
+        })
+        if (result === false) break
+      }
+    },
+    find: (sel: string) => {
+      const found: { html: string; content: string }[] = []
+      for (const el of elements) {
+        found.push(...extractElements(el.html, sel))
+      }
+      return createCheerioLikeFromElements(found)
+    },
+    text: () => elements.map(e => cleanText(e.content)).join(' '),
+    attr: (name: string) => elements[0] ? extractAttr(elements[0].html, name) : undefined,
+    first: () => createCheerioLikeFromElements(elements.slice(0, 1)),
+    length: elements.length
+  }
+}
+
+function extractElements(html: string, selector: string): { html: string; content: string }[] {
+  const elements: { html: string; content: string }[] = []
+  
+  // Handle attribute selectors like [class*="news"]
+  const attrMatch = selector.match(/^\[(\w+)([*~|]?=)?["']?([^"'\]]*)["']?\]$/)
+  if (attrMatch) {
+    const [, attr, op, value] = attrMatch
+    const regex = new RegExp(`<[^>]*${attr}[^>]*>`, 'gi')
+    let match: RegExpExecArray | null
+    while ((match = regex.exec(html)) !== null) {
+      const fullTag = match[0]
+      if (op === '*=' && value && !fullTag.toLowerCase().includes(value.toLowerCase())) continue
+      elements.push({ html: fullTag, content: '' })
+    }
+    return elements
+  }
+  
+  // Handle tag selectors
+  const tagMatch = selector.match(/^(\w+)$/)
+  if (tagMatch) {
+    const tag = tagMatch[1]
+    const regex = new RegExp(`<${tag}[^>]*>([\\s\\S]*?)</${tag}>`, 'gi')
+    let match: RegExpExecArray | null
+    while ((match = regex.exec(html)) !== null) {
+      elements.push({ html: match[0], content: match[1] || '' })
+    }
+  }
+  
+  return elements
+}
+
+function extractAttr(html: string, name: string): string | undefined {
+  const regex = new RegExp(`${name}=["']([^"']*)["']`, 'i')
+  const match = html.match(regex)
+  return match ? match[1] : undefined
+}
+
+/**
+ * Clean text by removing HTML tags and extra whitespace
+ */
+export function cleanText(text: string): string {
+  return text
+    .replace(/<[^>]*>/g, '')
+    .replace(/\s+/g, ' ')
+    .trim()
+}
+
+/**
+ * Normalize URL to absolute form
+ */
+export function normalizeUrl(url: string, baseUrl: string): string {
+  if (!url) return ''
+  if (url.startsWith('http://') || url.startsWith('https://')) {
+    return url
+  }
+  if (url.startsWith('//')) {
+    return 'https:' + url
+  }
+  if (url.startsWith('/')) {
+    const base = new URL(baseUrl)
+    return `${base.protocol}//${base.host}${url}`
+  }
+  return new URL(url, baseUrl).href
+}
+
+/**
+ * Parse date string into ISO format
+ */
+export function parseDate(dateStr: string): string {
+  if (!dateStr) return new Date().toISOString()
+  
+  try {
+    const date = new Date(dateStr)
+    if (isNaN(date.getTime())) {
+      return new Date().toISOString()
+    }
+    return date.toISOString()
+  } catch {
+    return new Date().toISOString()
+  }
+}

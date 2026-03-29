@@ -4,6 +4,30 @@ import { NextRequest } from 'next/server'
 import { getSupabaseAdmin } from '@/lib/supabase'
 import { createSuccessResponse, createErrorResponse } from '@/lib/auth'
 
+interface PathCourse {
+  order_index: number
+  is_required: boolean | null
+  courses: {
+    id: string
+    title: string
+    description: string | null
+    topic: string
+    difficulty: string
+    duration_weeks: number
+    image_url: string | null
+  } | null
+}
+
+interface LearningPath {
+  id: string
+  title: string
+  description: string | null
+  is_published: boolean
+  created_at: string
+  updated_at: string
+  path_courses?: PathCourse[]
+}
+
 // GET /api/paths - Get all learning paths
 export async function GET(request: NextRequest) {
   try {
@@ -33,7 +57,7 @@ export async function GET(request: NextRequest) {
         `)
         .eq('slug', slug)
         .eq('is_published', true)
-        .single()
+        .single() as { data: LearningPath | null; error: any }
       
       if (error) throw error
       

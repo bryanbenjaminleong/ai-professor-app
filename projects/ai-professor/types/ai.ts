@@ -9,7 +9,8 @@ import type {
   SkillLevel, 
   TopicCategory, 
   GenerationRequest,
-  GenerationResult 
+  GenerationResult,
+  ProgrammingLanguage
 } from './content';
 
 // ============================================

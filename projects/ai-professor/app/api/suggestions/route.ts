@@ -5,6 +5,34 @@ import { getSupabaseAdmin } from '@/lib/supabase'
 import { createSuccessResponse, createErrorResponse } from '@/lib/auth'
 import OpenAI from 'openai'
 
+interface NewsItem {
+  id: string
+  title: string
+  summary: string | null
+  category: string | null
+  source_name: string
+}
+
+interface CourseSuggestion {
+  id: string
+  title: string
+  description: string | null
+  topic: string | null
+  difficulty: string | null
+  duration_weeks: number | null
+  reason: string | null
+  status: string
+}
+
+interface AISuggestion {
+  title: string
+  description: string
+  topic: string
+  difficulty: string
+  duration_weeks: number
+  reason: string
+}
+
 // Lazy OpenAI initialization
 let _openai: OpenAI | null = null
 function getOpenAI(): OpenAI {
@@ -47,7 +75,7 @@ export async function POST(request: NextRequest) {
       .from('news_items')
       .select('id, title, summary, category, source_name')
       .order('published_at', { ascending: false })
-      .limit(50)
+      .limit(50) as { data: NewsItem[] | null }
     
     if (!news || news.length === 0) {
       return createSuccessResponse({ 
@@ -59,7 +87,7 @@ export async function POST(request: NextRequest) {
     // Get existing suggestions to avoid duplicates
     const { data: existing } = await supabaseAdmin
       .from('course_suggestions')
-      .select('title')
+      .select('title') as { data: { title: string }[] | null }
     
     const existingTitles = new Set(existing?.map(s => s.title.toLowerCase()) || [])
     
@@ -101,10 +129,10 @@ Focus on practical, in-demand topics. Avoid generic courses like "Introduction t
     })
     
     const result = JSON.parse(response.choices[0].message.content || '{"suggestions":[]}')
-    const suggestions = result.suggestions || []
+    const suggestions: AISuggestion[] = result.suggestions || []
     
     // Filter out duplicates and save to database
-    const newSuggestions = []
+    const newSuggestions: CourseSuggestion[] = []
     for (const suggestion of suggestions) {
       if (existingTitles.has(suggestion.title.toLowerCase())) continue
       
@@ -118,9 +146,9 @@ Focus on practical, in-demand topics. Avoid generic courses like "Introduction t
           duration_weeks: suggestion.duration_weeks,
           reason: suggestion.reason,
           status: 'pending',
-        })
+        } as any)
         .select()
-        .single()
+        .single() as { data: CourseSuggestion | null; error: any }
       
       if (!error && data) {
         newSuggestions.push(data)

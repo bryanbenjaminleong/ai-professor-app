@@ -41,7 +41,7 @@ function getAuthOptions(): NextAuthOptions {
             .from('users')
             .select('*')
             .eq('id', data.user.id)
-            .single()
+            .single() as any
 
           return {
             id: data.user.id,
@@ -106,7 +106,7 @@ function getAuthOptions(): NextAuthOptions {
               id: user.id,
               email: user.email!,
               subscription_tier: 'free',
-            })
+            } as any)
 
             if (error) {
               console.error('Failed to create user:', error)

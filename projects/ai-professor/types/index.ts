@@ -45,7 +45,8 @@ export type {
 } from './course';
 
 export { TOPICS, isValidTopic, calculateCourseProgress, getDifficultyLevel } from './course';
-export type { Topic, DifficultyLevel } from './database';
+export type { Topic } from './course';
+export type { DifficultyLevel } from './database';
 
 // ===========================================
 // UI/API Course Types (for frontend display)

@@ -53,7 +53,7 @@ async function getCachedContent(
     .eq('content_type', contentType)
     .eq('prompt_hash', promptHash)
     .gt('expires_at', new Date().toISOString())
-    .single()
+    .single() as any
 
   return data?.content || null
 }
@@ -76,7 +76,7 @@ async function cacheContent(
       prompt_hash: promptHash,
       content,
       expires_at: expiresAt.toISOString(),
-    }, {
+    } as any, {
       onConflict: 'prompt_hash,content_type',
     })
 }
@@ -232,7 +232,7 @@ export async function generateResearchUpdate(
     .select('*')
     .eq('course_id', course_id)
     .eq('week_number', week_number)
-    .single()
+    .single() as any
 
   if (existing) {
     return {
@@ -270,7 +270,7 @@ export async function generateResearchUpdate(
       sources: update.sources,
       recommended_reading: update.recommended_reading,
     },
-  })
+  } as any)
 
   return update
 }
@@ -356,7 +356,7 @@ export async function aiTutorChat(
       .from('courses')
       .select('title, topic')
       .eq('id', context.courseId)
-      .single()
+      .single() as any
     
     if (course) {
       contextString += `Course: ${course.title} (${course.topic})\n`
@@ -368,7 +368,7 @@ export async function aiTutorChat(
       .from('lessons')
       .select('title, content')
       .eq('id', context.lessonId)
-      .single()
+      .single() as any
     
     if (lesson) {
       contextString += `Current lesson: ${lesson.title}\n`

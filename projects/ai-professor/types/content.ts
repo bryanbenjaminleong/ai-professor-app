@@ -416,3 +416,49 @@ export interface ScheduledTask {
   category: TopicCategory;
   priority: 'high' | 'medium' | 'low';
 }
+
+// ============================================
+// Additional Research Types (for AI agents)
+// ============================================
+
+export type ResearchSourceType = 'paper' | 'article' | 'documentation' | 'release' | 'news';
+
+export interface ResearchRequest {
+  topic: string;
+  depth?: 'brief' | 'detailed' | 'comprehensive';
+  sources?: string[];
+  timeframe?: string;
+}
+
+export interface Trend {
+  id: string;
+  name: string;
+  description: string;
+  category: string;
+  momentum: 'rising' | 'stable' | 'declining';
+  relevance: number;
+  sources: ResearchedSource[];
+}
+
+export interface ResearchedSource {
+  id: string;
+  title: string;
+  url: string;
+  author?: string;
+  publishedAt?: Date;
+  summary: string;
+  type: ResearchSourceType;
+  credibility: 'high' | 'medium' | 'low';
+}
+
+export interface ResearchResult {
+  id: string;
+  topic: string;
+  summary: string;
+  keyInsights: string[];
+  sources: ResearchedSource[];
+  trends: Trend[];
+  recommendations: string[];
+  generatedAt: Date;
+  expiresAt: Date;
+}
