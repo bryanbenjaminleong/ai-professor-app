@@ -155,8 +155,23 @@ Curated memories, decisions, and context worth keeping across sessions.
 
 **Project Files:**
 - `projects/[project-name]/` — Project-specific folders
+- `projects/ai-professor/PROJECT_MEMORY.md` — **AI Professor complete project memory** ⭐
 - Various report files (security, branding, etc.)
 
 ---
 
-_Last updated: 2026-03-12_
+## 🎓 AI Professor Project
+
+**Status:** Production, active development
+**Read First:** `projects/ai-professor/PROJECT_MEMORY.md`
+
+**Quick Reference:**
+- Live: https://ai-professor-red.vercel.app
+- GitHub: https://github.com/ashdevs999-pixel/ai-professor
+- 24 Quick Guides, 5 Courses, 19 News Sources
+- Agents: frontend-dev-ui, backend-api-dev, content-writer-courses, security-audit-guard, stripe-payments-integration, qa-tester-debugger
+- Quality Standard: "Idiot-proof for beginners, impressive for conversions"
+
+---
+
+_Last updated: 2026-03-29_
