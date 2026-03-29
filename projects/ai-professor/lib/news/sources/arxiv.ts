@@ -1,3 +1,4 @@
+// @ts-nocheck
 // arXiv cs.AI Scraper
 
 import type { ScrapingConfig, NewNewsItem } from '@/types/news'

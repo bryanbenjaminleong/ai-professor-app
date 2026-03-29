@@ -17,12 +17,12 @@ async function getCourses() {
     return courses.map(c => ({
       id: c.id,
       title: c.title,
-      description: c.description,
+      description: c.description || '',
       topic: c.topic,
       difficulty: c.difficulty,
       duration_weeks: c.duration_weeks,
-      lesson_count: c.lessons?.[0]?.count || 0,
-      image_url: c.image_url,
+      lesson_count: (c.lessons as any)?.[0]?.count || 0,
+      image_url: c.image_url ?? undefined,
     }))
   } catch (error) {
     console.error('Failed to fetch courses:', error)

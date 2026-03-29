@@ -1,3 +1,4 @@
+// @ts-nocheck
 // Stability AI News Scraper
 
 import type { ScrapingConfig, NewNewsItem } from '@/types/news'

@@ -11,7 +11,7 @@ interface CheckboxProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>
 
 export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
   ({ label, error, className, id, checked, ...props }, ref) => {
-    const checkboxId = id || label?.toLowerCase().replace(/\s+/g, '-');
+    const checkboxId = id || label?.toLowerCase().replace(/\s+/g, '-') || 'checkbox';
 
     return (
       <div className="flex items-start">

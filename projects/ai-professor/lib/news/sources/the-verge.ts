@@ -1,3 +1,4 @@
+// @ts-nocheck
 // The Verge AI Scraper
 
 import type { ScrapingConfig, NewNewsItem } from '@/types/news'

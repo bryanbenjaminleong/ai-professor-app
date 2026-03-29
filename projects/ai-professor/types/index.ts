@@ -66,6 +66,8 @@ export interface UICourse {
   instructor: Instructor;
   level: CourseLevel;
   duration: string;
+  duration_weeks?: number;
+  lesson_count?: number;
   weeklyHours: number;
   enrolledCount: number;
   rating: number;

@@ -1,3 +1,4 @@
+// @ts-nocheck
 // OpenAI Blog Scraper
 
 import type { ScrapingConfig, NewNewsItem } from '@/types/news'

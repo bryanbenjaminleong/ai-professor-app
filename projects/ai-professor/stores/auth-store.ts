@@ -16,6 +16,7 @@ interface AuthState {
   signup: (data: { name: string; email: string; password: string }) => Promise<void>
   login: (email: string, password: string) => Promise<void>
   checkAuth: () => Promise<void>
+  resetPassword: (email: string) => Promise<void>
 }
 
 export const useAuthStore = create<AuthState>()(
@@ -126,6 +127,28 @@ export const useAuthStore = create<AuthState>()(
             isAuthenticated: false,
             isLoading: false 
           })
+        }
+      },
+      
+      resetPassword: async (email: string) => {
+        set({ isLoading: true })
+        
+        try {
+          const response = await fetch('/api/auth/reset-password', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email }),
+          })
+          
+          if (!response.ok) {
+            const error = await response.json().catch(() => ({ error: 'Reset failed' }))
+            throw new Error(error.error || 'Password reset failed')
+          }
+          
+          set({ isLoading: false })
+        } catch (error) {
+          set({ isLoading: false })
+          throw error
         }
       },
     }),

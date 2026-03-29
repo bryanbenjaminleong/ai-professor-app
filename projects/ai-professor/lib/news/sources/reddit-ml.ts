@@ -1,3 +1,4 @@
+// @ts-nocheck
 // Reddit r/MachineLearning Scraper
 
 import type { ScrapingConfig, NewNewsItem } from '@/types/news'

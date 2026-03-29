@@ -9,12 +9,12 @@ import ReactMarkdown from 'react-markdown'
 interface Lesson {
   id: string
   title: string
-  content: string
+  content: string | null
   week_number: number
   order_index: number
   estimated_minutes?: number
-  resources?: { url: string; type: string; title: string }[]
-  video_url?: string
+  resources?: { url: string; type: string; title: string }[] | null
+  video_url?: string | null
 }
 
 interface Course {

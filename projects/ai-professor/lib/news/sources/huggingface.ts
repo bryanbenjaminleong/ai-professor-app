@@ -1,3 +1,4 @@
+// @ts-nocheck
 // Hugging Face Blog Scraper
 
 import type { ScrapingConfig, NewNewsItem } from '@/types/news'

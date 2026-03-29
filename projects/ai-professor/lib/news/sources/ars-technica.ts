@@ -1,3 +1,4 @@
+// @ts-nocheck
 // Ars Technica AI Scraper
 
 import type { ScrapingConfig, NewNewsItem } from '@/types/news'

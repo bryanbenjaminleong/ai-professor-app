@@ -99,7 +99,7 @@ export default function NewsArticlePage() {
         description={article.summary || article.title}
         url={`https://pulseaiprofessor.com/news/${article.id}`}
         datePublished={article.published_at || article.created_at || new Date().toISOString()}
-        dateModified={article.updated_at}
+        dateModified={article.created_at}
         category={categoryLabels[article.category]}
         sourceName={article.source_name}
       />
@@ -159,7 +159,7 @@ export default function NewsArticlePage() {
             <LinkedinShareButton url={shareUrl} title={shareTitle}>
               <LinkedinIcon size={32} round />
             </LinkedinShareButton>
-            <FacebookShareButton url={shareUrl} quote={shareTitle}>
+            <FacebookShareButton url={shareUrl}>
               <FacebookIcon size={32} round />
             </FacebookShareButton>
           </div>

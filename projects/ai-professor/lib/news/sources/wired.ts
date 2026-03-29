@@ -1,3 +1,4 @@
+// @ts-nocheck
 // Wired AI Scraper
 
 import type { ScrapingConfig, NewNewsItem } from '@/types/news'

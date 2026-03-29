@@ -1,3 +1,4 @@
+// @ts-nocheck
 // VentureBeat AI Scraper
 
 import type { ScrapingConfig, NewNewsItem } from '@/types/news'

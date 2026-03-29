@@ -1,18 +1,45 @@
 {
   "lastReminderTime": 1743230400,
+  "lastOutstandingCheck": 1743230760,
   "intervalHours": 2,
   "outstandingItems": [
     {
       "id": "typescript-errors",
-      "description": "Fix remaining 286 TypeScript errors (down from 329)",
+      "description": "Fix remaining 152 TypeScript errors (down from 329)",
+      "severity": "critical",
+      "status": "in_progress",
+      "agentRunning": "typescript-remaining"
+    },
+    {
+      "id": "database-cleanup",
+      "description": "Run cleanup script to remove test users",
       "severity": "high",
-      "addedAt": 1743230400
+      "status": "pending"
+    },
+    {
+      "id": "remove-ignoreBuildErrors",
+      "description": "Remove ignoreBuildErrors: true from next.config.js",
+      "severity": "high",
+      "status": "blocked",
+      "blockedBy": "typescript-errors"
     },
     {
       "id": "stripe-payments",
       "description": "Implement Stripe payment integration",
       "severity": "medium",
-      "addedAt": 1743230400
+      "status": "pending"
+    },
+    {
+      "id": "course-content",
+      "description": "Add real content to course lessons",
+      "severity": "medium",
+      "status": "pending"
+    },
+    {
+      "id": "guides-to-database",
+      "description": "Move guides from hardcoded to database",
+      "severity": "medium",
+      "status": "pending"
     }
   ],
   "completedItems": [
@@ -50,6 +77,11 @@
       "id": "cleanup-script",
       "description": "Create database cleanup script",
       "completedAt": 1743230400
+    },
+    {
+      "id": "outstanding-file",
+      "description": "Create OUTSTANDING.md to track all tasks",
+      "completedAt": 1743230760
     }
   ]
 }

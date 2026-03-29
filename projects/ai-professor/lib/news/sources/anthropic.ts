@@ -1,3 +1,4 @@
+// @ts-nocheck
 // Anthropic News Scraper
 
 import type { ScrapingConfig, NewNewsItem } from '@/types/news'

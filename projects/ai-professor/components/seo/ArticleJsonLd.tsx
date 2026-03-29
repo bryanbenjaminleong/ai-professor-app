@@ -12,7 +12,7 @@ interface NewsArticleJsonLdProps {
     name: string
     url?: string
   }
-  publisher: {
+  publisher?: {
     name: string
     logo?: string
   }

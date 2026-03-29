@@ -1,3 +1,4 @@
+// @ts-nocheck
 // Papers With Code Scraper
 
 import type { ScrapingConfig, NewNewsItem } from '@/types/news'

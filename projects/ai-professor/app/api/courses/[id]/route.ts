@@ -62,13 +62,13 @@ export async function GET(
 
     // Get lessons with proper ordering
     const lessons = await db.lessons.getByCourse(courseId)
-    const { count: enrolledCount } = await db.enrollments.getByUser(courseId)
+    const enrollments = await db.enrollments.getByUser(courseId)
 
     const courseWithStats = {
       ...course,
       lessons: lessons, // Include properly ordered lessons
       lesson_count: lessons.length,
-      enrolled_count: enrolledCount || 0,
+      enrolled_count: enrollments.length,
     }
 
     return createSuccessResponse(courseWithStats)

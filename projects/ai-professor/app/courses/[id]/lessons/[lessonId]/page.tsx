@@ -42,7 +42,7 @@ export default async function LessonPage({
   ])
   
   // Check if user is admin
-  const isAdmin = session?.user?.email && ADMIN_EMAILS.includes(session.user.email)
+  const isAdmin = !!(session?.user?.email && ADMIN_EMAILS.includes(session.user.email))
   
   // Check enrollment status
   let isEnrolled = false

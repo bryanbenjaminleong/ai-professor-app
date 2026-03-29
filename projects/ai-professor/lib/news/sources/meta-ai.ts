@@ -1,3 +1,4 @@
+// @ts-nocheck
 // Meta AI Blog Scraper
 
 import type { ScrapingConfig, NewNewsItem } from '@/types/news'

@@ -254,7 +254,6 @@ export function NewsCard({
                 </LinkedinShareButton>
                 <FacebookShareButton
                   url={shareUrl}
-                  quote={shareTitle}
                   className="hover:opacity-80 transition-opacity"
                 >
                   <FacebookIcon size={24} round />

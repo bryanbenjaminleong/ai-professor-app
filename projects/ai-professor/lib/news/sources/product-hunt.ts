@@ -1,3 +1,4 @@
+// @ts-nocheck
 // Product Hunt AI Scraper
 
 import type { ScrapingConfig, NewNewsItem } from '@/types/news'

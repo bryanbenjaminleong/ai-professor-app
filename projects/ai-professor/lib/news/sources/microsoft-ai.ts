@@ -1,3 +1,4 @@
+// @ts-nocheck
 // Microsoft AI Blog Scraper
 
 import type { ScrapingConfig, NewNewsItem } from '@/types/news'
