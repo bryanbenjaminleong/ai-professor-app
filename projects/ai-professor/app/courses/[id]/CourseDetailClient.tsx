@@ -7,7 +7,6 @@ import { Button, Card, Badge } from '@/components/ui'
 
 interface Props {
   courseId: string
-  initialCourse: any
 }
 
 const DIFFICULTY_COLORS: Record<string, string> = {
@@ -16,30 +15,62 @@ const DIFFICULTY_COLORS: Record<string, string> = {
   advanced: 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400',
 }
 
-export default function CourseDetailClient({ courseId, initialCourse }: Props) {
-  const [mounted, setMounted] = useState(false)
+export default function CourseDetailClient({ courseId }: Props) {
+  const [course, setCourse] = useState<any>(null)
+  const [lessons, setLessons] = useState<any[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    setMounted(true)
-  }, [])
+    if (!courseId) return
 
-  // Extract data safely
-  const course = initialCourse || {}
-  const title = course.title || 'Untitled Course'
-  const description = course.description || ''
-  const topic = course.topic || ''
-  const difficulty = course.difficulty || 'beginner'
-  const durationWeeks = course.duration_weeks || 8
-  const lessons: any[] = Array.isArray(course.lessons) ? course.lessons : []
-  const difficultyColor = DIFFICULTY_COLORS[difficulty] || DIFFICULTY_COLORS.beginner
+    async function load() {
+      try {
+        const res = await fetch(`/api/courses/${courseId}`)
+        if (!res.ok) throw new Error(`HTTP ${res.status}`)
+        const data = await res.json()
+        
+        if (data.success && data.data) {
+          setCourse(data.data)
+          setLessons(Array.isArray(data.data.lessons) ? data.data.lessons : [])
+        } else {
+          setError('Course not found')
+        }
+      } catch (err: any) {
+        setError(err.message || 'Failed to load course')
+      } finally {
+        setLoading(false)
+      }
+    }
 
-  if (!mounted) {
+    load()
+  }, [courseId])
+
+  if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 dark:bg-gray-950 flex items-center justify-center">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
       </div>
     )
   }
+
+  if (error || !course) {
+    return (
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-950 flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+            {error || 'Course Not Found'}
+          </h1>
+          <Link href="/courses">
+            <Button>Back to Courses</Button>
+          </Link>
+        </div>
+      </div>
+    )
+  }
+
+  const difficulty = course.difficulty || 'beginner'
+  const durationWeeks = course.duration_weeks || 8
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
@@ -56,13 +87,13 @@ export default function CourseDetailClient({ courseId, initialCourse }: Props) {
 
           <div className="flex flex-col lg:flex-row items-start justify-between gap-6">
             <div className="flex-1">
-              <Badge className={difficultyColor}>
+              <Badge className={DIFFICULTY_COLORS[difficulty] || DIFFICULTY_COLORS.beginner}>
                 {difficulty}
               </Badge>
-              
-              <h1 className="text-4xl font-bold mt-4 mb-3">{title}</h1>
-              <p className="text-lg text-white/80 mb-6">{description}</p>
-              
+
+              <h1 className="text-4xl font-bold mt-4 mb-3">{course.title || 'Untitled Course'}</h1>
+              <p className="text-lg text-white/80 mb-6">{course.description || ''}</p>
+
               <div className="flex items-center gap-6 text-sm">
                 <div className="flex items-center gap-2">
                   <Clock className="w-5 h-5" />
@@ -96,7 +127,7 @@ export default function CourseDetailClient({ courseId, initialCourse }: Props) {
       {/* Curriculum */}
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Course Curriculum</h2>
-        
+
         <div className="space-y-4">
           {lessons.map((lesson: any, index: number) => (
             <Link key={lesson.id} href={`/courses/${courseId}/lessons/${lesson.id}`}>
