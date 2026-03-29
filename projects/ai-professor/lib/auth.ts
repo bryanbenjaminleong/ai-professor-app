@@ -129,47 +129,40 @@ export async function isInstructor(userId: string): Promise<boolean> {
   return (data?.length || 0) > 0
 }
 
-// Rate limiting
-const rateLimitStore = new Map<string, { count: number; resetTime: number }>()
+// Rate limiting — delegates to lib/rate-limit.ts (Upstash Redis with in-memory fallback)
+import { checkRateLimit as redisCheckRateLimit, RATE_LIMIT_PRESETS, rateLimitResponse } from './rate-limit'
 
+/**
+ * Legacy in-memory check (kept for backward compat, used only as fallback internally).
+ * The actual implementation is in lib/rate-limit.ts.
+ */
 export function checkRateLimit(
   identifier: string,
   maxRequests: number = 100,
   windowMs: number = 60000
 ): { allowed: boolean; remaining: number; resetTime: number } {
+  // Synchronous in-memory fallback for any code that calls this directly.
   const now = Date.now()
-  const record = rateLimitStore.get(identifier)
+  const _fallbackStore = checkRateLimit._store
+  const record = _fallbackStore.get(identifier)
 
   if (!record || now > record.resetTime) {
-    const newRecord = {
-      count: 1,
-      resetTime: now + windowMs,
-    }
-    rateLimitStore.set(identifier, newRecord)
-    return {
-      allowed: true,
-      remaining: maxRequests - 1,
-      resetTime: newRecord.resetTime,
-    }
+    const newRecord = { count: 1, resetTime: now + windowMs }
+    _fallbackStore.set(identifier, newRecord)
+    return { allowed: true, remaining: maxRequests - 1, resetTime: newRecord.resetTime }
   }
 
   if (record.count >= maxRequests) {
-    return {
-      allowed: false,
-      remaining: 0,
-      resetTime: record.resetTime,
-    }
+    return { allowed: false, remaining: 0, resetTime: record.resetTime }
   }
 
   record.count++
-  return {
-    allowed: true,
-    remaining: maxRequests - record.count,
-    resetTime: record.resetTime,
-  }
+  return { allowed: true, remaining: maxRequests - record.count, resetTime: record.resetTime }
 }
+// Internal store for the synchronous fallback
+checkRateLimit._store = new Map<string, { count: number; resetTime: number }>()
 
-// Apply rate limiting to request
+// Apply rate limiting to request — now uses Redis-backed sliding window
 export async function applyRateLimit(
   request: NextRequest,
   maxRequests?: number
@@ -177,7 +170,18 @@ export async function applyRateLimit(
   const user = await getApiUser(request)
   const identifier = user?.id || request.ip || 'anonymous'
 
-  const result = checkRateLimit(identifier, maxRequests)
+  // Pick the right preset based on the maxRequests value, or use custom config
+  let config
+  if (maxRequests === undefined || maxRequests === 60) {
+    config = RATE_LIMIT_PRESETS.general
+  } else if (maxRequests <= 20) {
+    // Low limits → treat as write/strict
+    config = { maxRequests, windowSeconds: 60 }
+  } else {
+    config = { maxRequests, windowSeconds: 60 }
+  }
+
+  const result = await redisCheckRateLimit(identifier, config)
 
   if (!result.allowed) {
     throw new RateLimitError(

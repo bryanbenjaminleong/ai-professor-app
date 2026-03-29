@@ -31,6 +31,7 @@
 | Authentication | NextAuth.js |
 | AI | OpenAI API |
 | Deployment | Vercel (Hobby plan) |
+| Rate Limiting | Upstash Redis (sliding window) |
 | CI/CD | GitHub Actions |
 
 ### Key Files
@@ -41,6 +42,7 @@
 | `/lib/openai.ts` | OpenAI client |
 | `/app/guides/[id]/GuideContent.tsx` | All 24 quick guides (5000+ lines) |
 | `/app/api/` | All API routes |
+| `/lib/rate-limit.ts` | Upstash Redis rate limiting (sliding window) |
 | `/middleware.ts` | CORS middleware |
 | `/next.config.js` | Next.js config + security headers |
 | `/.github/workflows/` | CI/CD pipelines |
@@ -186,10 +188,10 @@
 **Required Secret:** `CRON_SECRET` in GitHub
 
 ### Issue 3: In-Memory Rate Limiting
-**Status:** Known limitation
-**Problem:** Doesn't work in serverless (resets per request)
-**Recommendation:** Use Upstash Redis
-**Priority:** Low (not critical)
+**Status:** ✅ Resolved
+**Solution:** Implemented Upstash Redis sliding window rate limiter in `lib/rate-limit.ts`
+**Details:** Graceful fallback to in-memory when Redis env vars not configured
+**Presets:** general (60/min), write (10/min), auth (10/min), ai (20/min), admin (30/min)
 
 ### Issue 4: Guides Hardcoded
 **Status:** Known
@@ -270,7 +272,6 @@ If NO → Expand content until YES
 - [ ] **Move guides to database** - Enable CMS-style editing
 
 ### Low Priority (Backlog)
-- [ ] **Add Upstash Redis** for rate limiting
 - [ ] **Add video content** to courses
 - [ ] **Mobile app** (PWA or native)
 
@@ -384,6 +385,8 @@ OPENAI_API_KEY
 CRON_SECRET
 TELEGRAM_BOT_TOKEN ✅
 TELEGRAM_CHAT_ID ✅
+UPSTASH_REDIS_REST_URL
+UPSTASH_REDIS_REST_TOKEN
 ```
 
 ### Important Files

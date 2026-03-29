@@ -1,6 +1,5 @@
 import { Metadata } from 'next'
 import CourseDetailClient from './CourseDetailClient'
-import CourseErrorBoundary from './ErrorBoundary'
 import { db } from '@/lib/supabase'
 
 export const metadata: Metadata = {
@@ -21,8 +20,7 @@ async function getCourse(id: string) {
 export default async function CoursePage({ params }: { params: { id: string } }) {
   const course = await getCourse(params.id)
 
-  // Strip lesson content — only send metadata needed for the course detail page.
-  // Full lesson content is fetched on the lesson page itself.
+  // Strip lesson content — only send metadata needed for listing
   const strippedCourse = course
     ? {
         ...course,
@@ -35,9 +33,5 @@ export default async function CoursePage({ params }: { params: { id: string } })
       }
     : null
 
-  return (
-    <CourseErrorBoundary>
-      <CourseDetailClient courseId={params.id} initialCourse={strippedCourse} />
-    </CourseErrorBoundary>
-  )
+  return <CourseDetailClient courseId={params.id} initialCourse={strippedCourse} />
 }

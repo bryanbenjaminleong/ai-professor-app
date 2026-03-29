@@ -1,26 +1,13 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
-import { useRouter } from 'next/navigation'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { ArrowLeft, Clock, BookOpen, ChevronRight, CheckCircle, Play, Star } from 'lucide-react'
+import { ArrowLeft, Clock, BookOpen, ChevronRight, Star } from 'lucide-react'
 import { Button, Card, Badge } from '@/components/ui'
-import { CourseJsonLd, BreadcrumbJsonLd } from '@/components/seo'
 
-interface Course {
-  id: string
-  title: string
-  description: string
-  topic: string
-  difficulty: string
-  duration_weeks: number
-}
-
-interface Lesson {
-  id: string
-  title: string
-  week_number: number
-  order_index: number
+interface Props {
+  courseId: string
+  initialCourse: any
 }
 
 const DIFFICULTY_COLORS: Record<string, string> = {
@@ -29,72 +16,24 @@ const DIFFICULTY_COLORS: Record<string, string> = {
   advanced: 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400',
 }
 
-interface Props {
-  courseId: string
-  initialCourse: any
-}
-
 export default function CourseDetailClient({ courseId, initialCourse }: Props) {
-  const router = useRouter()
-  const [course, setCourse] = useState<Course | null>(null)
-  const [lessons, setLessons] = useState<Lesson[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
+  const [mounted, setMounted] = useState(false)
 
-  // Safely initialize from server data
   useEffect(() => {
-    if (initialCourse) {
-      try {
-        setCourse({
-          id: initialCourse.id,
-          title: initialCourse.title || 'Untitled Course',
-          description: initialCourse.description || '',
-          topic: initialCourse.topic || '',
-          difficulty: initialCourse.difficulty || 'beginner',
-          duration_weeks: initialCourse.duration_weeks || 8,
-        })
-        setLessons(Array.isArray(initialCourse.lessons) ? initialCourse.lessons : [])
-        setLoading(false)
-      } catch (err) {
-        console.error('[CourseDetailClient] Error processing initial data:', err)
-        setError('Failed to load course data')
-        setLoading(false)
-      }
-    } else {
-      // No server data — fetch client-side
-      fetchCourse()
-    }
-  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+    setMounted(true)
+  }, [])
 
-  const fetchCourse = useCallback(async () => {
-    if (!courseId) {
-      setError('Invalid course ID')
-      setLoading(false)
-      return
-    }
+  // Extract data safely
+  const course = initialCourse || {}
+  const title = course.title || 'Untitled Course'
+  const description = course.description || ''
+  const topic = course.topic || ''
+  const difficulty = course.difficulty || 'beginner'
+  const durationWeeks = course.duration_weeks || 8
+  const lessons: any[] = Array.isArray(course.lessons) ? course.lessons : []
+  const difficultyColor = DIFFICULTY_COLORS[difficulty] || DIFFICULTY_COLORS.beginner
 
-    try {
-      const response = await fetch(`/api/courses/${courseId}`)
-      if (!response.ok) {
-        throw new Error(`HTTP ${response.status}`)
-      }
-      const data = await response.json()
-
-      if (data.success && data.data) {
-        setCourse(data.data)
-        setLessons(Array.isArray(data.data.lessons) ? data.data.lessons : [])
-      } else {
-        setError(data.error || 'Course not found')
-      }
-    } catch (err) {
-      console.error('[CourseDetailClient] Error fetching course:', err)
-      setError('Failed to load course. Please try again.')
-    } finally {
-      setLoading(false)
-    }
-  }, [courseId])
-
-  if (loading) {
+  if (!mounted) {
     return (
       <div className="min-h-screen bg-gray-50 dark:bg-gray-950 flex items-center justify-center">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
@@ -102,48 +41,8 @@ export default function CourseDetailClient({ courseId, initialCourse }: Props) {
     )
   }
 
-  if (error || !course) {
-    return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-950 flex items-center justify-center">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-            {error || 'Course Not Found'}
-          </h1>
-          <Link href="/courses">
-            <Button>Back to Courses</Button>
-          </Link>
-        </div>
-      </div>
-    )
-  }
-
-  const difficultyColor = DIFFICULTY_COLORS[course.difficulty || 'beginner'] || DIFFICULTY_COLORS.beginner
-  const durationWeeks = course.duration_weeks || 8
-  const lessonsCount = lessons.length || 10
-
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
-      {/* SEO Structured Data */}
-      <CourseJsonLd
-        name={course.title}
-        description={course.description}
-        provider={{ name: 'Pulse + AI Professor', url: 'https://pulseaiprofessor.com' }}
-        url={`https://pulseaiprofessor.com/courses/${courseId}`}
-        duration={`P${durationWeeks}W`}
-        educationalLevel={course.difficulty || 'Beginner'}
-        isAccessibleForFree={false}
-        price={14.99}
-        currency="USD"
-        aggregateRating={{ ratingValue: 4.8, reviewCount: 234 }}
-      />
-      <BreadcrumbJsonLd
-        items={[
-          { name: 'Home', url: 'https://pulseaiprofessor.com' },
-          { name: 'Courses', url: 'https://pulseaiprofessor.com/courses' },
-          { name: course.title, url: `https://pulseaiprofessor.com/courses/${courseId}` },
-        ]}
-      />
-
       {/* Header */}
       <div className="bg-gradient-to-br from-primary-600 to-primary-800 text-white">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -158,12 +57,12 @@ export default function CourseDetailClient({ courseId, initialCourse }: Props) {
           <div className="flex flex-col lg:flex-row items-start justify-between gap-6">
             <div className="flex-1">
               <Badge className={difficultyColor}>
-                {course.difficulty || 'beginner'}
+                {difficulty}
               </Badge>
-
-              <h1 className="text-4xl font-bold mt-4 mb-3">{course.title}</h1>
-              <p className="text-lg text-white/80 mb-6">{course.description}</p>
-
+              
+              <h1 className="text-4xl font-bold mt-4 mb-3">{title}</h1>
+              <p className="text-lg text-white/80 mb-6">{description}</p>
+              
               <div className="flex items-center gap-6 text-sm">
                 <div className="flex items-center gap-2">
                   <Clock className="w-5 h-5" />
@@ -171,7 +70,7 @@ export default function CourseDetailClient({ courseId, initialCourse }: Props) {
                 </div>
                 <div className="flex items-center gap-2">
                   <BookOpen className="w-5 h-5" />
-                  <span>{lessonsCount} lessons</span>
+                  <span>{lessons.length} lessons</span>
                 </div>
                 <div className="flex items-center gap-1">
                   <Star className="w-5 h-5 fill-yellow-300 text-yellow-300" />
@@ -197,29 +96,29 @@ export default function CourseDetailClient({ courseId, initialCourse }: Props) {
       {/* Curriculum */}
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Course Curriculum</h2>
-
-        {lessons.length > 0 ? (
-          <div className="space-y-4">
-            {lessons.map((lesson, index) => (
-              <Link key={lesson.id || index} href={`/courses/${courseId}/lessons/${lesson.id}`}>
-                <Card className="p-4 hover:shadow-lg transition-all duration-200 cursor-pointer group">
-                  <div className="flex items-center gap-4">
-                    <div className="w-10 h-10 bg-primary-100 dark:bg-primary-900/30 rounded-lg flex items-center justify-center text-primary-600 font-bold">
-                      {index + 1}
-                    </div>
-                    <div className="flex-1">
-                      <h3 className="font-semibold text-gray-900 dark:text-white group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
-                        {lesson.title || 'Untitled Lesson'}
-                      </h3>
-                      <p className="text-sm text-gray-500">Week {lesson.week_number || '?'}</p>
-                    </div>
-                    <ChevronRight className="w-5 h-5 text-gray-400 group-hover:text-primary-500 transition-colors" />
+        
+        <div className="space-y-4">
+          {lessons.map((lesson: any, index: number) => (
+            <Link key={lesson.id} href={`/courses/${courseId}/lessons/${lesson.id}`}>
+              <Card className="p-4 hover:shadow-lg transition-all duration-200 cursor-pointer group">
+                <div className="flex items-center gap-4">
+                  <div className="w-10 h-10 bg-primary-100 dark:bg-primary-900/30 rounded-lg flex items-center justify-center text-primary-600 font-bold">
+                    {index + 1}
                   </div>
-                </Card>
-              </Link>
-            ))}
-          </div>
-        ) : (
+                  <div className="flex-1">
+                    <h3 className="font-semibold text-gray-900 dark:text-white group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
+                      {lesson.title}
+                    </h3>
+                    <p className="text-sm text-gray-500">Week {lesson.week_number}</p>
+                  </div>
+                  <ChevronRight className="w-5 h-5 text-gray-400 group-hover:text-primary-500 transition-colors" />
+                </div>
+              </Card>
+            </Link>
+          ))}
+        </div>
+
+        {lessons.length === 0 && (
           <div className="text-center py-12">
             <BookOpen className="w-16 h-16 text-gray-400 mx-auto mb-4" />
             <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
