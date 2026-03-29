@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { ArrowLeft, Clock, BookOpen, ChevronRight, CheckCircle, Play, Star } from 'lucide-react'
@@ -36,33 +36,63 @@ interface Props {
 
 export default function CourseDetailClient({ courseId, initialCourse }: Props) {
   const router = useRouter()
-  const [course, setCourse] = useState<Course | null>(initialCourse || null)
-  const [lessons, setLessons] = useState<Lesson[]>(initialCourse?.lessons || [])
-  const [loading, setLoading] = useState(!initialCourse)
-  const avgRating = 0
-  const ratingCount = 0
+  const [course, setCourse] = useState<Course | null>(null)
+  const [lessons, setLessons] = useState<Lesson[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
+  // Safely initialize from server data
   useEffect(() => {
-    if (!initialCourse) {
+    if (initialCourse) {
+      try {
+        setCourse({
+          id: initialCourse.id,
+          title: initialCourse.title || 'Untitled Course',
+          description: initialCourse.description || '',
+          topic: initialCourse.topic || '',
+          difficulty: initialCourse.difficulty || 'beginner',
+          duration_weeks: initialCourse.duration_weeks || 8,
+        })
+        setLessons(Array.isArray(initialCourse.lessons) ? initialCourse.lessons : [])
+        setLoading(false)
+      } catch (err) {
+        console.error('[CourseDetailClient] Error processing initial data:', err)
+        setError('Failed to load course data')
+        setLoading(false)
+      }
+    } else {
+      // No server data — fetch client-side
       fetchCourse()
     }
-  }, [courseId])
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
-  const fetchCourse = async () => {
+  const fetchCourse = useCallback(async () => {
+    if (!courseId) {
+      setError('Invalid course ID')
+      setLoading(false)
+      return
+    }
+
     try {
       const response = await fetch(`/api/courses/${courseId}`)
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}`)
+      }
       const data = await response.json()
-      
+
       if (data.success && data.data) {
         setCourse(data.data)
-        setLessons(data.data.lessons || [])
+        setLessons(Array.isArray(data.data.lessons) ? data.data.lessons : [])
+      } else {
+        setError(data.error || 'Course not found')
       }
-    } catch (error) {
-      console.error('Error fetching course:', error)
+    } catch (err) {
+      console.error('[CourseDetailClient] Error fetching course:', err)
+      setError('Failed to load course. Please try again.')
     } finally {
       setLoading(false)
     }
-  }
+  }, [courseId])
 
   if (loading) {
     return (
@@ -72,16 +102,24 @@ export default function CourseDetailClient({ courseId, initialCourse }: Props) {
     )
   }
 
-  if (!course) {
+  if (error || !course) {
     return (
       <div className="min-h-screen bg-gray-50 dark:bg-gray-950 flex items-center justify-center">
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Course Not Found</h1>
-          <Link href="/courses"><Button>Back to Courses</Button></Link>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+            {error || 'Course Not Found'}
+          </h1>
+          <Link href="/courses">
+            <Button>Back to Courses</Button>
+          </Link>
         </div>
       </div>
     )
   }
+
+  const difficultyColor = DIFFICULTY_COLORS[course.difficulty || 'beginner'] || DIFFICULTY_COLORS.beginner
+  const durationWeeks = course.duration_weeks || 8
+  const lessonsCount = lessons.length || 10
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
@@ -91,7 +129,7 @@ export default function CourseDetailClient({ courseId, initialCourse }: Props) {
         description={course.description}
         provider={{ name: 'Pulse + AI Professor', url: 'https://pulseaiprofessor.com' }}
         url={`https://pulseaiprofessor.com/courses/${courseId}`}
-        duration={`P${course.duration_weeks || 8}W`}
+        duration={`P${durationWeeks}W`}
         educationalLevel={course.difficulty || 'Beginner'}
         isAccessibleForFree={false}
         price={14.99}
@@ -105,7 +143,7 @@ export default function CourseDetailClient({ courseId, initialCourse }: Props) {
           { name: course.title, url: `https://pulseaiprofessor.com/courses/${courseId}` },
         ]}
       />
-      
+
       {/* Header */}
       <div className="bg-gradient-to-br from-primary-600 to-primary-800 text-white">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -117,27 +155,27 @@ export default function CourseDetailClient({ courseId, initialCourse }: Props) {
             Back to Courses
           </Link>
 
-          <div className="flex items-start justify-between gap-6">
+          <div className="flex flex-col lg:flex-row items-start justify-between gap-6">
             <div className="flex-1">
-              <Badge className={DIFFICULTY_COLORS[course.difficulty] || DIFFICULTY_COLORS.beginner}>
+              <Badge className={difficultyColor}>
                 {course.difficulty || 'beginner'}
               </Badge>
-              
+
               <h1 className="text-4xl font-bold mt-4 mb-3">{course.title}</h1>
               <p className="text-lg text-white/80 mb-6">{course.description}</p>
-              
+
               <div className="flex items-center gap-6 text-sm">
                 <div className="flex items-center gap-2">
                   <Clock className="w-5 h-5" />
-                  <span>{course.duration_weeks || 8} weeks</span>
+                  <span>{durationWeeks} weeks</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <BookOpen className="w-5 h-5" />
-                  <span>{lessons.length || 10} lessons</span>
+                  <span>{lessonsCount} lessons</span>
                 </div>
                 <div className="flex items-center gap-1">
                   <Star className="w-5 h-5 fill-yellow-300 text-yellow-300" />
-                  <span>{avgRating > 0 ? `${avgRating} (${ratingCount} reviews)` : 'New course'}</span>
+                  <span>New course</span>
                 </div>
               </div>
             </div>
@@ -159,29 +197,29 @@ export default function CourseDetailClient({ courseId, initialCourse }: Props) {
       {/* Curriculum */}
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Course Curriculum</h2>
-        
-        <div className="space-y-4">
-          {lessons.map((lesson, index) => (
-            <Link key={lesson.id} href={`/courses/${courseId}/lessons/${lesson.id}`}>
-              <Card className="p-4 hover:shadow-lg transition-all duration-200 cursor-pointer group">
-                <div className="flex items-center gap-4">
-                  <div className="w-10 h-10 bg-primary-100 dark:bg-primary-900/30 rounded-lg flex items-center justify-center text-primary-600 font-bold">
-                    {index + 1}
-                  </div>
-                  <div className="flex-1">
-                    <h3 className="font-semibold text-gray-900 dark:text-white group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
-                      {lesson.title}
-                    </h3>
-                    <p className="text-sm text-gray-500">Week {lesson.week_number}</p>
-                  </div>
-                  <ChevronRight className="w-5 h-5 text-gray-400 group-hover:text-primary-500 transition-colors" />
-                </div>
-              </Card>
-            </Link>
-          ))}
-        </div>
 
-        {lessons.length === 0 && (
+        {lessons.length > 0 ? (
+          <div className="space-y-4">
+            {lessons.map((lesson, index) => (
+              <Link key={lesson.id || index} href={`/courses/${courseId}/lessons/${lesson.id}`}>
+                <Card className="p-4 hover:shadow-lg transition-all duration-200 cursor-pointer group">
+                  <div className="flex items-center gap-4">
+                    <div className="w-10 h-10 bg-primary-100 dark:bg-primary-900/30 rounded-lg flex items-center justify-center text-primary-600 font-bold">
+                      {index + 1}
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="font-semibold text-gray-900 dark:text-white group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
+                        {lesson.title || 'Untitled Lesson'}
+                      </h3>
+                      <p className="text-sm text-gray-500">Week {lesson.week_number || '?'}</p>
+                    </div>
+                    <ChevronRight className="w-5 h-5 text-gray-400 group-hover:text-primary-500 transition-colors" />
+                  </div>
+                </Card>
+              </Link>
+            ))}
+          </div>
+        ) : (
           <div className="text-center py-12">
             <BookOpen className="w-16 h-16 text-gray-400 mx-auto mb-4" />
             <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
