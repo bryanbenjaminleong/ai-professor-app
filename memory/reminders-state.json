@@ -1,5 +1,24 @@
 {
-  "lastReminderTime": 1743206400,
+  "lastReminderTime": 1743207600,
   "intervalHours": 2,
-  "outstandingItems": []
+  "outstandingItems": [
+    {
+      "id": "openai-key-rotation",
+      "description": "Rotate OpenAI API key (delete old, create new, update Vercel)",
+      "severity": "critical",
+      "addedAt": 1743207600
+    },
+    {
+      "id": "telegram-alerts-setup",
+      "description": "Set up Telegram bot for alerts (create bot, get chat ID, add to Vercel)",
+      "severity": "medium",
+      "addedAt": 1743207600
+    },
+    {
+      "id": "github-cron-secret",
+      "description": "Add CRON_SECRET and SITE_URL to GitHub Actions secrets",
+      "severity": "high",
+      "addedAt": 1743208100
+    }
+  ]
 }

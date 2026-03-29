@@ -4901,7 +4901,6 @@ const TOPIC_COLORS: Record<string, string> = {
 }
 
 export default function GuideContent({ guideId }: { guideId: string }) {
-  const router = useRouter()
   const [currentLesson, setCurrentLesson] = useState(0)
   
   const guide = GUIDES_DATA[guideId]
