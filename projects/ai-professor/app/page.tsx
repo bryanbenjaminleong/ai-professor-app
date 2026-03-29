@@ -152,7 +152,7 @@ export default function HomePage() {
               {
                 icon: Newspaper,
                 title: 'Breaking Tech News',
-                description: 'Real-time updates from 7 top tech sources. Know what matters, as it happens.',
+                description: 'Real-time updates from 8 top tech sources. Know what matters, as it happens.',
                 link: '/breaking',
                 color: 'from-orange-500 to-red-500',
                 cta: 'Read Breaking News'
