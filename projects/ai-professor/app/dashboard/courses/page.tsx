@@ -8,7 +8,7 @@ import { useAuthStore } from '@/stores/auth-store'
 
 export default function MyCoursesPage() {
   const { user } = useAuthStore()
-  const [enrollments, setEnrollments] = useState([])
+  const [enrollments, setEnrollments] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
