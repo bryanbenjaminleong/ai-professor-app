@@ -25,13 +25,18 @@ interface AdminStats {
 
 export default function AdminDashboard() {
   const router = useRouter()
-  const { user, isLoading } = useAuthStore()
+  const { user, isLoading, checkAuth } = useAuthStore()
   const [stats, setStats] = useState<AdminStats>({
     userCount: 0, courseCount: 0, enrollmentCount: 0, revenue: 0,
     recentUsers: [], recentEnrollments: [], topCourses: [], newsCount: 0
   })
   const [loading, setLoading] = useState(true)
   const [timeRange, setTimeRange] = useState('7d')
+  const [authLoading, setAuthLoading] = useState(true)
+
+  useEffect(() => {
+    checkAuth().finally(() => setAuthLoading(false))
+  }, [])
 
   useEffect(() => {
     if (!isLoading && user && !ADMIN_EMAILS.includes(user.email)) {
@@ -75,12 +80,17 @@ export default function AdminDashboard() {
     }
   }
 
-  if (isLoading || !user) {
+  if (authLoading) {
     return (
       <div className="min-h-screen bg-gray-50 dark:bg-gray-950 flex items-center justify-center">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
       </div>
     )
+  }
+
+  if (!user) {
+    router.push('/auth/login')
+    return null
   }
 
   if (!ADMIN_EMAILS.includes(user.email)) {
