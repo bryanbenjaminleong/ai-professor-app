@@ -1,32 +1,46 @@
 'use client'
 
-import { useSession } from 'next-auth/react'
-import { useRouter } from 'next/navigation'
 import { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { 
   Users, BookOpen, DollarSign, Crown, FileText, 
-  Settings, BarChart3, ArrowUpRight, Activity, Globe
+  Settings, BarChart3, Globe
 } from 'lucide-react'
 
-const ADMIN_EMAILS = ["bryanbleong@gmail.com", "bryanbenleong@gmail.com", "bryan.leong@gmail.com"]
+const ADMIN_EMAILS = ['bryanbleong@gmail.com']
 
 export default function AdminDashboard() {
   const router = useRouter()
-  const { data: session, status } = useSession()
+  const [loading, setLoading] = useState(true)
+  const [isAdmin, setIsAdmin] = useState(false)
+  const [userEmail, setUserEmail] = useState('')
   const [stats, setStats] = useState({ userCount: 0, courseCount: 0, enrollmentCount: 0, revenue: 0, topCourses: [] as any[] })
 
   useEffect(() => {
-    if (status === 'unauthenticated') {
+    // Check localStorage for auth store
+    try {
+      const stored = localStorage.getItem('auth-storage')
+      if (stored) {
+        const parsed = JSON.parse(stored)
+        const email = parsed?.state?.user?.email
+        if (email && ADMIN_EMAILS.includes(email)) {
+          setIsAdmin(true)
+          setUserEmail(email)
+          fetchStats()
+        } else {
+          router.push('/dashboard')
+        }
+      } else {
+        router.push('/auth/login')
+      }
+    } catch (e) {
+      console.error('Auth check failed:', e)
       router.push('/auth/login')
+    } finally {
+      setLoading(false)
     }
-  }, [status, router])
-
-  useEffect(() => {
-    if (session?.user?.email && ADMIN_EMAILS.includes(session.user.email)) {
-      fetchStats()
-    }
-  }, [session])
+  }, [])
 
   const fetchStats = async () => {
     try {
@@ -48,7 +62,7 @@ export default function AdminDashboard() {
     }
   }
 
-  if (status === 'loading') {
+  if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 dark:bg-gray-950 flex items-center justify-center">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
@@ -56,16 +70,8 @@ export default function AdminDashboard() {
     )
   }
 
-  if (!session?.user?.email || !ADMIN_EMAILS.includes(session.user.email)) {
-    return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-950 flex items-center justify-center">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Access Denied</h1>
-          <p className="text-gray-600 dark:text-gray-400">You do not have admin access.</p>
-          <p className="text-sm text-gray-400 mt-2">Logged in as: {session?.user?.email || 'unknown'}</p>
-        </div>
-      </div>
-    )
+  if (!isAdmin) {
+    return null
   }
 
   return (
@@ -77,7 +83,7 @@ export default function AdminDashboard() {
           </div>
           <div>
             <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Admin Dashboard</h1>
-            <p className="text-gray-600 dark:text-gray-400">Welcome back, {session.user.email}</p>
+            <p className="text-gray-600 dark:text-gray-400">Welcome back, {userEmail}</p>
           </div>
         </div>
 
@@ -90,8 +96,8 @@ export default function AdminDashboard() {
           ].map((card) => (
             <div key={card.title} className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6">
               <div className="flex items-center justify-between mb-4">
-                <div className={`w-10 h-10 ${card.bg} rounded-lg flex items-center justify-center`}>
-                  <card.icon className={`w-5 h-5 ${card.color}`} />
+                <div className={"w-10 h-10 " + card.bg + " rounded-lg flex items-center justify-center"}>
+                  <card.icon className={"w-5 h-5 " + card.color} />
                 </div>
               </div>
               <div className="text-2xl font-bold text-gray-900 dark:text-white">{card.value}</div>
