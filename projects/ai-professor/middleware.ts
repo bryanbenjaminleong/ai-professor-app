@@ -4,6 +4,7 @@ import type { NextRequest } from 'next/server'
 // Allowed origins for CORS
 const ALLOWED_ORIGINS = [
   'https://ai-professor-red.vercel.app',
+  'https://ai-professor-app.vercel.app',
   'https://pulseaiprofessor.com',
   // Add development origins if needed
   process.env.NODE_ENV === 'development' && 'http://localhost:3000',
