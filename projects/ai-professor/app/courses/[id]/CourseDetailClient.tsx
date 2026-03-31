@@ -152,3 +152,4 @@ export default function CourseDetailClient({ courseId }: { courseId: string }) {
     </div>
   )
 }
+// force rebuild Tue Mar 31 10:14:20 UTC 2026
