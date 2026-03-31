@@ -9,7 +9,7 @@ import {
   Settings, BarChart3, ArrowUpRight, Activity, Globe
 } from 'lucide-react'
 
-const ADMIN_EMAILS = ['bryanbleong@gmail.com']
+const ADMIN_EMAILS = ["bryanbleong@gmail.com", "bryanbenleong@gmail.com", "bryan.leong@gmail.com"]
 
 export default function AdminDashboard() {
   const router = useRouter()
