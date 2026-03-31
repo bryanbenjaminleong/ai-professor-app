@@ -2,6 +2,7 @@
 
 import React, { useEffect } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { SessionProvider } from 'next-auth/react';
 import { Header, Footer } from '@/components/layout';
 import { ToastContainer } from '@/components/ui';
 import { InstallPrompt } from '@/components/pwa/InstallPrompt';
@@ -26,13 +27,15 @@ export function Providers({ children }: { children: React.ReactNode }) {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <div className="min-h-screen flex flex-col">
-        <Header />
-        <main className="flex-1">{children}</main>
-        <Footer />
-      </div>
-      <ToastContainer />
-      <InstallPrompt />
+      <SessionProvider>
+        <div className="min-h-screen flex flex-col">
+          <Header />
+          <main className="flex-1">{children}</main>
+          <Footer />
+        </div>
+        <ToastContainer />
+        <InstallPrompt />
+      </SessionProvider>
     </QueryClientProvider>
   );
 }
