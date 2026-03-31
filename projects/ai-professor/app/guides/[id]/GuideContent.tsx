@@ -175,7 +175,7 @@ nano .env
 
 Add your key:
 \`\`\`
-OPENAI_API_KEY=sk-proj-xxxxxxxxxxxxxxxxxxxx
+OPENAI_API_KEY=your-api-key-here
 \`\`\`
 
 Save and exit (Ctrl+X, then Y, then Enter).
@@ -437,9 +437,9 @@ npm install -g openclaw
 cat .env
 
 # 2. Verify the key format is correct (no extra spaces/quotes)
-# Should be: OPENAI_API_KEY=sk-proj-xxxx...
-# NOT: OPENAI_API_KEY="sk-proj-xxxx..."
-# NOT: OPENAI_API_KEY = sk-proj-xxxx...
+# Should be: OPENAI_API_KEY=your-api-key-here...
+# NOT: OPENAI_API_KEY="your-api-key-here..."
+# NOT: OPENAI_API_KEY = your-api-key-here...
 
 # 3. Test key works:
 curl https://api.openai.com/v1/models \

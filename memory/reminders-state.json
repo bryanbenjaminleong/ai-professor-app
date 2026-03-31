@@ -1,23 +1,8 @@
 {
-  "lastReminderTime": 1743230400,
-  "lastOutstandingCheck": 1743254820,
-  "agentRunning": "cleanup-config",
-  "agentStartedAt": 1743254820,
-  "typescriptErrors": 0,
+  "lastReminderTime": 1743235200,
+  "lastOutstandingCheck": 1743257520,
   "intervalHours": 2,
   "outstandingItems": [
-    {
-      "id": "database-cleanup",
-      "description": "Run cleanup script to remove test users",
-      "severity": "high",
-      "status": "in_progress"
-    },
-    {
-      "id": "remove-ignoreBuildErrors",
-      "description": "Remove ignoreBuildErrors: true from next.config.js",
-      "severity": "high",
-      "status": "in_progress"
-    },
     {
       "id": "stripe-payments",
       "description": "Implement Stripe payment integration",
@@ -38,15 +23,14 @@
     }
   ],
   "completedItems": [
-    {"id": "typescript-errors", "completedAt": 1743254820, "note": "329 -> 0 errors"},
+    {"id": "typescript-errors", "completedAt": 1743239400, "details": "329 → 0 errors"},
+    {"id": "remove-ignoreBuildErrors", "completedAt": 1743239400},
     {"id": "openai-key-rotation", "completedAt": 1743225000},
     {"id": "telegram-alerts-setup", "completedAt": 1743225300},
     {"id": "github-secrets", "completedAt": 1743225800},
     {"id": "expand-skeletal-guides", "completedAt": 1743226500},
     {"id": "paid-content-protection", "completedAt": 1743230400},
     {"id": "admin-dashboard", "completedAt": 1743230400},
-    {"id": "cleanup-script", "completedAt": 1743230400},
-    {"id": "outstanding-file", "completedAt": 1743230760},
-    {"id": "memory-system", "completedAt": 1743231600}
+    {"id": "cleanup-script", "completedAt": 1743230400}
   ]
 }

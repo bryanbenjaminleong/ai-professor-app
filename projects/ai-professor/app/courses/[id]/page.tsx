@@ -9,6 +9,5 @@ export const metadata: Metadata = {
 export const dynamic = 'force-dynamic'
 
 export default async function CoursePage({ params }: { params: { id: string } }) {
-  // Just pass the ID — client fetches everything via API
   return <CourseDetailClient courseId={params.id} />
 }
