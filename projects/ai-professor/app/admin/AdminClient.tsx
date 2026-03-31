@@ -40,7 +40,48 @@ export default function AdminDashboard() {
     } finally {
       setLoading(false)
     }
+
+    // Listen for storage changes (logout)
+    const handleStorageChange = () => {
+      try {
+        const stored = localStorage.getItem('auth-storage')
+        if (!stored) {
+          router.push('/auth/login')
+          return
+        }
+        const parsed = JSON.parse(stored)
+        if (!parsed?.state?.user?.email) {
+          router.push('/auth/login')
+        }
+      } catch (e) {
+        router.push('/auth/login')
+      }
+    }
+    window.addEventListener('storage', handleStorageChange)
+    return () => window.removeEventListener('storage', handleStorageChange)
   }, [])
+
+  // Listen for logout - redirect if user is no longer admin
+  useEffect(() => {
+    const interval = setInterval(() => {
+      try {
+        const stored = localStorage.getItem('auth-storage')
+        if (!stored) {
+          router.push('/auth/login')
+        } else {
+          const parsed = JSON.parse(stored)
+          const email = parsed?.state?.user?.email
+          if (!email || !ADMIN_EMAILS.includes(email)) {
+            router.push('/dashboard')
+          }
+        }
+      } catch {
+        router.push('/auth/login')
+      }
+    }, 2000)
+
+    return () => clearInterval(interval)
+  }, [router])
 
   const fetchStats = async () => {
     try {
