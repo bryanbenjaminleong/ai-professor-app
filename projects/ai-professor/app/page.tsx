@@ -176,7 +176,7 @@ export default function HomePage() {
               {
                 icon: GraduationCap,
                 title: 'Full Courses',
-                description: '8-12 week comprehensive programs. Master AI with hands-on projects.',
+                description: 'Comprehensive programs with hands-on projects. Learn at your own pace.',
                 link: '/courses',
                 color: 'from-blue-500 to-indigo-500',
                 cta: 'Browse Courses'

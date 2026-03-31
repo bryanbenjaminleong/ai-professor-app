@@ -93,7 +93,7 @@ export default function CoursesClient({ initialCourses }: Props) {
                   <div className="flex items-center gap-4 text-sm text-white/90">
                     <div className="flex items-center gap-1">
                       <Clock className="w-4 h-4" />
-                      <span>{course.duration_weeks || 8} weeks</span>
+                      <span>Self-paced</span>
                     </div>
                     <div className="flex items-center gap-1">
                       <BookOpen className="w-4 h-4" />
