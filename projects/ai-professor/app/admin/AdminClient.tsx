@@ -27,7 +27,7 @@ export default function AdminDashboard() {
         if (email && ADMIN_EMAILS.includes(email)) {
           setIsAdmin(true)
           setUserEmail(email)
-          fetchStats()
+          fetchStats(email)
         } else {
           router.push('/dashboard')
         }
@@ -83,10 +83,12 @@ export default function AdminDashboard() {
     return () => clearInterval(interval)
   }, [router])
 
-  const fetchStats = async () => {
+  const fetchStats = async (email?: string) => {
     try {
       const [statsRes, coursesRes] = await Promise.all([
-        fetch('/api/admin/stats'),
+        fetch('/api/admin/stats', {
+          headers: { 'x-admin-email': email || userEmail || '' }
+        }),
         fetch('/api/courses'),
       ])
       const statsData = await statsRes.json()
