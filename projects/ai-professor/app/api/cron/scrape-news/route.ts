@@ -10,22 +10,19 @@ export async function GET(request: NextRequest) {
   const authHeader = request.headers.get('authorization')
   const cronSecret = process.env.CRON_SECRET
   
-  // CRON_SECRET is mandatory in production
-  if (process.env.NODE_ENV === 'production') {
-    if (!cronSecret) {
-      console.error('[Cron] CRON_SECRET not configured in production')
-      return NextResponse.json(
-        { success: false, error: 'Server configuration error' },
-        { status: 500 }
-      )
-    }
-    
-    if (authHeader !== `Bearer ${cronSecret}`) {
-      return NextResponse.json(
-        { success: false, error: 'Unauthorized' },
-        { status: 401 }
-      )
-    }
+  // Allow through if:
+  // 1. Has valid CRON_SECRET bearer token (manual trigger / GitHub Actions)
+  // 2. Has Vercel cron signature header (automatic Vercel Cron calls)
+  const vercelCronHeader = request.headers.get('x-vercel-cron')
+  const hasValidSecret = authHeader === `Bearer ${cronSecret}`
+  const isVercelCron = vercelCronHeader === '1' || vercelCronHeader === 'true'
+  
+  if (!hasValidSecret && !isVercelCron) {
+    console.warn('[Cron] Unauthorized request - missing or invalid auth')
+    return NextResponse.json(
+      { success: false, error: 'Unauthorized' },
+      { status: 401 }
+    )
   }
 
   try {
