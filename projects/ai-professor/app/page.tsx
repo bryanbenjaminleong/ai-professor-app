@@ -111,7 +111,7 @@ export default function HomePage() {
               {[
                 { value: `${stats.articles}+`, label: 'Articles' },
                 { value: `${stats.guides}`, label: 'Quick Guides' },
-                { value: `${stats.courses}`, label: 'Full Courses' },
+                { value: `${stats.courses}`, label: 'Courses' },
                 { value: '24/7', label: 'Updates' },
               ].map((stat, i) => (
                 <motion.div
@@ -175,8 +175,8 @@ export default function HomePage() {
               },
               {
                 icon: GraduationCap,
-                title: 'Full Courses',
-                description: 'Comprehensive programs with hands-on projects. Learn at your own pace.',
+                title: 'Courses',
+                description: 'Comprehensive courses with hands-on projects. Learn at your own pace.',
                 link: '/courses',
                 color: 'from-blue-500 to-indigo-500',
                 cta: 'Browse Courses'

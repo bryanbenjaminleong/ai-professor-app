@@ -13,7 +13,7 @@ const navLinks = [
   { href: '/guides', label: 'Quick Guides' },
   { href: '/breaking', label: 'Breaking', highlight: true },
   { href: '/news', label: 'AI News' },
-  { href: '/courses', label: 'Full Courses' },
+  { href: '/courses', label: 'Courses' },
   { href: '/pricing', label: 'Pricing' },
 ];
 

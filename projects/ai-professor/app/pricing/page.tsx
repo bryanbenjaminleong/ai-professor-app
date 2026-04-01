@@ -43,25 +43,26 @@ const pricingTiers = [
   },
   {
     id: 'bundle',
-    name: 'All Courses Bundle',
-    price: 29.99,
+    name: 'Program',
+    price: 49.99,
     interval: 'one-time',
-    description: 'Get all 3 courses at Save $15',
+    description: 'Complete curriculum — all modules included',
     features: [
       'Everything in Single Course',
-      '3 full courses included',
-      'Save $15 vs buying separately',
+      'All modules in the program',
+      'Save vs buying modules separately',
+      'Cohort-based progress tracking',
       'Priority support',
     ],
-    cta: 'Get All Courses',
+    cta: 'Explore Programs',
     ctaLink: '/courses',
   },
 ];
 
 const featureComparison = [
   { feature: 'Quick Guides', free: '11 guides', single: '11 guides', bundle: '11 guides' },
-  { feature: 'Full Courses', free: '1 lesson', single: 'All 3 courses', bundle: 'All 3 courses' },
-  { feature: 'Hands-on Projects', free: false, single: '3 projects', bundle: '9 projects' },
+  { feature: 'Courses', free: '1 lesson', single: '1 full course', bundle: 'All courses in program' },
+  { feature: 'Hands-on Projects', free: false, single: 'Per course', bundle: 'All projects' },
   { feature: 'Assessments', free: false, single: 'Pass/fail quizzes', bundle: 'All quizzes' },
   { feature: 'Community Challenges', free: false, single: '✓', bundle: '✓' },
   { feature: 'Support', free: 'Email', single: 'Priority', bundle: 'Priority' },
@@ -74,7 +75,7 @@ const faqs = [
   },
   {
     question: 'Is there a free trial?',
-    answer: 'Our Quick Guides are completely free. For full courses, try the1-2 lessons free before deciding.',
+    answer: 'Our Quick Guides are completely free. For courses, try the first 1-2 lessons free before deciding.',
   },
   {
     question: 'What payment methods?',
