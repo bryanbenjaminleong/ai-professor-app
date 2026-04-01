@@ -123,9 +123,7 @@ export default function PricingPage() {
               >
                 <Card
                   className={cn(
-                    'h-full card-hover',
-                    tier.recommended &&
-                      'border-2 border-primary-600 dark:border-primary-500 shadow-xl'
+                    'h-full card-hover'
                   )}
                   padding="none"
                 >
@@ -170,7 +168,7 @@ export default function PricingPage() {
                     <Link href={tier.ctaLink || '/courses'}>
                       <Button
                         className="w-full"
-                        variant={tier.recommended ? 'primary' : 'outline'}
+                        variant='outline'
                         size="lg"
                       >
                         {tier.cta}
