@@ -16,6 +16,7 @@ import {
 import { Button, Card, Badge, ProgressBar, Avatar } from '@/components/ui';
 import { CourseCard } from '@/components/course';
 import { Sidebar } from '@/components/layout';
+import { NotificationBell } from '@/components/NotificationBell';
 import { useFeaturedCourses } from '@/hooks';
 import { useAuthStore } from '@/stores/auth-store';
 import { cn } from '@/lib/utils';
@@ -142,14 +143,17 @@ export default function DashboardPage() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="mb-8"
+            className="mb-8 flex items-start justify-between"
           >
-            <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-              Welcome back{user?.email ? `, ${user.email.split('@')[0]}` : ''}! 👋
-            </h1>
-            <p className="text-gray-600 dark:text-gray-400">
-              Continue your learning journey
-            </p>
+            <div>
+              <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+                Welcome back{user?.email ? `, ${user.email.split('@')[0]}` : ''}! 👋
+              </h1>
+              <p className="text-gray-600 dark:text-gray-400">
+                Continue your learning journey
+              </p>
+            </div>
+            <NotificationBell />
           </motion.div>
 
           {/* Stats Grid */}

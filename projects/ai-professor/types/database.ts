@@ -631,6 +631,73 @@ export interface Database {
           created_at?: string
         }
       }
+      content_updates: {
+        Row: {
+          id: string
+          course_id: string
+          lesson_id: string | null
+          update_type: string
+          summary: string
+          old_version: number
+          new_version: number
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          course_id: string
+          lesson_id?: string | null
+          update_type: string
+          summary: string
+          old_version: number
+          new_version: number
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          course_id?: string
+          lesson_id?: string | null
+          update_type?: string
+          summary?: string
+          old_version?: number
+          new_version?: number
+          created_at?: string
+        }
+      }
+      notifications: {
+        Row: {
+          id: string
+          user_id: string
+          type: string
+          title: string
+          message: string
+          related_course_id: string | null
+          related_lesson_id: string | null
+          is_read: boolean
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          type: string
+          title: string
+          message: string
+          related_course_id?: string | null
+          related_lesson_id?: string | null
+          is_read?: boolean
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          type?: string
+          title?: string
+          message?: string
+          related_course_id?: string | null
+          related_lesson_id?: string | null
+          is_read?: boolean
+          created_at?: string
+        }
+      }
     }
     Enums: {
       subscription_tier: SubscriptionTier
@@ -665,6 +732,8 @@ export type Assessment = Database['public']['Tables']['assessments']['Row']
 export type AssessmentAttempt = Database['public']['Tables']['assessment_attempts']['Row']
 export type LearningPath = Database['public']['Tables']['learning_paths']['Row']
 export type PathCourse = Database['public']['Tables']['path_courses']['Row']
+export type ContentUpdate = Database['public']['Tables']['content_updates']['Row']
+export type Notification = Database['public']['Tables']['notifications']['Row']
 
 // Insert types
 export type NewUser = Database['public']['Tables']['users']['Insert']
@@ -684,6 +753,8 @@ export type NewAssessment = Database['public']['Tables']['assessments']['Insert'
 export type NewAssessmentAttempt = Database['public']['Tables']['assessment_attempts']['Insert']
 export type NewLearningPath = Database['public']['Tables']['learning_paths']['Insert']
 export type NewPathCourse = Database['public']['Tables']['path_courses']['Insert']
+export type NewContentUpdate = Database['public']['Tables']['content_updates']['Insert']
+export type NewNotification = Database['public']['Tables']['notifications']['Insert']
 
 // Update types
 export type UserUpdate = Database['public']['Tables']['users']['Update']
@@ -702,6 +773,8 @@ export type AssessmentUpdate = Database['public']['Tables']['assessments']['Upda
 export type AssessmentAttemptUpdate = Database['public']['Tables']['assessment_attempts']['Update']
 export type LearningPathUpdate = Database['public']['Tables']['learning_paths']['Update']
 export type PathCourseUpdate = Database['public']['Tables']['path_courses']['Update']
+export type ContentUpdateUpdate = Database['public']['Tables']['content_updates']['Update']
+export type NotificationUpdate = Database['public']['Tables']['notifications']['Update']
 
 // Extended types with relations
 export interface CourseWithLessons extends Course {
