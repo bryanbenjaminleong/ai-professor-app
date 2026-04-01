@@ -1,5 +1,6 @@
 'use client'
 
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { ArrowLeft, Clock, BookOpen, ChevronRight, ChevronLeft, CheckCircle, ExternalLink, Lock, Crown } from 'lucide-react'
 import { Button, Card, Badge } from '@/components/ui'
@@ -27,21 +28,33 @@ interface Props {
   lesson: Lesson | null
   course: Course | null
   courseId: string
-  isEnrolled: boolean
-  isAdmin: boolean
-  canAccess: boolean
-  userEmail: string | null
+  adminEmails: string[]
 }
 
 export default function LessonClient({ 
   lesson, 
   course, 
   courseId, 
-  isEnrolled, 
-  isAdmin, 
-  canAccess, 
-  userEmail 
+  adminEmails 
 }: Props) {
+  const [canAccess, setIsAdmin] = useState(false)
+  const [isAdmin, setAdminFlag] = useState(false)
+  const [userEmail, setUserEmail] = useState<string | null>(null)
+
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem('auth-storage')
+      if (stored) {
+        const { state } = JSON.parse(stored)
+        const email = state?.user?.email
+        setUserEmail(email)
+        if (email && adminEmails.includes(email)) {
+          setAdminFlag(true)
+          setIsAdmin(true)
+        }
+      }
+    } catch {}
+  }, [adminEmails])
   if (!lesson) {
     return (
       <div className="min-h-screen bg-gray-50 dark:bg-gray-950 flex items-center justify-center">
