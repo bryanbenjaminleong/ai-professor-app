@@ -49,7 +49,7 @@ const pricingTiers = [
     description: 'Complete program — all modules included',
     features: [
       'All modules in the program',
-      'Save vs buying each module separately',
+
       'Cohort-based progress tracking',
       'Priority support',
     ],
@@ -159,10 +159,6 @@ export default function PricingPage() {
                           </span>
                         )}
                       </div>
-                      {tier.id === 'bundle' && (
-                        <p className="text-sm text-green-600 dark:text-green-400 mt-1">
-                          Save $15 compared to buying separately
-                        </p>
                       )}
                     </div>
 
