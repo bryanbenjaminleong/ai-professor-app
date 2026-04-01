@@ -159,7 +159,6 @@ export default function PricingPage() {
                           </span>
                         )}
                       </div>
-                      )}
                     </div>
 
                     <p className="text-gray-600 dark:text-gray-400 mb-4">
