@@ -46,11 +46,10 @@ const pricingTiers = [
     name: 'Program',
     price: 49.99,
     interval: 'one-time',
-    description: 'Complete curriculum — all modules included',
+    description: 'Complete program — all modules included',
     features: [
-      'Everything in Single Course',
       'All modules in the program',
-      'Save vs buying modules separately',
+      'Save vs buying each module separately',
       'Cohort-based progress tracking',
       'Priority support',
     ],
@@ -61,10 +60,10 @@ const pricingTiers = [
 
 const featureComparison = [
   { feature: 'Quick Guides', free: '11 guides', single: '11 guides', bundle: '11 guides' },
-  { feature: 'Courses', free: '1 lesson', single: '1 full course', bundle: 'All courses in program' },
+  { feature: 'Courses', free: '1 lesson preview', single: '1 full course ($14.99 each)', bundle: 'All modules in program' },
+  { feature: 'Individual Modules', free: false, single: 'Buy as Course ($14.99)', bundle: 'Included in program' },
   { feature: 'Hands-on Projects', free: false, single: 'Per course', bundle: 'All projects' },
   { feature: 'Assessments', free: false, single: 'Pass/fail quizzes', bundle: 'All quizzes' },
-  { feature: 'Community Challenges', free: false, single: '✓', bundle: '✓' },
   { feature: 'Support', free: 'Email', single: 'Priority', bundle: 'Priority' },
 ];
 
