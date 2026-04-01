@@ -58,7 +58,6 @@ export function PricingSection() {
                   'Full course access',
                   '10+ hours of content',
                   'Downloadable resources',
-                  'Certificate of completion',
                   'Lifetime updates',
                   'Community access',
                 ].map((feature) => (

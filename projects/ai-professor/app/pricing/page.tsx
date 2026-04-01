@@ -33,11 +33,10 @@ const pricingTiers = [
       'Full course access',
       'Hands-on projects',
       'Pass/fail assessment',
-      'Certificate of completion',
+
       'Community challenges',
       'Priority support',
     ],
-    recommended: true,
     cta: 'Buy Now',
     ctaLink: '/courses',
   },
@@ -124,20 +123,12 @@ export default function PricingPage() {
               >
                 <Card
                   className={cn(
-                    'h-full',
+                    'h-full card-hover',
                     tier.recommended &&
                       'border-2 border-primary-600 dark:border-primary-500 shadow-xl'
                   )}
                   padding="none"
                 >
-                  {tier.recommended && (
-                    <div className="absolute -top-4 left-1/2 -translate-x-1/2">
-                      <Badge variant="primary" className="px-4 py-1">
-                        Best Value
-                      </Badge>
-                    </div>
-                  )}
-
                   <div className="p-8">
                     <div className="flex items-center gap-3 mb-4">
                       {tier.id === 'free' && <Zap className="w-6 h-6 text-blue-600" />}

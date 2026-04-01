@@ -75,7 +75,7 @@ export default function CoursesClient({ initialCourses }: Props) {
         {courses.length > 0 ? (
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {courses.map((course) => (
-              <Card key={course.id} className="overflow-hidden hover:shadow-xl transition-all duration-300 group">
+              <Card key={course.id} className="overflow-hidden hover:shadow-xl transition-all duration-300 group card-hover">
                 {/* Header with image or gradient */}
                 {course.image_url ? (
                   <div className="relative h-48 w-full overflow-hidden">

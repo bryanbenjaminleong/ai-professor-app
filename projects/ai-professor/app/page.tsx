@@ -190,7 +190,7 @@ export default function HomePage() {
                 transition={{ delay: i * 0.1 }}
               >
                 <Link href={item.link}>
-                  <div className="group bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-sm hover:shadow-xl transition-all duration-300 h-full border border-gray-100 dark:border-gray-700 hover:border-transparent">
+                  <div className="group bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-sm hover:shadow-xl transition-all duration-300 h-full border border-gray-100 dark:border-gray-700 hover:border-transparent card-hover">
                     {/* Icon */}
                     <div className={`w-14 h-14 rounded-xl bg-gradient-to-br ${item.color} flex items-center justify-center mb-6 group-hover:scale-110 transition-transform`}>
                       <item.icon className="w-7 h-7 text-white" />
