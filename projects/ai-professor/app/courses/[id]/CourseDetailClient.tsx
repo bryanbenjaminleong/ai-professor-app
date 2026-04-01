@@ -14,6 +14,7 @@ interface Course {
   topic: string
   difficulty: string
   duration_weeks: number
+  image_url?: string
   version?: number
   changelog?: Array<{
     version: number
@@ -93,6 +94,19 @@ export default function CourseDetailClient({ courseId }: { courseId: string }) {
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
+      {/* Cover Image Banner */}
+      {course.image_url && (
+        <div className="relative h-48 md:h-64 w-full overflow-hidden">
+          <img src={course.image_url} alt={course.title} className="w-full h-full object-cover" />
+          <div className="absolute inset-0 bg-gradient-to-t from-primary-900/90 via-primary-900/40 to-transparent" />
+          <div className="absolute bottom-0 left-0 right-0 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pb-4">
+            <Link href="/courses" className="flex items-center gap-2 text-white/80 hover:text-white mb-2 transition-colors">
+              <ArrowLeft className="w-5 h-5" />
+              Back to Courses
+            </Link>
+          </div>
+        </div>
+      )}
       <div className="bg-gradient-to-br from-primary-600 to-primary-800 text-white">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <Link href="/courses" className="flex items-center gap-2 text-white/80 hover:text-white mb-6 transition-colors">
