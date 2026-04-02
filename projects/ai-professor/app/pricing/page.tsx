@@ -41,29 +41,31 @@ const pricingTiers = [
     ctaLink: '/courses',
   },
   {
-    id: 'bundle',
+    id: 'program',
     name: 'Program',
     price: 49.99,
     interval: 'one-time',
-    description: 'Complete program — all modules included',
+    description: 'Complete 4-module program — master a discipline end to end',
     features: [
-      'All modules in the program',
-
+      '4 courses (modules) included',
+      '24 in-depth lessons',
+      'Capstone project with review',
       'Cohort-based progress tracking',
       'Priority support',
     ],
     cta: 'Explore Programs',
-    ctaLink: '/courses',
+    ctaLink: '/programs',
   },
 ];
 
 const featureComparison = [
-  { feature: 'Quick Guides', free: '11 guides', single: '11 guides', bundle: '11 guides' },
-  { feature: 'Courses', free: '1 lesson preview', single: '1 full course ($14.99 each)', bundle: 'All modules in program' },
-  { feature: 'Individual Modules', free: false, single: 'Buy as Course ($14.99)', bundle: 'Included in program' },
-  { feature: 'Hands-on Projects', free: false, single: 'Per course', bundle: 'All projects' },
-  { feature: 'Assessments', free: false, single: 'Pass/fail quizzes', bundle: 'All quizzes' },
-  { feature: 'Support', free: 'Email', single: 'Priority', bundle: 'Priority' },
+  { feature: 'Quick Guides', free: '11 guides', single: '11 guides', program: '11 guides' },
+  { feature: 'Courses', free: '1 lesson preview', single: '1 full course ($14.99 each)', program: '4 courses (modules)' },
+  { feature: 'Lessons', free: '-', single: '6-12 per course', program: '24 per program' },
+  { feature: 'Capstone Project', free: false, single: false, program: '✓' },
+  { feature: 'Hands-on Projects', free: false, single: 'Per course', program: 'All projects' },
+  { feature: 'Assessments', free: false, single: 'Per course', program: 'All quizzes' },
+  { feature: 'Support', free: 'Email', single: 'Priority', program: 'Priority' },
 ];
 
 const faqs = [
@@ -131,7 +133,7 @@ export default function PricingPage() {
                     <div className="flex items-center gap-3 mb-4">
                       {tier.id === 'free' && <Zap className="w-6 h-6 text-blue-600" />}
                       {tier.id === 'single-course' && <BookOpen className="w-6 h-6 text-primary-600" />}
-                      {tier.id === 'bundle' && <Crown className="w-6 h-6 text-yellow-600" />}
+                      {tier.id === 'program' && <Crown className="w-6 h-6 text-yellow-600" />}
                       <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
                         {tier.name}
                       </h3>
@@ -317,15 +319,15 @@ export default function PricingPage() {
                         )}
                       </td>
                       <td className="p-6 text-center">
-                        {typeof row.bundle === 'boolean' ? (
-                          row.bundle? (
+                        {typeof row.program === 'boolean' ? (
+                          row.program? (
                             <Check className="w-5 h-5 text-green-600 dark:text-green-400 mx-auto" />
                           ) : (
                             <X className="w-5 h-5 text-gray-400 mx-auto" />
                           )
                         ) : (
                           <span className="text-gray-900 dark:text-white font-medium">
-                            {row.bundle}
+                            {row.program}
                           </span>
                         )}
                       </td>
