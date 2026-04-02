@@ -14,6 +14,7 @@ const navLinks = [
   { href: '/breaking', label: 'Breaking', highlight: true },
   { href: '/news', label: 'AI News' },
   { href: '/courses', label: 'Courses' },
+  { href: '/programs', label: 'Programs' },
   { href: '/pricing', label: 'Pricing' },
 ];
 

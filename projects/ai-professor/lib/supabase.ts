@@ -700,6 +700,47 @@ export const db = {
       }))
     },
   },
+  // Learning paths (programs) operations
+  learningPaths: {
+    async getAll(): Promise<any[]> {
+      const admin = getSupabaseAdmin()
+      const { data, error } = await admin
+        .from('learning_paths')
+        .select(`
+          *,
+          path_courses(
+            order_index,
+            courses(
+              id, title, description, difficulty, duration_weeks, image_url,
+              lessons(count)
+            )
+          )
+        `)
+        .eq('is_published', true)
+        .order('created_at', { ascending: true })
+      if (error) throw error
+      return (data || []) as any
+    },
+    async getById(id: string): Promise<any> {
+      const admin = getSupabaseAdmin()
+      const { data, error } = await admin
+        .from('learning_paths')
+        .select(`
+          *,
+          path_courses(
+            order_index,
+            courses(
+              id, title, description, difficulty, duration_weeks, image_url,
+              lessons(id, title, order_index, estimated_minutes)
+            )
+          )
+        `)
+        .eq('id', id)
+        .single()
+      if (error) throw error
+      return data!
+    },
+  },
 }
 // Error handling
 export class SupabaseError extends Error {

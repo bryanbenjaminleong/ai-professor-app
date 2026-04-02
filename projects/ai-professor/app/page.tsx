@@ -12,7 +12,8 @@ import {
   TrendingUp,
   Target,
   Clock,
-  GraduationCap
+  GraduationCap,
+  Layers
 } from 'lucide-react'
 import { Button } from '@/components/ui'
 
@@ -20,13 +21,22 @@ interface Stats {
   articles: number
   guides: number
   courses: number
+  programs: number
 }
 
 export default function HomePage() {
+  interface Stats {
+    articles: number
+    guides: number
+    courses: number
+    programs: number
+  }
+
   const [stats, setStats] = useState<Stats>({
-    articles: 100,  // Fallback values
+    articles: 100,
     guides: 24,
-    courses: 5,
+    courses: 21,
+    programs: 4,
   })
 
   useEffect(() => {
@@ -112,7 +122,7 @@ export default function HomePage() {
                 { value: `${stats.articles}+`, label: 'Articles' },
                 { value: `${stats.guides}`, label: 'Quick Guides' },
                 { value: `${stats.courses}`, label: 'Courses' },
-                { value: '24/7', label: 'Updates' },
+                { value: `${stats.programs}`, label: 'Programs' },
               ].map((stat, i) => (
                 <motion.div
                   key={stat.label}
@@ -180,6 +190,14 @@ export default function HomePage() {
                 link: '/courses',
                 color: 'from-blue-500 to-indigo-500',
                 cta: 'Browse Courses'
+              },
+              {
+                icon: Layers,
+                title: 'Programs',
+                description: '4-module programs that master a complete discipline. 24 lessons, capstone projects, and real-world application.',
+                link: '/programs',
+                color: 'from-emerald-500 to-teal-500',
+                cta: 'Explore Programs'
               },
             ].map((item, i) => (
               <motion.div
@@ -342,6 +360,7 @@ export default function HomePage() {
               <Link href="/news" className="hover:text-white transition-colors">AI News</Link>
               <Link href="/guides" className="hover:text-white transition-colors">Guides</Link>
               <Link href="/courses" className="hover:text-white transition-colors">Courses</Link>
+              <Link href="/programs" className="hover:text-white transition-colors">Programs</Link>
             </div>
           </div>
           <div className="mt-8 pt-8 border-t border-gray-800 text-center text-gray-500">
