@@ -45,6 +45,10 @@ export const useAuthStore = create<AuthState>()(
           isAuthenticated: false,
           isLoading: false 
         })
+        // Redirect to landing page after logout
+        if (typeof window !== 'undefined') {
+          window.location.href = '/'
+        }
       },
       
       signup: async (data: { name: string; email: string; password: string }) => {
