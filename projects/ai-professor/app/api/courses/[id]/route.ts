@@ -4,7 +4,6 @@ import { NextRequest } from 'next/server'
 import { db, handleSupabaseError } from '@/lib/supabase'
 import { 
   requireAuth, 
-  requireResourceOwnership,
   applyRateLimit, 
   createSuccessResponse, 
   createErrorResponse,

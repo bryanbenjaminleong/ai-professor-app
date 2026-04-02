@@ -5,18 +5,8 @@ const nextConfig = {
     ignoreBuildErrors: false,
   },
   
-  // Enable experimental features
   experimental: {
-    serverActions: true,
     serverComponentsExternalPackages: ['@supabase/supabase-js'],
-  },
-
-  // Environment variables exposed to browser
-  env: {
-    NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
-    NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL,
-    NEXT_PUBLIC_SUPABASE_ANON_KEY: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
-    NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
   },
 
   // Headers for security
@@ -51,7 +41,7 @@ const nextConfig = {
           },
           {
             key: 'Content-Security-Policy',
-            value: "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline' https://vercel.live; style-src 'self' 'unsafe-inline'; img-src 'self' data: https: blob:; connect-src 'self' https://api.openai.com https://*.supabase.co; frame-ancestors 'none';"
+            value: "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline' https://vercel.live; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https: blob:; connect-src 'self' https://api.openai.com https://*.supabase.co https://api.stripe.com; frame-ancestors 'none';"
           },
         ],
       },
@@ -69,24 +59,11 @@ const nextConfig = {
     ]
   },
 
-  // Rewrites for API routes
-  async rewrites() {
-    return [
-      // Add any rewrites if needed
-    ]
-  },
-
-  // Webpack configuration
-  webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {
-    // Add custom webpack configurations if needed
-    return config
-  },
-
-  // Image domains
+  // Image configuration
   images: {
-    domains: [
-      'localhost',
-      // Add your image domains here
+    remotePatterns: [
+      { protocol: 'https', hostname: '*.supabase.co' },
+      { protocol: 'https', hostname: 'localhost' },
     ],
     formats: ['image/avif', 'image/webp'],
   },

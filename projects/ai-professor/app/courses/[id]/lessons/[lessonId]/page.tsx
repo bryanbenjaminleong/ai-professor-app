@@ -24,6 +24,7 @@ async function getCourse(courseId: string) {
     const course = await db.courses.getById(courseId)
     return course
   } catch (error) {
+    console.error('Failed to fetch course:', error)
     return null
   }
 }
