@@ -56,7 +56,7 @@ export const metadata: Metadata = {
       'Real-time AI news aggregation meets AI-powered learning. Stay current with the latest AI developments and get smarter with expert-led courses.',
     images: [
       {
-        url: '/og-image.png',
+        url: '/og-image.svg',
         width: 1200,
         height: 630,
         alt: 'CXO Academy',

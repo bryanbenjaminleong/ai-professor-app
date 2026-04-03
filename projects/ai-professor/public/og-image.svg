@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+  <!-- Navy background -->
+  <rect width="1200" height="630" fill="#0A1628"/>
+  
+  <!-- Subtle teal accent line -->
+  <rect x="80" y="560" width="200" height="3" rx="1.5" fill="#0d9488"/>
+  
+  <!-- CXO bold -->
+  <text x="80" y="300" font-family="Georgia, 'Times New Roman', serif" font-weight="700" font-size="140" fill="#FFFFFF" letter-spacing="-4">CXO</text>
+  
+  <!-- Teal dot -->
+  <circle cx="430" cy="265" r="12" fill="#0d9488"/>
+  
+  <!-- Academy lighter -->
+  <text x="460" y="300" font-family="Georgia, 'Times New Roman', serif" font-weight="400" font-size="80" fill="#94A3B8" letter-spacing="2">Academy</text>
+  
+  <!-- Tagline -->
+  <text x="82" y="400" font-family="'Helvetica Neue', Arial, sans-serif" font-weight="300" font-size="28" fill="#64748B" letter-spacing="2">WHERE LEADERS LEARN TO LEAD IN THE AGE OF AI</text>
+  
+  <!-- Stats -->
+  <text x="82" y="500" font-family="'Helvetica Neue', Arial, sans-serif" font-weight="400" font-size="20" fill="#475569">33 Courses · 7 Programs · 236+ Lessons · CXO News</text>
+  
+  <!-- URL -->
+  <text x="82" y="580" font-family="'Helvetica Neue', Arial, sans-serif" font-weight="400" font-size="16" fill="#0d9488">cxoacademy.co</text>
+</svg>
