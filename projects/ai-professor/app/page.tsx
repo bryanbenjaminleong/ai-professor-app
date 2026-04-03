@@ -12,8 +12,7 @@ import {
   TrendingUp,
   Target,
   Clock,
-  GraduationCap,
-  Layers
+  GraduationCap
 } from 'lucide-react'
 import { Button } from '@/components/ui'
 
@@ -21,22 +20,13 @@ interface Stats {
   articles: number
   guides: number
   courses: number
-  programs: number
 }
 
 export default function HomePage() {
-  interface Stats {
-    articles: number
-    guides: number
-    courses: number
-    programs: number
-  }
-
   const [stats, setStats] = useState<Stats>({
-    articles: 100,
+    articles: 100,  // Fallback values
     guides: 24,
-    courses: 21,
-    programs: 4,
+    courses: 28,
   })
 
   useEffect(() => {
@@ -77,9 +67,7 @@ export default function HomePage() {
             
             {/* Main Headline - Bolder */}
             <h1 className="text-5xl md:text-7xl lg:text-8xl font-black mb-6 tracking-tight">
-              <span className="text-white">Pulse</span>
-              <span className="text-white/40"> + </span>
-              <span className="text-white">AI Professor</span>
+              <span className="text-white">CXO Academy</span>
             </h1>
             
             {/* Subheadline */}
@@ -119,10 +107,10 @@ export default function HomePage() {
             {/* Quick Stats */}
             <div className="grid grid-cols-4 gap-4 max-w-2xl mx-auto">
               {[
-                { value: `${stats.articles}+`, label: 'Articles' },
-                { value: `${stats.guides}`, label: 'Quick Guides' },
+                { value: '7', label: 'Programs' },
                 { value: `${stats.courses}`, label: 'Courses' },
-                { value: `${stats.programs}`, label: 'Programs' },
+                { value: '226+', label: 'Lessons' },
+                { value: '24/7', label: 'Updates' },
               ].map((stat, i) => (
                 <motion.div
                   key={stat.label}
@@ -157,7 +145,7 @@ export default function HomePage() {
             </p>
           </motion.div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-8">
             {[
               {
                 icon: Newspaper,
@@ -185,19 +173,19 @@ export default function HomePage() {
               },
               {
                 icon: GraduationCap,
-                title: 'Courses',
-                description: 'Comprehensive courses with hands-on projects. Learn at your own pace.',
-                link: '/courses',
+                title: 'Learning Programs',
+                description: '7 structured programs from cybersecurity to AI strategy. Master a domain end-to-end.',
+                link: '/paths',
                 color: 'from-blue-500 to-indigo-500',
-                cta: 'Browse Courses'
+                cta: 'Browse Programs'
               },
               {
-                icon: Layers,
-                title: 'Programs',
-                description: '4-module programs that master a complete discipline. 24 lessons, capstone projects, and real-world application.',
-                link: '/programs',
-                color: 'from-emerald-500 to-teal-500',
-                cta: 'Explore Programs'
+                icon: BookOpen,
+                title: 'Full Courses',
+                description: '28 individual courses across all levels. Pick what you need, learn at your pace.',
+                link: '/courses',
+                color: 'from-teal-500 to-cyan-500',
+                cta: 'Browse Courses'
               },
             ].map((item, i) => (
               <motion.div
@@ -208,7 +196,7 @@ export default function HomePage() {
                 transition={{ delay: i * 0.1 }}
               >
                 <Link href={item.link}>
-                  <div className="group bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-sm hover:shadow-xl transition-all duration-300 h-full border border-gray-100 dark:border-gray-700 hover:border-transparent card-hover">
+                  <div className="group bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-sm hover:shadow-xl transition-all duration-300 h-full border border-gray-100 dark:border-gray-700 hover:border-transparent">
                     {/* Icon */}
                     <div className={`w-14 h-14 rounded-xl bg-gradient-to-br ${item.color} flex items-center justify-center mb-6 group-hover:scale-110 transition-transform`}>
                       <item.icon className="w-7 h-7 text-white" />
@@ -353,18 +341,17 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="text-2xl font-bold mb-4 md:mb-0">
-              Pulse + AI Professor
+              CXO Academy
             </div>
             <div className="flex gap-6 text-gray-400">
               <Link href="/breaking" className="hover:text-white transition-colors">Breaking</Link>
               <Link href="/news" className="hover:text-white transition-colors">AI News</Link>
               <Link href="/guides" className="hover:text-white transition-colors">Guides</Link>
               <Link href="/courses" className="hover:text-white transition-colors">Courses</Link>
-              <Link href="/programs" className="hover:text-white transition-colors">Programs</Link>
             </div>
           </div>
           <div className="mt-8 pt-8 border-t border-gray-800 text-center text-gray-500">
-            <p>© 2026 Pulse + AI Professor. Stay current. Get smarter.</p>
+            <p>© 2026 CXO Academy. Stay current. Get smarter.</p>
           </div>
         </div>
       </footer>

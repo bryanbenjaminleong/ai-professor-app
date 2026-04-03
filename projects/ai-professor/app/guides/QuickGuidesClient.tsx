@@ -404,7 +404,7 @@ export default function QuickGuidesClient() {
             const gradient = CATEGORY_COLORS[guide.topic] || 'from-gray-500 to-gray-600'
             
             return (
-              <Card key={guide.id} className="h-full hover:shadow-xl transition-all duration-300 group overflow-hidden card-hover">
+              <Card key={guide.id} className="h-full hover:shadow-xl transition-all duration-300 group overflow-hidden">
                 {/* Gradient Header */}
                 <div className={`bg-gradient-to-r ${gradient} p-6 text-white`}>
                   <div className="flex items-center justify-between mb-4">
@@ -461,11 +461,11 @@ export default function QuickGuidesClient() {
             </h2>
             <p className="text-gray-600 dark:text-gray-400 mb-6 max-w-2xl mx-auto">
               Our Quick Guides are perfect for getting started. When you're ready to master a topic 
-              and build real projects, check out our courses.
+              and build real projects, check out our full courses.
             </p>
             <Link href="/courses">
               <Button size="lg">
-                Browse Courses
+                Browse Full Courses
                 <ArrowRight className="w-5 h-5 ml-2" />
               </Button>
             </Link>

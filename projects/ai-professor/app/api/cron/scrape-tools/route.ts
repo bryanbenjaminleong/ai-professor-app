@@ -7,12 +7,20 @@ const CRON_SECRET = process.env.CRON_SECRET
 export async function GET(request: NextRequest) {
   // Verify cron authorization
   const authHeader = request.headers.get('authorization')
-  const vercelCronHeader = request.headers.get('x-vercel-cron')
-  const hasValidSecret = authHeader === `Bearer ${CRON_SECRET}`
-  const isVercelCron = vercelCronHeader === '1' || vercelCronHeader === 'true'
   
-  if (!hasValidSecret && !isVercelCron) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  // CRON_SECRET is mandatory in production
+  if (process.env.NODE_ENV === 'production') {
+    if (!CRON_SECRET) {
+      console.error('[Cron] CRON_SECRET not configured in production')
+      return NextResponse.json(
+        { error: 'Server configuration error' },
+        { status: 500 }
+      )
+    }
+    
+    if (authHeader !== `Bearer ${CRON_SECRET}`) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
   }
 
   try {

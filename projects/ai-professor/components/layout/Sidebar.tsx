@@ -11,7 +11,6 @@ import {
   ChevronLeft,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { AdminLink } from './AdminLink';
 
 interface SidebarProps {
   isCollapsed?: boolean;
@@ -76,7 +75,6 @@ export function Sidebar({ isCollapsed = false, onToggle }: SidebarProps) {
               </Link>
             );
           })}
-          <AdminLink isCollapsed={isCollapsed} />
         </nav>
 
         {/* Help Card */}

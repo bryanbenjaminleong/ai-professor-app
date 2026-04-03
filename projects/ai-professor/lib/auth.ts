@@ -1,57 +1,68 @@
 // Authentication Helpers
 
-import { getSupabaseAdmin } from './supabase'
+import { getServerSession, Session } from 'next-auth'
+import { authOptions } from '../app/api/auth/[...nextauth]/route'
+import { getSupabaseAdmin, getUserFromRequest } from './supabase'
 import { User } from '../types/database'
 import { NextRequest } from 'next/server'
 
 // Re-export auth store for client components
 export { useAuthStore } from '../stores/auth-store'
 
-// Get user by email (server-side)
-export async function getUserByEmail(email: string): Promise<User | null> {
+// Get current session (server-side)
+export async function getCurrentSession(): Promise<Session | null> {
+  return await getServerSession(authOptions)
+}
+
+// Get current user (server-side)
+export async function getCurrentUser(): Promise<User | null> {
+  const session = await getCurrentSession()
+  
+  if (!session?.user?.id) {
+    return null
+  }
+
   try {
     const supabaseAdmin = getSupabaseAdmin()
-    const { data } = await supabaseAdmin
+    const user = await supabaseAdmin
       .from('users')
       .select('*')
-      .eq('email', email)
+      .eq('id', session.user.id)
       .single()
-    return data
+
+    return user.data
   } catch (error) {
     return null
   }
 }
 
-// Get user from API route — checks Bearer token OR x-user-email header
+// Get user from API route
 export async function getApiUser(request: NextRequest): Promise<User | null> {
-  // Check for x-user-email header (sent by client from localStorage)
-  const userEmail = request.headers.get('x-user-email')
-  if (userEmail) {
-    return getUserByEmail(userEmail)
-  }
-
-  // Check for x-admin-email header (admin dashboard)
-  const adminEmail = request.headers.get('x-admin-email')
-  if (adminEmail) {
-    return getUserByEmail(adminEmail)
-  }
-
-  // Check Bearer token (if client sends Supabase access token)
   const authHeader = request.headers.get('Authorization')
-  if (authHeader?.startsWith('Bearer ')) {
-    const token = authHeader.substring(7)
-    try {
-      const supabaseAdmin = getSupabaseAdmin()
-      const { data: { user } } = await supabaseAdmin.auth.getUser(token)
-      if (user) {
-        return getUserByEmail(user.email!)
-      }
-    } catch {
-      // Invalid token
-    }
+  
+  if (!authHeader?.startsWith('Bearer ')) {
+    return null
   }
 
-  return null
+  const token = authHeader.substring(7)
+  const user = await getUserFromRequest(request as any)
+  
+  if (!user) {
+    return null
+  }
+
+  try {
+    const supabaseAdmin = getSupabaseAdmin()
+    const { data } = await supabaseAdmin
+      .from('users')
+      .select('*')
+      .eq('id', user.id)
+      .single()
+
+    return data
+  } catch (error) {
+    return null
+  }
 }
 
 // Require authentication middleware
@@ -72,15 +83,15 @@ export async function requireTier(
 ): Promise<User> {
   const user = await requireAuth(request)
 
-  const tierLevels: Record<string, number> = {
+  const tierLevels = {
     free: 0,
     basic: 1,
     pro: 2,
     enterprise: 3,
   }
 
-  const userLevel = tierLevels[user.subscription_tier] || 0
-  const requiredLevel = tierLevels[requiredTier] || 0
+  const userLevel = tierLevels[user.subscription_tier]
+  const requiredLevel = tierLevels[requiredTier]
 
   if (userLevel < requiredLevel) {
     throw new AuthError(
@@ -92,24 +103,47 @@ export async function requireTier(
   return user
 }
 
-// Check if user is admin by email
-export function isAdminEmail(email: string): boolean {
-  const ADMIN_EMAILS = ['bryanbleong@gmail.com']
-  return ADMIN_EMAILS.includes(email)
+// Check if user owns resource
+export async function requireResourceOwnership(
+  request: NextRequest,
+  resourceUserId: string
+): Promise<User> {
+  const user = await requireAuth(request)
+
+  if (user.id !== resourceUserId) {
+    throw new AuthError('You do not have permission to access this resource', 403)
+  }
+
+  return user
+}
+
+// Check if user is instructor
+export async function isInstructor(userId: string): Promise<boolean> {
+  const supabaseAdmin = getSupabaseAdmin()
+  const { data } = await supabaseAdmin
+    .from('courses')
+    .select('id')
+    .eq('instructor_id', userId)
+    .limit(1)
+
+  return (data?.length || 0) > 0
 }
 
 // Rate limiting — delegates to lib/rate-limit.ts (Upstash Redis with in-memory fallback)
-import { checkRateLimit as redisCheckRateLimit, RATE_LIMIT_PRESETS } from './rate-limit'
+import { checkRateLimit as redisCheckRateLimit, RATE_LIMIT_PRESETS, rateLimitResponse } from './rate-limit'
 
-// Internal store for the synchronous fallback
-const _fallbackStore = new Map<string, { count: number; resetTime: number }>()
-
+/**
+ * Legacy in-memory check (kept for backward compat, used only as fallback internally).
+ * The actual implementation is in lib/rate-limit.ts.
+ */
 export function checkRateLimit(
   identifier: string,
   maxRequests: number = 100,
   windowMs: number = 60000
 ): { allowed: boolean; remaining: number; resetTime: number } {
+  // Synchronous in-memory fallback for any code that calls this directly.
   const now = Date.now()
+  const _fallbackStore = checkRateLimit._store
   const record = _fallbackStore.get(identifier)
 
   if (!record || now > record.resetTime) {
@@ -125,18 +159,24 @@ export function checkRateLimit(
   record.count++
   return { allowed: true, remaining: maxRequests - record.count, resetTime: record.resetTime }
 }
+// Internal store for the synchronous fallback
+checkRateLimit._store = new Map<string, { count: number; resetTime: number }>()
 
-// Apply rate limiting to request — uses Redis-backed sliding window
+// Apply rate limiting to request — now uses Redis-backed sliding window
 export async function applyRateLimit(
   request: NextRequest,
   maxRequests?: number
 ): Promise<void> {
   const user = await getApiUser(request)
-  const identifier = user?.id || 'anonymous'
+  const identifier = user?.id || request.ip || 'anonymous'
 
+  // Pick the right preset based on the maxRequests value, or use custom config
   let config
   if (maxRequests === undefined || maxRequests === 60) {
     config = RATE_LIMIT_PRESETS.general
+  } else if (maxRequests <= 20) {
+    // Low limits → treat as write/strict
+    config = { maxRequests, windowSeconds: 60 }
   } else {
     config = { maxRequests, windowSeconds: 60 }
   }
@@ -200,8 +240,8 @@ export function generateSecureToken(length: number = 32): string {
 export function sanitizeInput(input: string): string {
   return input
     .trim()
-    .replace(/[<>]/g, '')
-    .substring(0, 10000)
+    .replace(/[<>]/g, '') // Remove potential HTML tags
+    .substring(0, 10000) // Limit length
 }
 
 // Validate UUID
@@ -212,26 +252,22 @@ export function isValidUUID(uuid: string): boolean {
 
 // Error classes
 export class AuthError extends Error {
-  statusCode: number
   constructor(
     message: string,
-    statusCode: number = 401
+    public statusCode: number = 401
   ) {
     super(message)
     this.name = 'AuthError'
-    this.statusCode = statusCode
   }
 }
 
 export class RateLimitError extends Error {
-  resetTime: number
   constructor(
     message: string,
-    resetTime: number
+    public resetTime: number
   ) {
     super(message)
     this.name = 'RateLimitError'
-    this.resetTime = resetTime
   }
 }
 

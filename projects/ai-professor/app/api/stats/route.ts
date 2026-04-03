@@ -15,17 +15,12 @@ export async function GET() {
     const [
       { count: articleCount, error: articlesError },
       { count: courseCount, error: coursesError },
-      { count: programCount, error: programsError },
     ] = await Promise.all([
       admin
         .from('news_items')
         .select('*', { count: 'exact', head: true }),
       admin
         .from('courses')
-        .select('*', { count: 'exact', head: true })
-        .eq('is_published', true),
-      admin
-        .from('learning_paths')
         .select('*', { count: 'exact', head: true })
         .eq('is_published', true),
     ])
@@ -36,15 +31,11 @@ export async function GET() {
     if (coursesError) {
       console.error('Error fetching course count:', coursesError)
     }
-    if (programsError) {
-      console.error('Error fetching program count:', programsError)
-    }
     
     return NextResponse.json({
       articles: articleCount || 0,
       guides: 24, // Hardcoded as per requirements
       courses: courseCount || 0,
-      programs: programCount || 0,
       updatedAt: new Date().toISOString(),
     })
   } catch (error) {
@@ -54,8 +45,7 @@ export async function GET() {
     return NextResponse.json({
       articles: 100,
       guides: 24,
-      courses: 21,
-      programs: 4,
+      courses: 5,
       updatedAt: new Date().toISOString(),
       error: 'Failed to fetch live stats',
     })
