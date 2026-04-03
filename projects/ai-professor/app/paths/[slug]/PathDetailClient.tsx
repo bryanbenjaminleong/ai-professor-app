@@ -1,17 +1,13 @@
 'use client'
 
-import React, { useState } from 'react'
+import React from 'react'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
-import { ArrowLeft, BookOpen, Clock, DollarSign, CheckCircle, ChevronRight, GraduationCap, Mail, Loader2 } from 'lucide-react'
+import { ArrowLeft, BookOpen, Clock, DollarSign, CheckCircle, ChevronRight, GraduationCap } from 'lucide-react'
 import { Button, Badge, Card } from '@/components/ui'
 import { useQuery } from '@tanstack/react-query'
 
 export default function PathDetailClient({ slug }: { slug: string }) {
-  const [waitlistOpen, setWaitlistOpen] = useState(false)
-  const [email, setEmail] = useState('')
-  const [submitting, setSubmitting] = useState(false)
-  const [submitted, setSubmitted] = useState(false)
 
   const { data: pathData, isLoading, error } = useQuery({
     queryKey: ['path', slug],
@@ -22,22 +18,6 @@ export default function PathDetailClient({ slug }: { slug: string }) {
       return json.data?.path
     },
   })
-
-  const handleWaitlist = async (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!email) return
-    setSubmitting(true)
-    try {
-      const res = await fetch('/api/waitlist', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, source: slug }),
-      })
-      if (res.ok) setSubmitted(true)
-    } finally {
-      setSubmitting(false)
-    }
-  }
 
   if (isLoading) {
     return (
@@ -101,7 +81,7 @@ export default function PathDetailClient({ slug }: { slug: string }) {
         </div>
       </section>
 
-      {/* Pricing / Waitlist */}
+      {/* Pricing */}
       <section className="py-12">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <Card className="mb-8 p-6">
@@ -113,41 +93,13 @@ export default function PathDetailClient({ slug }: { slug: string }) {
                 </div>
                 <p className="text-sm text-gray-500 dark:text-gray-400 flex items-center gap-1">
                   <CheckCircle className="w-4 h-4 text-green-500" />
-                  All modules included with program purchase
+                  One-time purchase · Lifetime access · All modules included
                 </p>
               </div>
-
-              {!submitted && !waitlistOpen && (
-                <Button size="lg" onClick={() => setWaitlistOpen(true)}>Join Waitlist</Button>
-              )}
-
-              {submitted && (
-                <div className="flex items-center gap-2 text-green-600 dark:text-green-400 font-semibold">
-                  <CheckCircle className="w-5 h-5" />
-                  You&apos;re on the list!
-                </div>
-              )}
+              <Link href="/auth/signup">
+                <Button size="lg">Get Started</Button>
+              </Link>
             </div>
-
-            {waitlistOpen && !submitted && (
-              <form onSubmit={handleWaitlist} className="mt-4 flex gap-3 items-center flex-wrap">
-                <div className="relative flex-1 min-w-[240px]">
-                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-                  <input
-                    type="email"
-                    required
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="your@email.com"
-                    className="w-full pl-10 pr-4 py-2.5 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none"
-                  />
-                </div>
-                <Button type="submit" disabled={submitting}>
-                  {submitting ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
-                  {submitting ? 'Joining...' : 'Join Waitlist'}
-                </Button>
-              </form>
-            )}
           </Card>
 
           {/* Module List */}

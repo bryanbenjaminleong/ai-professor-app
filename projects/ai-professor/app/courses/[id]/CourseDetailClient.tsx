@@ -103,7 +103,9 @@ export default function CourseDetailClient({ courseId }: { courseId: string }) {
                   Included free with program purchase
                 </p>
               </div>
-              <Button size="lg">Join Waitlist</Button>
+              <Link href="/auth/signup">
+                <Button size="lg">Get Started</Button>
+              </Link>
             </div>
           </Card>
 
