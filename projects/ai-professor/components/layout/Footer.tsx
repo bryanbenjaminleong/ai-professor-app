@@ -39,8 +39,6 @@ export function Footer() {
               <span className="text-teal-600 text-lg">·</span>
               <span className="text-lg text-gray-500 dark:text-gray-400" style={{ fontFamily: 'Georgia, serif', fontWeight: 400 }}>
                 Academy</span>
-                </span>
-              </div>
             </Link>
             <p className="text-gray-600 dark:text-gray-400 text-sm mb-4">
               Stay current with AI news. Get smarter with AI courses. One platform for all your AI learning needs.
