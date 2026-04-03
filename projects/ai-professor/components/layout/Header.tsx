@@ -61,7 +61,6 @@ export function Header() {
               <span className="text-teal-600 text-lg">·</span>
               <span className="text-lg text-gray-500 dark:text-gray-400" style={{ fontFamily: 'Georgia, serif', fontWeight: 400 }}>
                 Academy</span>
-              </span>
             </div>
           </Link>
 
