@@ -26,7 +26,7 @@ export default function HomePage() {
   const [stats, setStats] = useState<Stats>({
     articles: 100,  // Fallback values
     guides: 24,
-    courses: 28,
+    courses: 33,
   })
 
   useEffect(() => {
@@ -182,7 +182,7 @@ export default function HomePage() {
               {
                 icon: BookOpen,
                 title: 'Full Courses',
-                description: '28 individual courses across all levels. Pick what you need, learn at your pace.',
+                description: '33 individual courses across all levels. Pick what you need, learn at your pace.',
                 link: '/courses',
                 color: 'from-teal-500 to-cyan-500',
                 cta: 'Browse Courses'
