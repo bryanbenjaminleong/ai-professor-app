@@ -1,14 +1,10 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
-  <!-- Favicon: Geometric C with ascending chevrons -->
-  <defs>
-    <style>
-      .mark { fill: #0d9488; }
-    </style>
-  </defs>
-  <!-- Outer C shape -->
-  <path class="mark" d="M16 2A13.96 13.96 0 0 0 5.4 7.4l3.5 3.5A9 9 0 1 1 7 16H3A14 14 0 1 0 16 2Z"/>
-  <!-- Ascending chevron 1 (lower) -->
-  <path class="mark" d="M12 17.5l4-3 4 3" fill="none" stroke="#0d9488" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
-  <!-- Ascending chevron 2 (upper, smaller) -->
-  <path class="mark" d="M13.5 13l2.5-1.8L18.5 13" fill="none" stroke="#0d9488" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <!-- Dark navy background -->
+  <rect width="512" height="512" rx="96" fill="#0A1628"/>
+  <!-- CXO in bold serif -->
+  <text x="256" y="260" font-family="Georgia, 'Times New Roman', serif" font-weight="700" font-size="180" fill="#FFFFFF" text-anchor="middle" letter-spacing="-3">CXO</text>
+  <!-- Teal dot -->
+  <circle cx="256" cy="310" r="10" fill="#0d9488"/>
+  <!-- Academy in lighter serif -->
+  <text x="256" y="370" font-family="Georgia, 'Times New Roman', serif" font-weight="400" font-size="80" fill="#94A3B8" text-anchor="middle" letter-spacing="4">Academy</text>
 </svg>

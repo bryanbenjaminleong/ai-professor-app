@@ -55,9 +55,12 @@ export function Header() {
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2">
             <Image src="/icons/icon.svg" alt="CXO Academy" width={32} height={32} className="rounded-lg" />
-            <div className="flex items-baseline gap-1">
-              <span className="font-bold text-xl text-gray-900 dark:text-white">
-                CXO Academy
+            <div className="flex items-baseline gap-1.5">
+              <span className="font-bold text-xl text-gray-900 dark:text-white" style={{ fontFamily: 'Georgia, serif' }}>
+                CXO</span>
+              <span className="text-teal-600 text-lg">·</span>
+              <span className="text-lg text-gray-500 dark:text-gray-400" style={{ fontFamily: 'Georgia, serif', fontWeight: 400 }}>
+                Academy</span>
               </span>
             </div>
           </Link>
