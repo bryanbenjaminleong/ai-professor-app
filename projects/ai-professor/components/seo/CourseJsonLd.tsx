@@ -31,7 +31,7 @@ export function CourseJsonLd({
   duration,
   educationalLevel = 'Beginner',
   isAccessibleForFree = false,
-  price = 14.99,
+  price = 19.99,
   currency = 'USD',
   aggregateRating,
 }: CourseJsonLdProps) {

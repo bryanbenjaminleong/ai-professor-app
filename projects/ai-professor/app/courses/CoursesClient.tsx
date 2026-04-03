@@ -109,7 +109,7 @@ export default function CoursesClient({ initialCourses }: Props) {
                   </p>
 
                   <div className="flex items-center justify-between mb-4">
-                    <span className="text-2xl font-bold text-gray-900 dark:text-white">$14.99</span>
+                    <span className="text-2xl font-bold text-gray-900 dark:text-white">$19.99</span>
                     <Badge className="bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-400">
                       {course.topic}
                     </Badge>

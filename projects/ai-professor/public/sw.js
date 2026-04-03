@@ -1,6 +1,6 @@
 /// <reference lib="webworker" />
 
-const CACHE_NAME = 'ai-professor-v1';
+const CACHE_NAME = 'cxo-academy-v1';
 const OFFLINE_URL = '/offline.html';
 
 // Assets to cache immediately on install
@@ -136,7 +136,7 @@ self.addEventListener('push', (event) => {
   };
 
   event.waitUntil(
-    self.registration.showNotification(data.title || 'AI Professor', options)
+    self.registration.showNotification(data.title || 'CXO Academy', options)
   );
 });
 

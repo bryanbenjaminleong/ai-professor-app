@@ -109,7 +109,7 @@ export default function HomePage() {
               {[
                 { value: '7', label: 'Programs' },
                 { value: `${stats.courses}`, label: 'Courses' },
-                { value: '226+', label: 'Lessons' },
+                { value: '236+', label: 'Lessons' },
                 { value: '24/7', label: 'Updates' },
               ].map((stat, i) => (
                 <motion.div

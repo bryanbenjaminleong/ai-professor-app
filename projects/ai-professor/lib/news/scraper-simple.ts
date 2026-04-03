@@ -113,7 +113,7 @@ async function fetchRSS(url: string): Promise<string> {
   try {
     const response = await fetch(url, {
       headers: {
-        'User-Agent': 'Mozilla/5.0 (compatible; AI-Professor-Bot/1.0)',
+        'User-Agent': 'Mozilla/5.0 (compatible; CXO-Academy-Bot/1.0)',
       },
     })
     
@@ -328,7 +328,7 @@ export async function fetchHTML(url: string): Promise<string> {
   try {
     const response = await fetch(url, {
       headers: {
-        'User-Agent': 'Mozilla/5.0 (compatible; AI-Professor-Bot/1.0)',
+        'User-Agent': 'Mozilla/5.0 (compatible; CXO-Academy-Bot/1.0)',
       },
     })
     

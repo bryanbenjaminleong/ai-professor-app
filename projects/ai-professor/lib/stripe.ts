@@ -2,9 +2,9 @@
 // TODO: Enable Stripe when ready for production payments
 
 export const STRIPE_CONFIG = {
-  coursePrice: 1499, // $14.99 in cents
+  coursePrice: 1999, // $19.99 in cents
   currency: 'usd',
-  priceDisplay: '$14.99',
+  priceDisplay: '$19.99',
 }
 
 export function formatPrice(cents: number, currency: string = 'USD'): string {

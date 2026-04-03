@@ -42,7 +42,7 @@ async function fetchProductHuntAI(): Promise<ScrapedItem[]> {
   try {
     const response = await fetch('https://www.producthunt.com/topics/ai', {
       headers: {
-        'User-Agent': 'AI-Professor-Bot/1.0',
+        'User-Agent': 'CXO-Academy-Bot/1.0',
       },
     })
     const html = await response.text()
@@ -74,7 +74,7 @@ async function fetchTechCrunchAI(): Promise<ScrapedItem[]> {
   try {
     const response = await fetch('https://techcrunch.com/category/artificial-intelligence/', {
       headers: {
-        'User-Agent': 'AI-Professor-Bot/1.0',
+        'User-Agent': 'CXO-Academy-Bot/1.0',
       },
     })
     const html = await response.text()

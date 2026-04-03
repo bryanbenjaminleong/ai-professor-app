@@ -5,7 +5,7 @@ import { NextRequest, NextResponse } from 'next/server'
  * 
  * To set up:
  * 1. Go to Supabase Dashboard → Database → Webhooks
- * 2. Create webhook pointing to: https://ai-professor-red.vercel.app/api/webhooks/supabase
+ * 2. Create webhook pointing to: https://cxoacademy.co/api/webhooks/supabase
  * 3. Select events: INSERT, UPDATE, DELETE on sensitive tables
  * 4. Add secret: Use same ALERT_SECRET env var
  */

@@ -174,7 +174,7 @@ export { runVoiceCron }
  * Add to crontab (crontab -e):
  * 
  * # Run every 6 hours
- * 0 */6 * * * cd /path/to/ai-professor && npm run voice-cron >> /var/log/voice-cron.log 2>&1
+ * 0 */6 * * * cd /path/to/cxo-academy && npm run voice-cron >> /var/log/voice-cron.log 2>&1
  * 
  * Add to package.json:
  * 

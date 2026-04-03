@@ -49,7 +49,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'en_US',
-    url: 'https://ai-professor-app.vercel.app',
+    url: 'https://cxoacademy.co',
     siteName: 'CXO Academy',
     title: 'CXO Academy | Stay Current. Get Smarter.',
     description:

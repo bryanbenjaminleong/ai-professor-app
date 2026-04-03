@@ -62,7 +62,7 @@ export default function TermsPage() {
           <p>THE SERVICE IS PROVIDED &quot;AS IS&quot; AND &quot;AS AVAILABLE&quot; WITHOUT WARRANTIES OF ANY KIND, either express or implied. We do not guarantee that the Service will be uninterrupted, timely, secure, or error-free.</p>
 
           <h2 className="text-xl font-bold text-gray-900 dark:text-white">8. Limitation of Liability</h2>
-          <p>TO THE MAXIMUM EXTENT PERMITTED BY LAW, AI PROFESSOR SHALL NOT BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES ARISING OUT OF OR RELATING TO YOUR USE OF THE SERVICE. Our total liability shall not exceed the amount you paid us in the 12 months preceding the claim.</p>
+          <p>TO THE MAXIMUM EXTENT PERMITTED BY LAW, CXO ACADEMY SHALL NOT BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES ARISING OUT OF OR RELATING TO YOUR USE OF THE SERVICE. Our total liability shall not exceed the amount you paid us in the 12 months preceding the claim.</p>
 
           <h2 className="text-xl font-bold text-gray-900 dark:text-white">9. Indemnification</h2>
           <p>You agree to indemnify and hold harmless CXO Academy from any claims, damages, or expenses arising from your use of the Service or violation of these Terms.</p>

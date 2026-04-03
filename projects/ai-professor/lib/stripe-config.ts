@@ -1,7 +1,7 @@
 // Stripe Configuration
 export const STRIPE_CONFIG = {
   // Course pricing in cents (Stripe uses cents)
-  coursePrice: 1499, // $14.99
+  coursePrice: 1999, // $19.99
   currency: 'usd',
   
   // URLs
@@ -9,7 +9,7 @@ export const STRIPE_CONFIG = {
   cancelUrl: '/courses?payment=cancelled',
   
   // Display
-  priceDisplay: '$14.99',
+  priceDisplay: '$19.99',
 }
 
 // Format price for display

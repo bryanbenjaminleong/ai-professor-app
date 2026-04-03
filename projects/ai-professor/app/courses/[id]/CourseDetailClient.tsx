@@ -96,7 +96,7 @@ export default function CourseDetailClient({ courseId }: { courseId: string }) {
               <div>
                 <div className="flex items-center gap-2 mb-2">
                   <DollarSign className="w-5 h-5 text-primary-600" />
-                  <span className="text-3xl font-bold text-gray-900 dark:text-white">$14.99</span>
+                  <span className="text-3xl font-bold text-gray-900 dark:text-white">$19.99</span>
                 </div>
                 <p className="text-sm text-gray-500 dark:text-gray-400 flex items-center gap-1">
                   <CheckCircle className="w-4 h-4 text-green-500" />

@@ -9,7 +9,7 @@ export default defineConfig({
   reporter: 'html',
   
   use: {
-    baseURL: process.env.BASE_URL || 'https://ai-professor-red.vercel.app',
+    baseURL: process.env.BASE_URL || 'https://cxoacademy.co',
     trace: 'on-first-retry',
   },
 
