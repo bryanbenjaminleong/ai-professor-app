@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 
-const BASE_URL = process.env.BASE_URL || 'https://ai-professor-red.vercel.app';
+const BASE_URL = process.env.BASE_URL || 'https://cxoacademy.co';
 
 test.describe('Critical Path Tests', () => {
   

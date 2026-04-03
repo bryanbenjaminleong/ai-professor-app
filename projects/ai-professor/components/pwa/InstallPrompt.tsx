@@ -88,7 +88,7 @@ export function InstallPrompt() {
             
             <div className="flex items-start gap-3">
               <div className="w-12 h-12 bg-gradient-to-br from-primary-600 to-primary-700 rounded-xl flex items-center justify-center flex-shrink-0">
-                <span className="text-white font-bold text-xl">P</span>
+                <span className="text-white font-bold text-xl">C</span>
               </div>
               
               <div className="flex-1">
@@ -122,7 +122,7 @@ export function InstallPrompt() {
           
           <div className="flex items-start gap-3">
             <div className="w-12 h-12 bg-gradient-to-br from-primary-600 to-primary-700 rounded-xl flex items-center justify-center flex-shrink-0">
-              <span className="text-white font-bold text-xl">P</span>
+              <span className="text-white font-bold text-xl">C</span>
             </div>
             
             <div className="flex-1">

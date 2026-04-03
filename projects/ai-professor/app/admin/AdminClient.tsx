@@ -210,7 +210,7 @@ export default function AdminDashboard() {
             <div className="grid grid-cols-2 gap-4">
               <div><p className="text-xs text-gray-500 mb-1">Platform</p><p className="text-sm font-medium text-gray-900 dark:text-white">Next.js 14 + Supabase</p></div>
               <div><p className="text-xs text-gray-500 mb-1">Hosting</p><p className="text-sm font-medium text-gray-900 dark:text-white">Vercel</p></div>
-              <div><p className="text-xs text-gray-500 mb-1">Domain</p><p className="text-sm font-medium text-gray-900 dark:text-white">ai-professor-app.vercel.app</p></div>
+              <div><p className="text-xs text-gray-500 mb-1">Domain</p><p className="text-sm font-medium text-gray-900 dark:text-white">cxoacademy.co</p></div>
               <div><p className="text-xs text-gray-500 mb-1">Status</p><p className="text-sm font-medium text-green-600">Operational</p></div>
             </div>
           </div>

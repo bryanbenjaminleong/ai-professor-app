@@ -21,7 +21,7 @@ export default function NewsClient() {
               CXO News
             </h1>
             <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto mb-8">
-              The pulse of AI innovation. Your one-stop destination for the latest AI developments,
+              The heartbeat of AI innovation. Your one-stop destination for the latest AI developments,
               research breakthroughs, product launches, and industry news from 19 trusted sources.
             </p>
             <div className="flex justify-center gap-4">

@@ -16,7 +16,7 @@ export function OrganizationJsonLd({
   logo = 'https://cxoacademy.co/icons/icon.svg',
   description = 'Real-time AI news aggregation meets AI-powered learning. Stay current with the latest AI developments and get smarter with expert-led courses.',
   sameAs = [
-    'https://twitter.com/pulseaiprof',
+    'https://twitter.com/cxoacademy',
   ],
 }: OrganizationJsonLdProps) {
   const schema = {

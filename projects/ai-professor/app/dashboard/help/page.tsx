@@ -30,7 +30,7 @@ export default function HelpPage() {
             <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Email Support</h2>
           </div>
           <p className="text-gray-500 dark:text-gray-400 text-sm mb-4">We will get back to you within 24 hours.</p>
-          <a href="mailto:support@pulseaiprofessor.com">
+          <a href="mailto:support@cxoacademy.co">
             <Button variant="outline" className="w-full">Send Email</Button>
           </a>
         </Card>
@@ -50,7 +50,7 @@ export default function HelpPage() {
             <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Report Issue</h2>
           </div>
           <p className="text-gray-500 dark:text-gray-400 text-sm mb-4">Found a bug? Let us know.</p>
-          <a href="mailto:support@pulseaiprofessor.com">
+          <a href="mailto:support@cxoacademy.co">
             <Button variant="outline" className="w-full">Report</Button>
           </a>
         </Card>

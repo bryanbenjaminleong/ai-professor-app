@@ -1,7 +1,7 @@
 {
-  "name": "pulse-ai-professor",
+  "name": "cxo-academy",
   "version": "1.0.0",
-  "description": "CXO Academy - Premium AI and tech leadership education for executives and professionals",
+  "description": "Premium AI and tech leadership education for business professionals",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
