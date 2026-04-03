@@ -33,13 +33,12 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Brand */}
           <div className="md:col-span-1">
-            <Link href="/" className="flex items-center gap-2 mb-4">
-              <div className="w-8 h-8 bg-primary-600 rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-lg">C</span>
-              </div>
-              <div className="flex items-baseline gap-0">
-                <span className="font-bold text-xl text-gray-900 dark:text-white">
-                  CXO Academy
+            <Link href="/" className="flex items-center gap-1.5 mb-4">
+              <span className="font-bold text-xl text-gray-900 dark:text-white" style={{ fontFamily: 'Georgia, serif' }}>
+                CXO</span>
+              <span className="text-teal-600 text-lg">·</span>
+              <span className="text-lg text-gray-500 dark:text-gray-400" style={{ fontFamily: 'Georgia, serif', fontWeight: 400 }}>
+                Academy</span>
                 </span>
               </div>
             </Link>

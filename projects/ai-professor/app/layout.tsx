@@ -68,7 +68,7 @@ export const metadata: Metadata = {
     title: 'CXO Academy | Stay Current. Get Smarter.',
     description:
       'Real-time AI news aggregation meets AI-powered learning. Stay current with the latest AI developments and get smarter with expert-led courses.',
-    images: ['/og-image.png'],
+    images: ['/og-image.svg'],
     creator: '@cxoacademy',
   },
   robots: {

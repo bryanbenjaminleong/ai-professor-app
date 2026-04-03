@@ -1,8 +1,12 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
   <!-- Dark navy rounded square -->
   <rect width="512" height="512" rx="96" fill="#0A1628"/>
-  <!-- CXO in bold white serif -->
-  <text x="256" y="290" font-family="Georgia, 'Times New Roman', serif" font-weight="700" font-size="200" fill="#FFFFFF" text-anchor="middle" letter-spacing="-4">CXO</text>
+  <!-- C letterform as path (not text, for browser compatibility) -->
+  <path d="M300 160C250 130 200 140 170 180C140 220 140 290 170 330C200 370 250 380 300 350L280 310C250 330 220 320 200 290C180 260 180 230 200 200C220 170 250 160 280 180Z" fill="#FFFFFF"/>
+  <!-- X as paths -->
+  <path d="M210 180L250 240L290 180L310 200L270 260L310 320L290 340L250 280L210 340L190 320L230 260L190 200Z" fill="#FFFFFF"/>
+  <!-- O as path -->
+  <path d="M340 200C360 200 380 220 380 260C380 300 360 320 340 320C320 320 300 300 300 260C300 220 320 200 340 200ZM340 220C330 220 320 240 320 260C320 280 330 300 340 300C350 300 360 280 360 260C360 240 350 220 340 220Z" fill="#FFFFFF"/>
   <!-- Teal dot -->
-  <circle cx="256" cy="350" r="12" fill="#0d9488"/>
+  <circle cx="256" cy="400" r="15" fill="#0d9488"/>
 </svg>
