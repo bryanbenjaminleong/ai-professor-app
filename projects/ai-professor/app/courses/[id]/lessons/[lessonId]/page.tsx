@@ -54,8 +54,9 @@ export default async function LessonPage({
     }
   }
   
+  // Soft launch: all content is free — everyone has access
   // Admin bypasses enrollment check
-  const canAccess = isAdmin || isEnrolled
+  const canAccess = true
   
   return <LessonClient 
     lesson={lesson as any} 
