@@ -85,11 +85,13 @@ export default function LearningPathsClient() {
                   transition={{ delay: index * 0.1 }}
                 >
                   <Card className="h-full hover:shadow-xl transition-shadow overflow-hidden group">
-                    <div className="relative h-48 overflow-hidden">
+                    <div className="relative h-48 overflow-hidden bg-gradient-to-br from-primary-600 to-primary-800">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img
                         src={getPathImage(path.slug)}
                         alt={path.title}
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                        onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }}
                       />
                       <div className="absolute top-4 left-4">
                         <Badge variant={getDifficultyColor(path.difficulty) as any}>
