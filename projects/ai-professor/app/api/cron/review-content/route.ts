@@ -79,7 +79,57 @@ export async function GET(request: NextRequest) {
       })
     }
 
-    console.log(`[ContentReview] Found ${courses.length} courses to review`)
+    // --- Template Detection Phase ---
+    // Detect old template-generated content that still contains boilerplate patterns
+    const TEMPLATE_SIGNATURES = [
+      'Satya Nadella',
+      "Microsoft's cultural transformation",
+      'Transformational Leadership Model',
+      '30-Day Implementation Plan',
+      'Measuring Success: Key Performance Indicators',
+      'Building Organizational Capability',
+      'Microsoft under Satya Nadella serves as',
+    ]
+
+    console.log(`[ContentReview] Phase 1: Template detection across all lessons`)
+    let templateFlags = 0
+
+    const { data: allLessons } = await admin
+      .from('lessons')
+      .select('id, title, content, course_id')
+
+    if (allLessons && allLessons.length > 0) {
+      for (const lesson of allLessons) {
+        if (!lesson.content) continue
+        const matches = TEMPLATE_SIGNATURES.filter(sig => lesson.content.includes(sig))
+        if (matches.length >= 3) {
+          // Flag as template-generated — needs full rewrite
+          const { data: existingCourse } = await admin
+            .from('courses')
+            .select('title')
+            .eq('id', lesson.course_id)
+            .single()
+
+          console.warn(
+            `[ContentReview] TEMPLATE DETECTED: "${lesson.title}" (${lesson.id}) — contains ${matches.length} template signatures: ${matches.join(', ')} — Course: ${existingCourse?.title || 'unknown'}`
+          )
+
+          await admin.from('content_updates').insert({
+            course_id: lesson.course_id,
+            lesson_id: lesson.id,
+            update_type: 'major',
+            summary: `Template-generated content detected (${matches.length} boilerplate signatures: ${matches.join(', ')}). Needs full SME rewrite.`,
+            old_version: 0,
+            new_version: 0,
+          })
+          templateFlags++
+        }
+      }
+    }
+    console.log(`[ContentReview] Template detection complete: ${templateFlags} lessons flagged for rewrite`)
+    // --- End Template Detection Phase ---
+
+    console.log(`[ContentReview] Phase 2: Freshness review for ${courses.length} courses`)
 
     let totalUpdated = 0
     const results: Array<{
@@ -318,6 +368,7 @@ Be conservative - only flag lessons where content is genuinely outdated or incor
     const summary = {
       success: true,
       timestamp: now,
+      templateFlaggedLessons: templateFlags,
       totalCoursesReviewed: courses.length,
       totalLessonsUpdated: totalUpdated,
       results,
