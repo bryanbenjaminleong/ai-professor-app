@@ -4,7 +4,6 @@ import Link from 'next/link'
 import { ArrowLeft, Clock, BookOpen, ChevronRight, ChevronLeft, CheckCircle, ExternalLink, Lock, Crown } from 'lucide-react'
 import { Button, Card, Badge } from '@/components/ui'
 import { LessonJsonLd, BreadcrumbJsonLd } from '@/components/seo'
-import ReactMarkdown from 'react-markdown'
 
 interface Lesson {
   id: string
@@ -150,7 +149,8 @@ export default function LessonClient({
   }
 
   // Find previous and next lessons
-  const lessons = course?.lessons || []
+  // Sort lessons by order_index to ensure correct ordering
+  const lessons = (course?.lessons || []).sort((a, b) => a.order_index - b.order_index)
   const currentIndex = lessons.findIndex(l => l.id === lesson.id)
   const prevLesson = currentIndex > 0 ? lessons[currentIndex - 1] : null
   const nextLesson = currentIndex < lessons.length - 1 ? lessons[currentIndex + 1] : null
@@ -247,9 +247,7 @@ export default function LessonClient({
           )}
 
           {/* Lesson content */}
-          <div className="prose prose-lg dark:prose-invert max-w-none">
-            <ReactMarkdown>{lesson.content}</ReactMarkdown>
-          </div>
+          <div className="prose prose-lg dark:prose-invert max-w-none lesson-content" dangerouslySetInnerHTML={{ __html: lesson.content || '' }} />
         </Card>
 
         {/* Resources */}
