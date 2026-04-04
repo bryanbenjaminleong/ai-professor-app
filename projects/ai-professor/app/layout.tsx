@@ -16,6 +16,7 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://cxoacademy.co'),
   title: {
     default: 'CXO Academy | Stay Current. Get Smarter.',
     template: '%s | CXO Academy',
