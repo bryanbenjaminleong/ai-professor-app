@@ -1,7 +1,8 @@
 // Notifications API - GET (list) and PATCH (mark as read)
-// Uses x-user-email header for auth (same pattern as other endpoints)
+// Uses Bearer token authentication via requireAuth
 
-import { NextRequest, NextResponse } from 'next/server'
+import { NextRequest } from 'next/server'
+import { requireAuth, createErrorResponse, createSuccessResponse } from '@/lib/auth'
 import { getSupabaseAdmin } from '@/lib/supabase'
 
 export const dynamic = 'force-dynamic'
@@ -9,37 +10,18 @@ export const dynamic = 'force-dynamic'
 // GET /api/notifications - Fetch notifications for current user
 export async function GET(request: NextRequest) {
   try {
-    const userEmail = request.headers.get('x-user-email')
-    if (!userEmail) {
-      return NextResponse.json(
-        { success: false, error: 'User email required' },
-        { status: 401 }
-      )
-    }
+    const user = await requireAuth(request)
 
+    // TODO: migrate to anon+JWT client for proper RLS enforcement
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const admin = getSupabaseAdmin() as any
-
-    // Look up user profile by email
-    const { data: profile, error: profileError } = await admin
-      .from('profiles')
-      .select('id')
-      .eq('email', userEmail)
-      .single()
-
-    if (profileError || !profile) {
-      return NextResponse.json(
-        { success: false, error: 'User not found' },
-        { status: 404 }
-      )
-    }
 
     // Build query
     const { searchParams } = new URL(request.url)
     let query = admin
       .from('notifications')
       .select('*')
-      .eq('user_id', profile.id)
+      .eq('user_id', user.id)
       .order('created_at', { ascending: false })
 
     // Filter for unread only
@@ -54,60 +36,35 @@ export async function GET(request: NextRequest) {
     const { data: notifications, error: notifError } = await query
 
     if (notifError) {
-      return NextResponse.json(
-        { success: false, error: notifError.message },
-        { status: 500 }
-      )
+      return createErrorResponse(notifError, 'Failed to fetch notifications', 500)
     }
 
     // Get unread count
     const { count: unreadCount } = await admin
       .from('notifications')
       .select('*', { count: 'exact', head: true })
-      .eq('user_id', profile.id)
+      .eq('user_id', user.id)
       .eq('is_read', false)
 
-    return NextResponse.json({
-      success: true,
-      data: notifications || [],
+    return createSuccessResponse({
+      notifications: notifications || [],
       unreadCount: unreadCount || 0,
     })
   } catch (error: any) {
+    if (error.statusCode) return createErrorResponse(error, error.message, error.statusCode)
     console.error('[Notifications] GET error:', error)
-    return NextResponse.json(
-      { success: false, error: error.message },
-      { status: 500 }
-    )
+    return createErrorResponse(error, 'Failed to fetch notifications')
   }
 }
 
 // PATCH /api/notifications - Mark notifications as read
 export async function PATCH(request: NextRequest) {
   try {
-    const userEmail = request.headers.get('x-user-email')
-    if (!userEmail) {
-      return NextResponse.json(
-        { success: false, error: 'User email required' },
-        { status: 401 }
-      )
-    }
+    const user = await requireAuth(request)
 
+    // TODO: migrate to anon+JWT client for proper RLS enforcement
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const admin = getSupabaseAdmin() as any
-
-    // Look up user profile
-    const { data: profile, error: profileError } = await admin
-      .from('profiles')
-      .select('id')
-      .eq('email', userEmail)
-      .single()
-
-    if (profileError || !profile) {
-      return NextResponse.json(
-        { success: false, error: 'User not found' },
-        { status: 404 }
-      )
-    }
 
     const body = await request.json()
     const { notificationIds, markAll } = body
@@ -117,26 +74,21 @@ export async function PATCH(request: NextRequest) {
       const { error } = await admin
         .from('notifications')
         .update({ is_read: true })
-        .eq('user_id', profile.id)
+        .eq('user_id', user.id)
         .eq('is_read', false)
 
       if (error) {
-        return NextResponse.json(
-          { success: false, error: error.message },
-          { status: 500 }
-        )
+        return createErrorResponse(error, 'Failed to update notifications', 500)
       }
 
-      return NextResponse.json({
-        success: true,
-        message: 'All notifications marked as read',
-      })
+      return createSuccessResponse({ message: 'All notifications marked as read' })
     }
 
     if (!notificationIds || !Array.isArray(notificationIds) || notificationIds.length === 0) {
-      return NextResponse.json(
-        { success: false, error: 'notificationIds array required' },
-        { status: 400 }
+      return createErrorResponse(
+        new Error('notificationIds array required'),
+        'Validation error',
+        400
       )
     }
 
@@ -144,25 +96,19 @@ export async function PATCH(request: NextRequest) {
     const { error } = await admin
       .from('notifications')
       .update({ is_read: true })
-      .eq('user_id', profile.id)
+      .eq('user_id', user.id)
       .in('id', notificationIds)
 
     if (error) {
-      return NextResponse.json(
-        { success: false, error: error.message },
-        { status: 500 }
-      )
+      return createErrorResponse(error, 'Failed to update notifications', 500)
     }
 
-    return NextResponse.json({
-      success: true,
+    return createSuccessResponse({
       message: `${notificationIds.length} notification(s) marked as read`,
     })
   } catch (error: any) {
+    if (error.statusCode) return createErrorResponse(error, error.message, error.statusCode)
     console.error('[Notifications] PATCH error:', error)
-    return NextResponse.json(
-      { success: false, error: error.message },
-      { status: 500 }
-    )
+    return createErrorResponse(error, 'Failed to update notifications')
   }
 }

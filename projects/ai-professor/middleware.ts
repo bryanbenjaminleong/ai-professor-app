@@ -3,7 +3,6 @@ import type { NextRequest } from 'next/server'
 
 const ALLOWED_ORIGINS = [
   'https://cxoacademy.co',
-  'https://cxoacademy.co',
   'http://localhost:3000',
   process.env.NODE_ENV === 'development' ? 'http://localhost:3001' : '',
 ].filter(Boolean) as string[]

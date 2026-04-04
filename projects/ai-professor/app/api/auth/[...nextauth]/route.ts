@@ -2,16 +2,29 @@
 
 import NextAuth, { NextAuthOptions } from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
-import GoogleProvider from 'next-auth/providers/google'
-import GitHubProvider from 'next-auth/providers/github'
 import { getSupabaseAdmin } from '@/lib/supabase'
+
+// Conditionally import OAuth providers
+let GoogleProvider: any = null
+let GitHubProvider: any = null
+try {
+  if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
+    GoogleProvider = require('next-auth/providers/google').default
+  }
+} catch {}
+try {
+  if (process.env.GITHUB_CLIENT_ID && process.env.GITHUB_CLIENT_SECRET) {
+    GitHubProvider = require('next-auth/providers/github').default
+  }
+} catch {}
 
 // Auth options factory - creates options at runtime
 function getAuthOptions(): NextAuthOptions {
-  return {
-    providers: [
-      // Email/Password authentication
-      CredentialsProvider({
+  // Only include OAuth providers if credentials are configured
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const providers: any[] = [
+    // Email/Password authentication
+    CredentialsProvider( {
         name: 'credentials',
         credentials: {
           email: { label: 'Email', type: 'email' },
@@ -53,20 +66,21 @@ function getAuthOptions(): NextAuthOptions {
         },
       }),
 
-      // Google OAuth
-      GoogleProvider({
+      // Conditionally add OAuth providers
+      ...(GoogleProvider ? [GoogleProvider({
         clientId: process.env.GOOGLE_CLIENT_ID!,
         clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
-      }),
-
-      // GitHub OAuth
-      GitHubProvider({
+      })] : []),
+      ...(GitHubProvider ? [GitHubProvider({
         clientId: process.env.GITHUB_CLIENT_ID!,
         clientSecret: process.env.GITHUB_CLIENT_SECRET!,
-      }),
-    ],
+      })] : []),
+    ]
 
-    callbacks: {
+    return {
+      providers,
+
+      callbacks: {
       async jwt({ token, user, account }) {
         // Initial sign in
         if (account && user) {

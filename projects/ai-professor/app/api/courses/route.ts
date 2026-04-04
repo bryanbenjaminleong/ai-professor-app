@@ -1,3 +1,4 @@
+// TODO: migrate to anon+JWT client for proper RLS enforcement
 // Courses API Route - GET all courses, POST new course
 
 import { NextRequest } from 'next/server'

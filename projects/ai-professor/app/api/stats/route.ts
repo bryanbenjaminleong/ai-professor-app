@@ -1,3 +1,4 @@
+// TODO: migrate to anon+JWT client for proper RLS enforcement
 // Public API endpoint for homepage stats
 // Returns dynamic counts for articles, guides, and courses
 

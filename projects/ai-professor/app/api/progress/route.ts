@@ -1,3 +1,4 @@
+// TODO: migrate to anon+JWT client for proper RLS enforcement
 // Progress API Route - GET/POST user progress
 
 import { NextRequest } from 'next/server'

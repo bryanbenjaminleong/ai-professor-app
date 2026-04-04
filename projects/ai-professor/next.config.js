@@ -6,10 +6,8 @@ const nextConfig = {
   },
   
   // Enable experimental features
-  experimental: {
-    serverActions: true,
-    serverComponentsExternalPackages: ['@supabase/supabase-js'],
-  },
+  // Turbopack config (Next.js 16 default)
+  turbopack: {},
 
   // Environment variables exposed to browser
   env: {
@@ -76,17 +74,13 @@ const nextConfig = {
     ]
   },
 
-  // Webpack configuration
-  webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {
-    // Add custom webpack configurations if needed
-    return config
-  },
+  // Turbopack config (Next.js 16 default)
+  turbopack: {},
 
   // Image domains
   images: {
-    domains: [
-      'localhost',
-      // Add your image domains here
+    remotePatterns: [
+      { protocol: 'https', hostname: '**' },
     ],
     formats: ['image/avif', 'image/webp'],
   },

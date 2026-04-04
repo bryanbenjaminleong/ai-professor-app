@@ -34,57 +34,6 @@ export const API_CONFIG = {
   },
 } as const
 
-// Subscription limits
-export const SUBSCRIPTION_LIMITS = {
-  free: {
-    courses: 3,
-    ai_generations_per_month: 10,
-    storage_gb: 1,
-    features: ['basic_courses', 'community_support'],
-  },
-  basic: {
-    courses: 10,
-    ai_generations_per_month: 100,
-    storage_gb: 5,
-    features: [
-      'basic_courses',
-      'ai_assistant',
-      'email_support',
-      'certificates',
-    ],
-  },
-  pro: {
-    courses: Infinity,
-    ai_generations_per_month: 1000,
-    storage_gb: 25,
-    features: [
-      'all_courses',
-      'advanced_ai',
-      'priority_support',
-      'analytics',
-      'custom_paths',
-      'research_updates',
-    ],
-  },
-  enterprise: {
-    courses: Infinity,
-    ai_generations_per_month: Infinity,
-    storage_gb: Infinity,
-    features: [
-      'all_courses',
-      'advanced_ai',
-      'priority_support',
-      'analytics',
-      'custom_paths',
-      'research_updates',
-      'team_management',
-      'custom_courses',
-      'api_access',
-      'sso',
-    ],
-  },
-} as const
-
 // Course constants
 export const COURSE_CONFIG = {
   MIN_DURATION_WEEKS: 1,
@@ -156,13 +105,7 @@ export const EMAIL_CONFIG = {
   },
 } as const
 
-// Stripe constants
-export const STRIPE_CONFIG = {
-  CURRENCY: 'usd',
-  BILLING_INTERVALS: ['month', 'year'] as const,
-  TRIAL_DAYS: 0,
-  PRORATION_BEHAVIOR: 'always_invoice',
-} as const
+// Stripe config lives in lib/stripe-config.ts
 
 // HTTP Status codes
 export const HTTP_STATUS = {
@@ -194,7 +137,6 @@ export const ERROR_MESSAGES = {
   COURSE_NOT_FOUND: 'Course not found',
   LESSON_NOT_FOUND: 'Lesson not found',
   NOT_ENROLLED: 'You must be enrolled in this course',
-  SUBSCRIPTION_REQUIRED: 'This feature requires a subscription upgrade',
 } as const
 
 // Success messages

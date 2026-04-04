@@ -1,3 +1,4 @@
+// TODO: migrate to anon+JWT client for proper RLS enforcement
 // Learning Paths API - Track B: Structured Learning Journeys
 
 import { NextRequest } from 'next/server'

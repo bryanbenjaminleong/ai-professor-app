@@ -1,3 +1,4 @@
+// TODO: migrate to anon+JWT client for proper RLS enforcement
 // Course Suggestion API - Track A: AI Course Suggester
 
 import { NextRequest } from 'next/server'

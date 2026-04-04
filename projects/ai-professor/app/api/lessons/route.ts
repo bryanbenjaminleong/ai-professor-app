@@ -1,3 +1,4 @@
+// TODO: migrate to anon+JWT client for proper RLS enforcement
 // Lessons API Route - GET lessons, POST new lesson
 
 import { NextRequest } from 'next/server'

@@ -1,12 +1,29 @@
 // POST /api/news/scrape - Trigger manual scrape
+// Requires CRON_SECRET bearer token authentication
 
 import { NextRequest, NextResponse } from 'next/server'
 import { scrapeAllNews, scrapeSpecificSource, getScrapingStats } from '@/lib/news/scraper'
 
+function verifyCronAuth(request: NextRequest): boolean {
+  const authHeader = request.headers.get('authorization')
+  const cronSecret = process.env.CRON_SECRET
+  if (process.env.NODE_ENV === 'production') {
+    if (!cronSecret) return false
+    return authHeader === `Bearer ${cronSecret}`
+  }
+  // In non-production, still require the secret if configured
+  if (cronSecret && authHeader !== `Bearer ${cronSecret}`) return false
+  return true
+}
+
 export async function POST(request: NextRequest) {
   try {
-    // For now, allow scraping without auth (for testing)
-    // In production, you'd want to require admin auth
+    if (!verifyCronAuth(request)) {
+      return NextResponse.json(
+        { success: false, error: 'Unauthorized' },
+        { status: 401 }
+      )
+    }
     
     const body = await request.json().catch(() => ({}))
     const { source } = body
@@ -34,6 +51,12 @@ export async function POST(request: NextRequest) {
 
 export async function GET(request: NextRequest) {
   try {
+    if (!verifyCronAuth(request)) {
+      return NextResponse.json(
+        { success: false, error: 'Unauthorized' },
+        { status: 401 }
+      )
+    }
     const stats = await getScrapingStats()
     
     return NextResponse.json({

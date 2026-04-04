@@ -1,3 +1,4 @@
+// TODO: migrate to anon+JWT client for proper RLS enforcement
 // Course Ratings API
 
 import { NextRequest } from 'next/server'
