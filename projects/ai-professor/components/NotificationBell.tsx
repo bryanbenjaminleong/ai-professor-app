@@ -3,7 +3,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { Bell, X, Check, ExternalLink } from 'lucide-react'
 import Link from 'next/link'
-import { useAuthStore } from '@/stores/auth-store'
 import { cn } from '@/lib/utils'
 
 interface Notification {
@@ -18,27 +17,21 @@ interface Notification {
 }
 
 export function NotificationBell() {
-  const { user } = useAuthStore()
   const [notifications, setNotifications] = useState<Notification[]>([])
   const [unreadCount, setUnreadCount] = useState(0)
   const [isOpen, setIsOpen] = useState(false)
-  const [loading, setLoading] = useState(false)
   const dropdownRef = useRef<HTMLDivElement>(null)
 
-  // Fetch notifications
+  // Fetch notifications (uses cookie-based NextAuth session)
   useEffect(() => {
-    if (!user?.email) return
-
     const fetchNotifications = async () => {
       try {
-        const res = await fetch('/api/notifications?limit=20', {
-          headers: { 'x-user-email': user.email! },
-        })
+        const res = await fetch('/api/notifications?limit=20')
         if (res.ok) {
           const data = await res.json()
           if (data.success) {
-            setNotifications(data.data || [])
-            setUnreadCount(data.unreadCount || 0)
+            setNotifications(data.data?.notifications || [])
+            setUnreadCount(data.data?.unreadCount || 0)
           }
         }
       } catch (err) {
@@ -47,10 +40,9 @@ export function NotificationBell() {
     }
 
     fetchNotifications()
-    // Poll every 2 minutes
     const interval = setInterval(fetchNotifications, 120000)
     return () => clearInterval(interval)
-  }, [user?.email])
+  }, [])
 
   // Close dropdown on outside click
   useEffect(() => {
@@ -64,14 +56,11 @@ export function NotificationBell() {
   }, [])
 
   const markAsRead = async (ids: string[]) => {
-    if (!user?.email || ids.length === 0) return
+    if (ids.length === 0) return
     try {
       await fetch('/api/notifications', {
         method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-user-email': user.email,
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ notificationIds: ids }),
       })
       setNotifications((prev) =>
@@ -84,14 +73,10 @@ export function NotificationBell() {
   }
 
   const markAllAsRead = async () => {
-    if (!user?.email) return
     try {
       await fetch('/api/notifications', {
         method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-user-email': user.email,
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ markAll: true }),
       })
       setNotifications((prev) => prev.map((n) => ({ ...n, is_read: true })))
@@ -116,7 +101,6 @@ export function NotificationBell() {
 
   return (
     <div className="relative" ref={dropdownRef}>
-      {/* Bell button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="relative p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
@@ -130,10 +114,8 @@ export function NotificationBell() {
         )}
       </button>
 
-      {/* Dropdown */}
       {isOpen && (
         <div className="absolute right-0 top-full mt-2 w-80 sm:w-96 bg-white dark:bg-gray-900 rounded-xl shadow-xl border border-gray-200 dark:border-gray-700 z-50 overflow-hidden">
-          {/* Header */}
           <div className="flex items-center justify-between px-4 py-3 border-b border-gray-200 dark:border-gray-700">
             <h3 className="font-semibold text-gray-900 dark:text-white">
               Notifications
@@ -161,7 +143,6 @@ export function NotificationBell() {
             </div>
           </div>
 
-          {/* Notification list */}
           <div className="max-h-96 overflow-y-auto">
             {notifications.length === 0 ? (
               <div className="px-4 py-8 text-center text-gray-500 dark:text-gray-400">

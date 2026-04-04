@@ -38,31 +38,44 @@ export async function getCurrentUser(): Promise<User | null> {
 
 // Get user from API route
 export async function getApiUser(request: NextRequest): Promise<User | null> {
+  // Try Bearer token first
   const authHeader = request.headers.get('Authorization')
   
-  if (!authHeader?.startsWith('Bearer ')) {
-    return null
+  if (authHeader?.startsWith('Bearer ')) {
+    const user = await getUserFromRequest(request as any)
+    
+    if (user) {
+      try {
+        const supabaseAdmin = getSupabaseAdmin()
+        const { data } = await supabaseAdmin
+          .from('users')
+          .select('*')
+          .eq('id', user.id)
+          .single()
+        return data
+      } catch (error) {
+        return null
+      }
+    }
   }
 
-  const token = authHeader.substring(7)
-  const user = await getUserFromRequest(request as any)
-  
-  if (!user) {
-    return null
-  }
-
+  // Fallback: try NextAuth session (cookie-based auth from client components)
   try {
-    const supabaseAdmin = getSupabaseAdmin()
-    const { data } = await supabaseAdmin
-      .from('users')
-      .select('*')
-      .eq('id', user.id)
-      .single()
-
-    return data
-  } catch (error) {
-    return null
+    const session = await getCurrentSession()
+    if (session?.user?.id) {
+      const supabaseAdmin = getSupabaseAdmin()
+      const { data } = await supabaseAdmin
+        .from('users')
+        .select('*')
+        .eq('id', session.user.id)
+        .single()
+      return data
+    }
+  } catch {
+    // Session not available
   }
+
+  return null
 }
 
 // Require authentication middleware
