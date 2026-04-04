@@ -29,7 +29,7 @@ export default function LearningPathsClient() {
   }
 
   const getPathImage = (slug: string) => {
-    return `/images/programs/${slug}.svg`
+    return `/images/programs/${slug}.svg?v=2`
   }
 
   if (isLoading) {
