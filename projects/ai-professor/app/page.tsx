@@ -167,6 +167,14 @@ export default function HomePage() {
                 disabled: true
               },
               {
+                icon: BookOpen,
+                title: 'Modules',
+                description: '48 individual modules across all levels. Pick what you need, learn at your pace.',
+                link: '/courses',
+                color: 'from-teal-500 to-cyan-500',
+                cta: 'Browse Modules'
+              },
+              {
                 icon: Newspaper,
                 title: 'Breaking Tech News',
                 description: 'Real-time updates from 8 top tech sources. Know what matters, as it happens.',
