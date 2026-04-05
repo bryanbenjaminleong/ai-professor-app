@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { Clock, BookOpen, Star, ChevronRight, Crown } from 'lucide-react'
+import { Clock, BookOpen, Star, ChevronRight, Crown, FolderOpen } from 'lucide-react'
 import { Button, Card, Badge } from '@/components/ui'
 
 interface Course {
@@ -14,6 +14,9 @@ interface Course {
   duration_weeks: number
   lesson_count: number
   image_url?: string
+  programName?: string | null
+  programId?: string | null
+  moduleNumber?: number | null
 }
 
 const DIFFICULTY_COLORS: Record<string, string> = {
@@ -29,23 +32,16 @@ interface Props {
 export default function CoursesClient({ initialCourses }: Props) {
   const [courses, setCourses] = useState<Course[]>(initialCourses || [])
 
-  // Optional: refresh courses on client-side mount
-  useEffect(() => {
-    if (initialCourses.length === 0) {
-      fetchCourses()
+  // Sort: program modules first (grouped by program), then standalone
+  const sortedCourses = [...courses].sort((a, b) => {
+    if (a.programName && !b.programName) return -1
+    if (!a.programName && b.programName) return 1
+    if (a.programName && b.programName) {
+      if (a.programName !== b.programName) return a.programName.localeCompare(b.programName)
+      return (a.moduleNumber || 0) - (b.moduleNumber || 0)
     }
-  }, [])
-
-  const fetchCourses = async () => {
-    try {
-      const response = await fetch('/api/courses')
-      const data = await response.json()
-      const coursesData = data.data?.courses || data.courses || data || []
-      setCourses(Array.isArray(coursesData) ? coursesData : [])
-    } catch (error) {
-      console.error('Error fetching courses:', error)
-    }
-  }
+    return 0
+  })
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
@@ -54,7 +50,7 @@ export default function CoursesClient({ initialCourses }: Props) {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
           <h1 className="text-4xl md:text-5xl font-bold mb-4">Modules</h1>
           <p className="text-xl text-primary-100 max-w-2xl">
-            Master AI with comprehensive courses. Text-based lessons, hands-on exercises, real projects.
+            Master AI with comprehensive modules. Text-based lessons, hands-on exercises, real projects.
           </p>
           
           <div className="flex items-center gap-6 mt-8">
@@ -64,7 +60,7 @@ export default function CoursesClient({ initialCourses }: Props) {
             </div>
             <div className="flex items-center gap-2">
               <BookOpen className="w-5 h-5" />
-              <span className="text-sm">{courses.length} Courses</span>
+              <span className="text-sm">{courses.length} Modules</span>
             </div>
           </div>
         </div>
@@ -72,9 +68,9 @@ export default function CoursesClient({ initialCourses }: Props) {
 
       {/* Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        {courses.length > 0 ? (
+        {sortedCourses.length > 0 ? (
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {courses.map((course) => (
+            {sortedCourses.map((course) => (
               <Card key={course.id} className="overflow-hidden hover:shadow-xl transition-all duration-300 group">
                 {/* Header with gradient */}
                 <div className="bg-gradient-to-r from-primary-600 to-primary-700 p-6 text-white">
@@ -89,6 +85,14 @@ export default function CoursesClient({ initialCourses }: Props) {
                   </div>
                   
                   <h3 className="text-xl font-bold mb-2">{course.title}</h3>
+                  
+                  {/* Program info badge */}
+                  {course.programName && (
+                    <div className="flex items-center gap-1.5 mb-3 bg-white/15 rounded-md px-2 py-1 text-xs">
+                      <FolderOpen className="w-3.5 h-3.5" />
+                      <span className="truncate">{course.programName} · Module {course.moduleNumber}</span>
+                    </div>
+                  )}
                   
                   <div className="flex items-center gap-4 text-sm text-white/90">
                     <div className="flex items-center gap-1">
@@ -129,10 +133,10 @@ export default function CoursesClient({ initialCourses }: Props) {
           <div className="text-center py-12">
             <BookOpen className="w-16 h-16 text-gray-400 mx-auto mb-4" />
             <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
-              No Courses Yet
+              No Modules Yet
             </h3>
             <p className="text-gray-600 dark:text-gray-400">
-              Check back soon for new courses!
+              Check back soon for new modules!
             </p>
           </div>
         )}

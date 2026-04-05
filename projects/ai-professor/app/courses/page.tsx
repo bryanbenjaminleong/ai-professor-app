@@ -1,36 +1,63 @@
 import { Metadata } from 'next'
 import CoursesClient from './CoursesClient'
-import { db } from '@/lib/supabase'
+import { getSupabaseAdmin } from '@/lib/supabase'
 
 export const metadata: Metadata = {
-  title: 'Courses - CXO Academy',
-  description: 'Master AI with expert-led courses. From fundamentals to advanced topics.',
+  title: 'Modules - CXO Academy',
+  description: 'Master AI with expert-led modules. From fundamentals to advanced topics.',
 }
 
 // Force dynamic rendering to always fetch fresh data
 export const dynamic = 'force-dynamic'
 
-async function getCourses() {
-  try {
-    const courses = await db.courses.getAll({ is_published: true })
-    // Transform to include lesson_count
-    return courses.map(c => ({
-      id: c.id,
-      title: c.title,
-      description: c.description || '',
-      topic: c.topic,
-      difficulty: c.difficulty,
-      duration_weeks: c.duration_weeks,
-      lesson_count: (c.lessons as any)?.[0]?.count || 0,
-      image_url: c.image_url ?? undefined,
-    }))
-  } catch (error) {
-    console.error('Failed to fetch courses:', error)
-    return []
+async function getCoursesWithProgramInfo() {
+  const admin = getSupabaseAdmin()
+  
+  // Fetch all published courses
+  const { data: courses, error: coursesError } = await admin
+    .from('courses')
+    .select('id, title, description, topic, difficulty, duration_weeks, image_url, lessons(count)')
+    .eq('is_published', true)
+    .order('created_at', { ascending: false })
+
+  if (coursesError) throw coursesError
+
+  // Fetch all path_courses with path info
+  const { data: pathCourses, error: pcError } = await admin
+    .from('path_courses')
+    .select('course_id, order_index, learning_paths(title, id)')
+  
+  if (pcError) throw pcError
+
+  // Build a map: course_id -> { programName, moduleNumber }
+  const courseProgramMap: Record<string, { programName: string; programId: string; moduleNumber: number }> = {}
+  for (const pc of (pathCourses || [])) {
+    const path = pc.learning_paths as any
+    if (path) {
+      courseProgramMap[pc.course_id] = {
+        programName: path.title,
+        programId: path.id,
+        moduleNumber: pc.order_index,
+      }
+    }
   }
+
+  return (courses || []).map(c => ({
+    id: c.id,
+    title: c.title,
+    description: c.description || '',
+    topic: c.topic,
+    difficulty: c.difficulty,
+    duration_weeks: c.duration_weeks,
+    lesson_count: (c.lessons as any)?.[0]?.count || 0,
+    image_url: c.image_url ?? undefined,
+    programName: courseProgramMap[c.id]?.programName || null,
+    programId: courseProgramMap[c.id]?.programId || null,
+    moduleNumber: courseProgramMap[c.id]?.moduleNumber || null,
+  }))
 }
 
 export default async function CoursesPage() {
-  const courses = await getCourses()
+  const courses = await getCoursesWithProgramInfo()
   return <CoursesClient initialCourses={courses} />
 }
