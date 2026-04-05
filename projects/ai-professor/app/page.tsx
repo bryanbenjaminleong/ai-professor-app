@@ -107,7 +107,7 @@ export default function HomePage() {
             {/* Quick Stats */}
             <div className="grid grid-cols-4 gap-4 max-w-2xl mx-auto">
               {[
-                { value: '7', label: 'Programs' },
+                { value: '10', label: 'Programs' },
                 { value: `${stats.courses}`, label: 'Courses' },
                 { value: '236+', label: 'Lessons' },
                 { value: '24/7', label: 'Updates' },
@@ -174,7 +174,7 @@ export default function HomePage() {
               {
                 icon: GraduationCap,
                 title: 'Learning Programs',
-                description: '7 structured programs from cybersecurity to AI strategy. Master a domain end-to-end.',
+                description: '10 structured programs from cybersecurity to AI strategy. Master a domain end-to-end.',
                 link: '/paths',
                 color: 'from-blue-500 to-indigo-500',
                 cta: 'Browse Programs'

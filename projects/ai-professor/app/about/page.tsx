@@ -37,7 +37,7 @@ export default function AboutPage() {
 
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white mt-10">Our Programs</h2>
           <p className="text-gray-600 dark:text-gray-300">
-            We offer 7 comprehensive programs covering the most in-demand skills for modern leaders:
+            We offer 10 comprehensive programs covering the most in-demand skills for modern leaders:
           </p>
           <ul className="list-disc pl-6 text-gray-600 dark:text-gray-300 space-y-1">
             <li>Digital Transformation</li>
