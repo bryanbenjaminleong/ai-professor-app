@@ -59,7 +59,7 @@ export default function LearningPathsClient() {
             animate={{ opacity: 1, y: 0 }}
           >
             <GraduationCap className="w-16 h-16 mx-auto mb-4 opacity-90" />
-            <h1 className="text-4xl md:text-5xl font-bold mb-4">Programs</h1>
+            <h1 className="text-4xl md:text-5xl font-bold mb-4">Learning Programs</h1>
             <p className="text-xl text-white/90 max-w-2xl mx-auto">
               Structured journeys from beginner to expert. Follow a curated path 
               and master AI step by step.
@@ -121,7 +121,7 @@ export default function LearningPathsClient() {
                       
                       <Link href={`/paths/${path.slug}`}>
                         <Button className="w-full">
-                          View Path
+                          View Program
                           <ArrowRight className="w-4 h-4 ml-2" />
                         </Button>
                       </Link>
