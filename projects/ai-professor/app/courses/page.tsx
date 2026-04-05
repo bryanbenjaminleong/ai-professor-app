@@ -22,23 +22,32 @@ async function getCoursesWithProgramInfo() {
 
   if (coursesError) throw coursesError
 
-  // Fetch all path_courses with path info
+  // Fetch path_courses
   const { data: pathCourses, error: pcError } = await admin
     .from('path_courses')
-    .select('course_id, order_index, learning_paths(title, id)')
+    .select('course_id, order_index, path_id')
   
   if (pcError) throw pcError
 
-  // Build a map: course_id -> { programName, moduleNumber }
+  // Fetch learning paths for names
+  const { data: paths, error: pathsError } = await admin
+    .from('learning_paths')
+    .select('id, title')
+
+  if (pathsError) throw pathsError
+
+  // Build maps
+  const pathNameMap: Record<string, string> = {}
+  for (const p of (paths || [])) {
+    pathNameMap[p.id] = p.title
+  }
+
   const courseProgramMap: Record<string, { programName: string; programId: string; moduleNumber: number }> = {}
   for (const pc of (pathCourses || [])) {
-    const path = pc.learning_paths as any
-    if (path) {
-      courseProgramMap[pc.course_id] = {
-        programName: path.title,
-        programId: path.id,
-        moduleNumber: pc.order_index,
-      }
+    courseProgramMap[pc.course_id] = {
+      programName: pathNameMap[pc.path_id] || '',
+      programId: pc.path_id,
+      moduleNumber: pc.order_index,
     }
   }
 
@@ -49,7 +58,7 @@ async function getCoursesWithProgramInfo() {
     topic: c.topic,
     difficulty: c.difficulty,
     duration_weeks: c.duration_weeks,
-    lesson_count: (c.lessons as any)?.[0]?.count || 0,
+    lesson_count: (c as any).lessons?.[0]?.count || 0,
     image_url: c.image_url ?? undefined,
     programName: courseProgramMap[c.id]?.programName || null,
     programId: courseProgramMap[c.id]?.programId || null,
