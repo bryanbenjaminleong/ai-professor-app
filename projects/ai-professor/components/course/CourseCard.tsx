@@ -99,7 +99,7 @@ export function CourseCard({ course, featured = false }: CourseCardProps) {
                   </span>
                 )}
               </div>
-              <Button size="sm">View Course</Button>
+              <Button size="sm">View Module</Button>
             </div>
           </div>
         </Card>

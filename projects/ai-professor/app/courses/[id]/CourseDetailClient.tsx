@@ -37,7 +37,7 @@ export default function CourseDetailClient({ courseId }: { courseId: string }) {
       <div className="min-h-screen bg-gray-50 dark:bg-gray-950 flex items-center justify-center">
         <div className="text-center">
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Course not found</h1>
-          <Link href="/courses"><Button>Back to Courses</Button></Link>
+          <Link href="/courses"><Button>Back to Modules</Button></Link>
         </div>
       </div>
     )
@@ -58,7 +58,7 @@ export default function CourseDetailClient({ courseId }: { courseId: string }) {
       <section className="bg-gradient-to-br from-primary-600 to-primary-800 text-white py-16">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <Link href="/courses" className="inline-flex items-center text-white/80 hover:text-white mb-6 transition-colors">
-            <ArrowLeft className="w-4 h-4 mr-2" /> Back to Courses
+            <ArrowLeft className="w-4 h-4 mr-2" /> Back to Modules
           </Link>
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
             <div className="flex items-center gap-3 mb-4">
@@ -110,7 +110,7 @@ export default function CourseDetailClient({ courseId }: { courseId: string }) {
           </Card>
 
           {/* Lessons List */}
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Course Lessons</h2>
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Module Lessons</h2>
           {course.lessons && course.lessons.length > 0 ? (
             <div className="space-y-3">
               {course.lessons.map((lesson: any, index: number) => (

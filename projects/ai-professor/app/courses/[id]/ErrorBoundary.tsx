@@ -48,7 +48,7 @@ export default class CourseErrorBoundary extends React.Component<Props, State> {
               </Button>
               <Link href="/courses">
                 <Button className="bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600">
-                  Back to Courses
+                  Back to Modules
                 </Button>
               </Link>
             </div>

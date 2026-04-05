@@ -47,7 +47,7 @@ export default function LessonClient({
         <div className="text-center">
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Lesson Not Found</h1>
           <Link href={`/courses/${courseId}`}>
-            <Button>Back to Course</Button>
+            <Button>Back to Module</Button>
           </Link>
         </div>
       </div>

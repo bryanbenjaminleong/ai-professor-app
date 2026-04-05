@@ -52,7 +52,7 @@ export default function CoursesClient({ initialCourses }: Props) {
       {/* Header */}
       <div className="bg-gradient-to-br from-primary-600 to-primary-800 text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">Full Courses</h1>
+          <h1 className="text-4xl md:text-5xl font-bold mb-4">Modules</h1>
           <p className="text-xl text-primary-100 max-w-2xl">
             Master AI with comprehensive courses. Text-based lessons, hands-on exercises, real projects.
           </p>
@@ -117,7 +117,7 @@ export default function CoursesClient({ initialCourses }: Props) {
 
                   <Link href={`/courses/${course.id}`}>
                     <Button className="w-full group-hover:bg-primary-600 transition-colors">
-                      View Course
+                      View Module
                       <ChevronRight className="w-4 h-4 ml-2" />
                     </Button>
                   </Link>
