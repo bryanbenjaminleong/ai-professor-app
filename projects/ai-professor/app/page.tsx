@@ -26,7 +26,7 @@ export default function HomePage() {
   const [stats, setStats] = useState<Stats>({
     articles: 100,  // Fallback values
     guides: 24,
-    courses: 33,
+    courses: 48,
   })
 
   useEffect(() => {
