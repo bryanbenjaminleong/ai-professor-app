@@ -10,6 +10,8 @@ export const metadata: Metadata = {
 // Force dynamic rendering to always fetch fresh data
 export const dynamic = 'force-dynamic'
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 async function getCoursesWithProgramInfo() {
   const admin = getSupabaseAdmin()
   
@@ -38,12 +40,12 @@ async function getCoursesWithProgramInfo() {
 
   // Build maps
   const pathNameMap: Record<string, string> = {}
-  for (const p of (paths || [])) {
+  for (const p of (paths as any[] || [])) {
     pathNameMap[p.id] = p.title
   }
 
   const courseProgramMap: Record<string, { programName: string; programId: string; moduleNumber: number }> = {}
-  for (const pc of (pathCourses || [])) {
+  for (const pc of (pathCourses as any[] || [])) {
     courseProgramMap[pc.course_id] = {
       programName: pathNameMap[pc.path_id] || '',
       programId: pc.path_id,
@@ -51,14 +53,14 @@ async function getCoursesWithProgramInfo() {
     }
   }
 
-  return (courses || []).map(c => ({
+  return (courses as any[] || []).map(c => ({
     id: c.id,
     title: c.title,
     description: c.description || '',
     topic: c.topic,
     difficulty: c.difficulty,
     duration_weeks: c.duration_weeks,
-    lesson_count: (c as any).lessons?.[0]?.count || 0,
+    lesson_count: c.lessons?.[0]?.count || 0,
     image_url: c.image_url ?? undefined,
     programName: courseProgramMap[c.id]?.programName || null,
     programId: courseProgramMap[c.id]?.programId || null,
