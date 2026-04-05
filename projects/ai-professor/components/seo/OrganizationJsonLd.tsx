@@ -14,7 +14,7 @@ export function OrganizationJsonLd({
   name = 'CXO Academy',
   url = 'https://cxoacademy.co',
   logo = 'https://cxoacademy.co/icons/icon.svg',
-  description = 'Real-time AI news aggregation meets AI-powered learning. Stay current with the latest AI developments and get smarter with expert-led courses.',
+  description = 'Real-time AI news aggregation meets AI-powered learning. Stay current with the latest AI developments and get smarter with expert-led modules.',
   sameAs = [
     'https://twitter.com/cxoacademy',
   ],

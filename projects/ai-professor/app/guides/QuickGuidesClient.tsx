@@ -465,7 +465,7 @@ export default function QuickGuidesClient() {
             </p>
             <Link href="/courses">
               <Button size="lg">
-                Browse Full Courses
+                Browse Modules
                 <ArrowRight className="w-5 h-5 ml-2" />
               </Button>
             </Link>

@@ -55,7 +55,7 @@ export function PricingSection() {
               {/* Features */}
               <ul className="space-y-4 mb-8">
                 {[
-                  'Full course access',
+                  'Full module access',
                   '10+ hours of content',
                   'Downloadable resources',
                   'Certificate of completion',
@@ -76,7 +76,7 @@ export function PricingSection() {
                 size="lg"
                 disabled={loading}
               >
-                {loading ? 'Processing...' : 'Browse Courses'}
+                {loading ? 'Processing...' : 'Browse Modules'}
               </Button>
 
               {/* Guarantee */}

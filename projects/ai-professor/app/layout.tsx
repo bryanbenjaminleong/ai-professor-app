@@ -22,16 +22,16 @@ export const metadata: Metadata = {
     template: '%s | CXO Academy',
   },
   description:
-    'Real-time AI news aggregation meets AI-powered learning. Stay current with the latest AI developments and get smarter with expert-led courses.',
+    'Real-time AI news aggregation meets AI-powered learning. Stay current with the latest AI developments and get smarter with expert-led modules.',
   keywords: [
     'AI news',
-    'AI courses',
+    'AI modules',
     'machine learning',
     'deep learning',
     'data science',
     'online learning',
     'artificial intelligence',
-    'ML courses',
+    'ML modules',
     'AI education',
     'CXO News',
     'CXO Academy',
@@ -54,7 +54,7 @@ export const metadata: Metadata = {
     siteName: 'CXO Academy',
     title: 'CXO Academy | Stay Current. Get Smarter.',
     description:
-      'Real-time AI news aggregation meets AI-powered learning. Stay current with the latest AI developments and get smarter with expert-led courses.',
+      'Real-time AI news aggregation meets AI-powered learning. Stay current with the latest AI developments and get smarter with expert-led modules.',
     images: [
       {
         url: '/og-image.svg',
@@ -68,7 +68,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'CXO Academy | Stay Current. Get Smarter.',
     description:
-      'Real-time AI news aggregation meets AI-powered learning. Stay current with the latest AI developments and get smarter with expert-led courses.',
+      'Real-time AI news aggregation meets AI-powered learning. Stay current with the latest AI developments and get smarter with expert-led modules.',
     images: ['/og-image.svg'],
     creator: '@cxoacademy',
   },

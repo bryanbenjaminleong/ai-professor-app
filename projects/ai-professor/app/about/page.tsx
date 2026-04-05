@@ -28,7 +28,7 @@ export default function AboutPage() {
 
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white mt-10">What Makes Us Different</h2>
           <ul className="list-disc pl-6 text-gray-600 dark:text-gray-300 space-y-2">
-            <li><strong>Structured programs</strong> — not random articles, but complete learning paths designed to build skills progressively</li>
+            <li><strong>Structured programs</strong> — not random articles, but complete programs designed to build skills progressively</li>
             <li><strong>Expert-level content</strong> — written by practitioners with real-world experience in AI, cybersecurity, and digital transformation</li>
             <li><strong>Practical exercises</strong> — every lesson includes hands-on activities you can apply immediately</li>
             <li><strong>Self-paced</strong> — learn on your schedule, at your speed, with lifetime access</li>

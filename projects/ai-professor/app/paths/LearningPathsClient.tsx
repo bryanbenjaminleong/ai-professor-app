@@ -59,7 +59,7 @@ export default function LearningPathsClient() {
             animate={{ opacity: 1, y: 0 }}
           >
             <GraduationCap className="w-16 h-16 mx-auto mb-4 opacity-90" />
-            <h1 className="text-4xl md:text-5xl font-bold mb-4">Learning Paths</h1>
+            <h1 className="text-4xl md:text-5xl font-bold mb-4">Programs</h1>
             <p className="text-xl text-white/90 max-w-2xl mx-auto">
               Structured journeys from beginner to expert. Follow a curated path 
               and master AI step by step.
@@ -73,7 +73,7 @@ export default function LearningPathsClient() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {paths.length === 0 ? (
             <div className="text-center py-12">
-              <p className="text-gray-600 dark:text-gray-400">No learning paths available yet.</p>
+              <p className="text-gray-600 dark:text-gray-400">No programs available yet.</p>
             </div>
           ) : (
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -111,7 +111,7 @@ export default function LearningPathsClient() {
                       <div className="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400 mb-4">
                         <div className="flex items-center gap-1">
                           <BookOpen className="w-4 h-4" />
-                          <span>{path.total_courses || 0} courses</span>
+                          <span>{path.total_courses || 0} modules</span>
                         </div>
                         <div className="flex items-center gap-1">
                           <Clock className="w-4 h-4" />

@@ -30,7 +30,7 @@ export default function CookiesPage() {
           <ul className="list-disc pl-6 space-y-1">
             <li><strong>Theme preference</strong> — Remember your light/dark mode choice</li>
             <li><strong>Language preference</strong> — Remember your selected language</li>
-            <li><strong>Course progress</strong> — Track your learning progress locally</li>
+            <li><strong>Module progress</strong> — Track your learning progress locally</li>
           </ul>
 
           <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Analytics Cookies</h3>

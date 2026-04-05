@@ -73,7 +73,7 @@ export default function HomePage() {
             {/* Subheadline */}
             <p className="text-xl md:text-2xl text-white/80 max-w-3xl mx-auto mb-10 leading-relaxed font-light">
               Stay ahead of the AI revolution with real-time news from 19 sources 
-              and expert courses designed for the modern learner.
+              and expert modules designed for the modern learner.
             </p>
             
             {/* CTA Buttons - More Prominent */}
@@ -108,7 +108,7 @@ export default function HomePage() {
             <div className="grid grid-cols-4 gap-4 max-w-2xl mx-auto">
               {[
                 { value: '10', label: 'Programs' },
-                { value: `${stats.courses}`, label: 'Courses' },
+                { value: `${stats.courses}`, label: 'Modules' },
                 { value: '236+', label: 'Lessons' },
                 { value: '24/7', label: 'Updates' },
               ].map((stat, i) => (
@@ -145,8 +145,27 @@ export default function HomePage() {
             </p>
           </motion.div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-8">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {[
+              {
+                icon: GraduationCap,
+                title: 'Learning Programs — Knowledge & Analysis',
+                subtitle: 'Suitable for SMTs and aspiring C-level individuals.',
+                description: '10 structured programs from cybersecurity to AI strategy. Master a domain end-to-end.',
+                link: '/paths',
+                color: 'from-blue-500 to-indigo-500',
+                cta: 'Browse Programs'
+              },
+              {
+                icon: Target,
+                title: 'Executive Education — Where Theory Meets the War Room',
+                subtitle: 'Immersive, executive decision-making simulations for sitting C-level and directors.',
+                description: 'Boardroom scenarios, AI adversary mode, branching consequences, and capstone projects with auto-marking. Nothing like this exists in ASEAN.',
+                link: '/paths',
+                color: 'from-amber-500 to-orange-500',
+                cta: 'Coming Soon',
+                disabled: true
+              },
               {
                 icon: Newspaper,
                 title: 'Breaking Tech News',
@@ -166,26 +185,10 @@ export default function HomePage() {
               {
                 icon: BookOpen,
                 title: 'Learn by Doing',
-                description: 'Free quick guides for beginners. Premium courses for serious learners.',
+                description: 'Free quick guides for beginners. Premium modules for serious learners.',
                 link: '/guides',
                 color: 'from-purple-500 to-pink-500',
                 cta: 'Start Learning Free'
-              },
-              {
-                icon: GraduationCap,
-                title: 'Learning Programs',
-                description: '10 structured programs from cybersecurity to AI strategy. Master a domain end-to-end.',
-                link: '/paths',
-                color: 'from-blue-500 to-indigo-500',
-                cta: 'Browse Programs'
-              },
-              {
-                icon: BookOpen,
-                title: 'Full Courses',
-                description: '33 individual courses across all levels. Pick what you need, learn at your pace.',
-                link: '/courses',
-                color: 'from-teal-500 to-cyan-500',
-                cta: 'Browse Courses'
               },
             ].map((item, i) => (
               <motion.div
@@ -195,25 +198,30 @@ export default function HomePage() {
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.1 }}
               >
-                <Link href={item.link}>
-                  <div className="group bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-sm hover:shadow-xl transition-all duration-300 h-full border border-gray-100 dark:border-gray-700 hover:border-transparent">
+                <Link href={item.link} className={item.disabled ? 'pointer-events-none' : ''}>
+                  <div className={`group bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-sm hover:shadow-xl transition-all duration-300 h-full border border-gray-100 dark:border-gray-700 ${item.disabled ? '' : 'hover:border-transparent'} ${item.disabled ? 'opacity-75' : ''}`}>
                     {/* Icon */}
                     <div className={`w-14 h-14 rounded-xl bg-gradient-to-br ${item.color} flex items-center justify-center mb-6 group-hover:scale-110 transition-transform`}>
                       <item.icon className="w-7 h-7 text-white" />
                     </div>
                     
                     {/* Content */}
-                    <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-3">
+                    <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
                       {item.title}
                     </h3>
+                    {item.subtitle && (
+                      <p className="text-sm font-medium text-primary-600 dark:text-primary-400 mb-2">
+                        {item.subtitle}
+                      </p>
+                    )}
                     <p className="text-gray-600 dark:text-gray-400 mb-6 leading-relaxed">
                       {item.description}
                     </p>
                     
                     {/* CTA */}
-                    <span className="inline-flex items-center text-primary-600 dark:text-primary-400 font-semibold group-hover:gap-3 transition-all">
+                    <span className={`inline-flex items-center font-semibold group-hover:gap-3 transition-all ${item.disabled ? 'text-gray-400 dark:text-gray-500 bg-gray-100 dark:bg-gray-700 px-4 py-2 rounded-lg' : 'text-primary-600 dark:text-primary-400'}`}>
                       {item.cta}
-                      <ChevronRight className="w-5 h-5 ml-1 group-hover:translate-x-1 transition-transform" />
+                      {!item.disabled && <ChevronRight className="w-5 h-5 ml-1 group-hover:translate-x-1 transition-transform" />}
                     </span>
                   </div>
                 </Link>
@@ -328,7 +336,7 @@ export default function HomePage() {
               </Link>
               <Link href="/courses">
                 <Button size="lg" variant="outline" className="border-gray-600 text-white hover:bg-white/10 px-10 py-5 text-lg">
-                  View Courses
+                  View Modules
                 </Button>
               </Link>
             </div>
@@ -347,7 +355,7 @@ export default function HomePage() {
               <Link href="/breaking" className="hover:text-white transition-colors">Breaking</Link>
               <Link href="/news" className="hover:text-white transition-colors">AI News</Link>
               <Link href="/guides" className="hover:text-white transition-colors">Guides</Link>
-              <Link href="/courses" className="hover:text-white transition-colors">Courses</Link>
+              <Link href="/courses" className="hover:text-white transition-colors">Modules</Link>
             </div>
           </div>
           <div className="mt-8 pt-8 border-t border-gray-800 text-center text-gray-500">

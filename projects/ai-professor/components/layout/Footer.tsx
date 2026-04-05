@@ -6,7 +6,7 @@ const footerLinks = {
   product: [
     { href: '/news', label: 'CXO News' },
     { href: '/programs', label: 'Programs' },
-    { href: '/courses', label: 'Courses' },
+    { href: '/courses', label: 'Modules' },
     { href: '/pricing', label: 'Pricing' },
   ],
   company: [
@@ -41,7 +41,7 @@ export function Footer() {
                 Academy</span>
             </Link>
             <p className="text-gray-600 dark:text-gray-400 text-sm mb-4">
-              Stay current with AI news. Get smarter with AI courses. One platform for all your AI learning needs.
+              Stay current with AI news. Get smarter with AI modules. One platform for all your AI learning needs.
             </p>
             <div className="flex gap-4">
               {socialLinks.map((link) => (

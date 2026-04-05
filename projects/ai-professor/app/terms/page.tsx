@@ -19,7 +19,7 @@ export default function TermsPage() {
           <p>By accessing or using the CXO Academy platform (&quot;Service&quot;), you agree to be bound by these Terms of Service (&quot;Terms&quot;). If you do not agree to these Terms, you may not use the Service.</p>
 
           <h2 className="text-xl font-bold text-gray-900 dark:text-white">2. Description of Service</h2>
-          <p>CXO Academy provides online educational content including courses, learning programs, quick guides, and AI news. Content is delivered through our web platform and may include text-based lessons, exercises, and supplementary materials.</p>
+          <p>CXO Academy provides online educational content including modules, learning programs, quick guides, and AI news. Content is delivered through our web platform and may include text-based lessons, exercises, and supplementary materials.</p>
 
           <h2 className="text-xl font-bold text-gray-900 dark:text-white">3. User Accounts</h2>
           <ul className="list-disc pl-6 space-y-1">
@@ -31,7 +31,7 @@ export default function TermsPage() {
           </ul>
 
           <h2 className="text-xl font-bold text-gray-900 dark:text-white">4. Purchases and Payments</h2>
-          <p>Courses and programs are available for individual purchase at the prices displayed on our pricing page. All prices are in USD unless otherwise stated.</p>
+          <p>Modules and programs are available for individual purchase at the prices displayed on our pricing page. All prices are in USD unless otherwise stated.</p>
           <ul className="list-disc pl-6 space-y-1">
             <li><strong>Pricing:</strong> Prices are subject to change. You will be charged the price in effect at the time of purchase</li>
             <li><strong>Payment:</strong> Payment is processed securely through our payment provider</li>
@@ -40,7 +40,7 @@ export default function TermsPage() {
           </ul>
 
           <h2 className="text-xl font-bold text-gray-900 dark:text-white">5. Intellectual Property</h2>
-          <p>All content on CXO Academy — including but not limited to text, graphics, logos, course materials, and software — is owned by or licensed to us and is protected by copyright and intellectual property laws.</p>
+          <p>All content on CXO Academy — including but not limited to text, graphics, logos, module materials, and software — is owned by or licensed to us and is protected by copyright and intellectual property laws.</p>
           <ul className="list-disc pl-6 space-y-1">
             <li>You may access and use purchased content for your personal, non-commercial education</li>
             <li>You may not reproduce, distribute, modify, or create derivative works from our content</li>

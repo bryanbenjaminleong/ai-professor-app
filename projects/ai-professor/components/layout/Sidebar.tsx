@@ -19,7 +19,7 @@ interface SidebarProps {
 
 const menuItems = [
   { href: '/dashboard', icon: LayoutDashboard, label: 'Overview' },
-  { href: '/dashboard/courses', icon: BookOpen, label: 'My Courses' },
+  { href: '/dashboard/courses', icon: BookOpen, label: 'My Modules' },
   { href: '/dashboard/settings', icon: Settings, label: 'Settings' },
   { href: '/dashboard/help', icon: HelpCircle, label: 'Help & Support' },
 ];

@@ -88,12 +88,12 @@ export default function DashboardPage() {
                 <div className="flex items-center justify-center gap-4">
                   <Link href="/courses">
                     <Button size="lg">
-                      Browse Courses
+                      Browse Modules
                     </Button>
                   </Link>
                   <Link href="/paths">
                     <Button variant="outline" size="lg">
-                      Learning Paths
+                      Programs
                     </Button>
                   </Link>
                 </div>

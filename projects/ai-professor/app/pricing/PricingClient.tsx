@@ -17,7 +17,7 @@ const pricingTiers = [
     features: [
       '24 Quick Guides',
       'CXO News (19 sources)',
-      'Browse course previews',
+      'Browse module previews',
       'Newsletter',
     ],
     cta: 'Get Started Free',
@@ -25,12 +25,12 @@ const pricingTiers = [
   },
   {
     id: 'single-course',
-    name: 'Single Course',
+    name: 'Single Module',
     price: 19.99,
     interval: 'one-time',
-    description: 'Buy individual courses. Lifetime access.',
+    description: 'Buy individual modules. Lifetime access.',
     features: [
-      'Full course access',
+      'Full module access',
       'All lessons included',
       'Lifetime access',
       'Progress tracking',
@@ -44,10 +44,10 @@ const pricingTiers = [
     name: 'Program Bundle',
     price: 49.99,
     interval: 'one-time',
-    description: 'Multi-course programs. Save vs buying individually.',
+    description: 'Multi-module programs. Save vs buying individually.',
     features: [
-      'All courses in the program',
-      'Structured learning path',
+      'All modules in the program',
+      'Structured program',
       'Lifetime access',
       'Progress tracking',
     ],
@@ -58,12 +58,12 @@ const pricingTiers = [
 
 const faqs = [
   {
-    question: 'Do courses expire?',
+    question: 'Do modules expire?',
     answer: 'No. Every purchase comes with lifetime access. Learn at your own pace.',
   },
   {
     question: 'Is there a free trial?',
-    answer: 'Our Quick Guides and CXO News are completely free. For full courses, try the free lesson available during our soft launch.',
+    answer: 'Our Quick Guides and CXO News are completely free. For full modules, try the free lesson available during our soft launch.',
   },
   {
     question: 'What payment methods do you accept?',

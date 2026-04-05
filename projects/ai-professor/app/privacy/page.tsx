@@ -17,8 +17,8 @@ export default function PrivacyPage() {
           <p>We collect information you provide directly to us, including:</p>
           <ul className="list-disc pl-6 space-y-1">
             <li><strong>Account information:</strong> Name, email address, and password when you create an account</li>
-            <li><strong>Payment information:</strong> Payment method and transaction details when you purchase a course or program</li>
-            <li><strong>Usage data:</strong> Pages visited, courses accessed, lesson progress, and time spent on the platform</li>
+            <li><strong>Payment information:</strong> Payment method and transaction details when you purchase a module or program</li>
+            <li><strong>Usage data:</strong> Pages visited, modules accessed, lesson progress, and time spent on the platform</li>
             <li><strong>Device information:</strong> Browser type, operating system, and device type for compatibility and security purposes</li>
             <li><strong>Communications:</strong> Content of messages you send to us via contact forms or support channels</li>
           </ul>
