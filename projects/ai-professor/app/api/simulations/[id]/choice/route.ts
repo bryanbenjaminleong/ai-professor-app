@@ -4,16 +4,27 @@ import { processChoice } from '@/lib/simulation/engine';
 import { getApiUser, createSuccessResponse, createErrorResponse } from '@/lib/auth';
 import type { ScenarioChoice } from '@/lib/simulation/types';
 
-function getUserId(req: NextRequest): string | null {
-  return req.headers.get('x-user-email');
+async function resolveUserId(req: NextRequest): Promise<string | null> {
+  const user = await getApiUser(req);
+  if (user?.id) return user.id;
+
+  const headerVal = req.headers.get('x-user-email');
+  if (!headerVal) return null;
+
+  if (/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(headerVal)) {
+    return headerVal;
+  }
+
+  const admin = getSupabaseAdmin();
+  const { data } = await admin.from('users').select('id').eq('email', headerVal).single();
+  return data?.id || null;
 }
 
 export async function POST(
   req: NextRequest,
   { params }: { params: { id: string } }
 ) {
-  const user = await getApiUser(req);
-  const userId = user?.id || getUserId(req);
+  const userId = await resolveUserId(req);
   if (!userId) return createErrorResponse(new Error('Unauthorized'));
 
   try {

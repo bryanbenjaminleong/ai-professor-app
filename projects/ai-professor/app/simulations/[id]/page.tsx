@@ -24,7 +24,7 @@ export default function SimulationPlayPage() {
 
   return (
     <main>
-      <SimulationPlayer simulationId={params.id as string} userId={user.email} />
+      <SimulationPlayer simulationId={params.id as string} userId={user.id} />
     </main>
   );
 }
