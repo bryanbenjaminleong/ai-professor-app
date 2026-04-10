@@ -5,8 +5,11 @@ import { Twitter, Linkedin, Mail } from 'lucide-react';
 const footerLinks = {
   product: [
     { href: '/news', label: 'CXO News' },
-    { href: '/programs', label: 'Programs' },
+    { href: '/breaking', label: 'Breaking News' },
+    { href: '/paths', label: 'Programs' },
     { href: '/courses', label: 'Modules' },
+    { href: '/simulations', label: 'Simulations' },
+    { href: '/guides', label: 'Quick Guides' },
     { href: '/pricing', label: 'Pricing' },
   ],
   company: [
