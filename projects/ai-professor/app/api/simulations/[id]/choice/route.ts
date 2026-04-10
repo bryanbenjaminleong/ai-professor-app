@@ -4,12 +4,17 @@ import { processChoice } from '@/lib/simulation/engine';
 import { getApiUser, createSuccessResponse, createErrorResponse } from '@/lib/auth';
 import type { ScenarioChoice } from '@/lib/simulation/types';
 
+function getUserId(req: NextRequest): string | null {
+  return req.headers.get('x-user-email');
+}
+
 export async function POST(
   req: NextRequest,
   { params }: { params: { id: string } }
 ) {
   const user = await getApiUser(req);
-  if (!user) return createErrorResponse(new Error('Unauthorized'));
+  const userId = user?.id || getUserId(req);
+  if (!userId) return createErrorResponse(new Error('Unauthorized'));
 
   try {
     const { scenarioId, choiceId } = await req.json();
@@ -27,7 +32,7 @@ export async function POST(
     }
 
     const progress = await processChoice(
-      user.id,
+      userId,
       params.id,
       scenarioId,
       choiceId,

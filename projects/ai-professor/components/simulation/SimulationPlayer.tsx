@@ -36,8 +36,10 @@ export function SimulationPlayer({ simulationId, userId }: SimulationPlayerProps
       try {
         const res = await fetch(`/api/simulations/${simulationId}`);
         const data = await res.json();
-        setSimulation(data.data?.simulation || data.simulation);
-        setScenarios(data.data?.scenarios || data.scenarios);
+        const sim = data.data?.simulation || data.simulation;
+        const scens = data.data?.scenarios || data.scenarios || [];
+        setSimulation(sim);
+        setScenarios(scens);
 
         const progRes = await fetch(`/api/simulations/${simulationId}/progress`, {
           headers: { 'x-user-email': userId },
@@ -47,20 +49,20 @@ export function SimulationPlayer({ simulationId, userId }: SimulationPlayerProps
 
         if (prog) {
           setProgress(prog);
-          const current = (data.data?.scenarios || data.scenarios).find(
+          const current = scens.find(
             (s: Scenario) => s.id === prog.current_scenario_id
           );
-          setCurrentScenario(current || (data.data?.scenarios || data.scenarios)[0]);
+          setCurrentScenario(current || scens[0]);
         } else {
           const startRes = await fetch(`/api/simulations/${simulationId}/progress`, {
             method: 'POST',
             headers: { 'x-user-email': userId, 'Content-Type': 'application/json' },
-            body: JSON.stringify({ firstScenarioId: (data.data?.scenarios || data.scenarios)[0]?.id }),
+            body: JSON.stringify({ firstScenarioId: scens[0]?.id }),
           });
           const startData = await startRes.json();
           const started = startData.data?.progress || startData.progress;
           setProgress(started);
-          setCurrentScenario((data.data?.scenarios || data.scenarios)[0]);
+          setCurrentScenario(scens[0]);
         }
       } catch (err) {
         console.error('Failed to load simulation:', err);
@@ -73,7 +75,7 @@ export function SimulationPlayer({ simulationId, userId }: SimulationPlayerProps
 
   const handleChoice = useCallback(
     async (choiceId: string) => {
-      if (!currentScenario || !progress) return;
+      if (!currentScenario || selectedChoice) return;
 
       setSelectedChoice(choiceId);
       setShowConsequences(false);
@@ -97,27 +99,27 @@ export function SimulationPlayer({ simulationId, userId }: SimulationPlayerProps
         if (currentScenario.adversary_prompt) {
           setShowAdversary(true);
         }
-
-        if (result.choice?.consequences && result.progress?.status !== 'completed') {
-          const nextScenario = scenarios.find(
-            (s) => s.id === result.progress.current_scenario_id
-          );
-          if (nextScenario) {
-            setTimeout(() => {
-              setCurrentScenario(nextScenario);
-              setSelectedChoice(null);
-              setShowConsequences(false);
-              setShowAdversary(false);
-              setConsequenceData(null);
-            }, 4000);
-          }
-        }
       } catch (err) {
         console.error('Failed to process choice:', err);
       }
     },
-    [currentScenario, progress, simulationId, userId, scenarios]
+    [currentScenario, selectedChoice, simulationId, userId]
   );
+
+  const handleNext = useCallback(() => {
+    if (!progress || !scenarios.length) return;
+
+    const nextScenario = scenarios.find(
+      (s) => s.id === progress.current_scenario_id
+    );
+    if (nextScenario) {
+      setCurrentScenario(nextScenario);
+    }
+    setSelectedChoice(null);
+    setShowConsequences(false);
+    setShowAdversary(false);
+    setConsequenceData(null);
+  }, [progress, scenarios]);
 
   if (loading) {
     return (
@@ -135,6 +137,15 @@ export function SimulationPlayer({ simulationId, userId }: SimulationPlayerProps
   const isCompleted = progress?.status === 'completed';
   const scenarioIndex = scenarios.findIndex((s) => s.id === currentScenario.id);
   const isCapstone = simulation.scenario_type === 'capstone';
+
+  const getOutcomeLabel = (type: string) => {
+    switch (type) {
+      case 'positive': return { label: 'Strong Decision', color: 'text-green-400', bg: 'bg-green-500/10 border-green-500/30' };
+      case 'neutral': return { label: 'Acceptable — Could Be Stronger', color: 'text-yellow-400', bg: 'bg-yellow-500/10 border-yellow-500/30' };
+      case 'negative': return { label: 'Poor Decision', color: 'text-red-400', bg: 'bg-red-500/10 border-red-500/30' };
+      default: return { label: 'Neutral', color: 'text-gray-400', bg: 'bg-gray-800/50 border-gray-600' };
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gray-950 text-white">
@@ -196,36 +207,73 @@ export function SimulationPlayer({ simulationId, userId }: SimulationPlayerProps
                 />
               )}
 
-              {showConsequences && consequenceData && (
-                <motion.div
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="mt-6"
-                >
-                  <div
-                    className={`rounded-lg border p-4 mb-4 ${
-                      consequenceData.outcome_type === 'positive'
-                        ? 'border-green-500/30 bg-green-500/10'
-                        : consequenceData.outcome_type === 'negative'
-                        ? 'border-red-500/30 bg-red-500/10'
-                        : 'border-gray-600 bg-gray-800/50'
-                    }`}
+              {showConsequences && consequenceData && (() => {
+                const outcome = getOutcomeLabel(consequenceData.outcome_type);
+                const hasNext = progress?.status !== 'completed' && progress?.current_scenario_id && progress.current_scenario_id !== currentScenario.id;
+                return (
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="mt-6"
                   >
-                    <p className="text-sm text-gray-300">{consequenceData.consequences}</p>
-                  </div>
-                  {consequenceData.feedback && (
-                    <p className="text-sm text-gray-500 italic">{consequenceData.feedback}</p>
-                  )}
-                  <p className="text-xs text-gray-600 mt-2">+{consequenceData.points} points</p>
-                </motion.div>
-              )}
+                    <div className={`rounded-lg border p-5 mb-4 ${outcome.bg}`}>
+                      <div className="flex items-center gap-2 mb-3">
+                        <span className={`text-sm font-bold uppercase tracking-wide ${outcome.color}`}>
+                          {outcome.label}
+                        </span>
+                        <span className="text-xs text-gray-500 ml-auto">
+                          +{consequenceData.points} points
+                        </span>
+                      </div>
+                      <p className="text-sm text-gray-300 leading-relaxed">{consequenceData.consequences}</p>
+                    </div>
 
-              {showAdversary && currentScenario.adversary_prompt && (
-                <AdversaryPanel
-                  personality={currentScenario.adversary_personality || 'Board Member'}
-                  prompt={currentScenario.adversary_prompt}
-                />
-              )}
+                    {consequenceData.feedback && (
+                      <div className="rounded-lg bg-gray-800/50 border border-gray-700 p-4 mb-4">
+                        <p className="text-xs font-semibold text-amber-400 uppercase tracking-wide mb-2">Why?</p>
+                        <p className="text-sm text-gray-400 leading-relaxed">{consequenceData.feedback}</p>
+                      </div>
+                    )}
+
+                    {showAdversary && currentScenario.adversary_prompt && (
+                      <div className="mt-4">
+                        <AdversaryPanel
+                          personality={currentScenario.adversary_personality || 'Board Member'}
+                          prompt={currentScenario.adversary_prompt}
+                        />
+                      </div>
+                    )}
+
+                    <div className="mt-6 flex justify-center">
+                      {progress?.status === 'completed' ? (
+                        <a
+                          href={`/simulations/${simulationId}/results`}
+                          className="inline-block bg-amber-500 hover:bg-amber-600 text-gray-900 font-bold px-8 py-3 rounded-lg transition"
+                        >
+                          View Results
+                        </a>
+                      ) : hasNext ? (
+                        <button
+                          onClick={handleNext}
+                          className="bg-amber-500 hover:bg-amber-600 text-gray-900 font-bold px-8 py-3 rounded-lg transition flex items-center gap-2"
+                        >
+                          Next Scenario
+                          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                          </svg>
+                        </button>
+                      ) : (
+                        <a
+                          href={`/simulations/${simulationId}/results`}
+                          className="inline-block bg-amber-500 hover:bg-amber-600 text-gray-900 font-bold px-8 py-3 rounded-lg transition"
+                        >
+                          View Results
+                        </a>
+                      )}
+                    </div>
+                  </motion.div>
+                );
+              })()}
             </motion.div>
           )}
         </AnimatePresence>
