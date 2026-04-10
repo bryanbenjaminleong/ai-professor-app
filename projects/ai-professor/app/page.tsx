@@ -205,14 +205,12 @@ export default function HomePage() {
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.1 }}
               >
-                <Link href={item.link} className={item.disabled ? 'pointer-events-none' : ''}>
-                  <div className={`group bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-sm hover:shadow-xl transition-all duration-300 h-full border border-gray-100 dark:border-gray-700 ${item.disabled ? '' : 'hover:border-transparent'} ${item.disabled ? 'opacity-75' : ''}`}>
-                    {/* Icon */}
+                <Link href={item.link}>
+                  <div className={`group bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-sm hover:shadow-xl transition-all duration-300 h-full border border-gray-100 dark:border-gray-700 hover:border-transparent`}>
                     <div className={`w-14 h-14 rounded-xl bg-gradient-to-br ${item.color} flex items-center justify-center mb-6 group-hover:scale-110 transition-transform`}>
                       <item.icon className="w-7 h-7 text-white" />
                     </div>
                     
-                    {/* Content */}
                     <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
                       {item.title}
                     </h3>
@@ -225,10 +223,9 @@ export default function HomePage() {
                       {item.description}
                     </p>
                     
-                    {/* CTA */}
-                    <span className={`inline-flex items-center font-semibold group-hover:gap-3 transition-all ${item.disabled ? 'text-gray-400 dark:text-gray-500 bg-gray-100 dark:bg-gray-700 px-4 py-2 rounded-lg' : 'text-primary-600 dark:text-primary-400'}`}>
+                    <span className="inline-flex items-center font-semibold group-hover:gap-3 transition-all text-primary-600 dark:text-primary-400">
                       {item.cta}
-                      {!item.disabled && <ChevronRight className="w-5 h-5 ml-1 group-hover:translate-x-1 transition-transform" />}
+                      <ChevronRight className="w-5 h-5 ml-1 group-hover:translate-x-1 transition-transform" />
                     </span>
                   </div>
                 </Link>

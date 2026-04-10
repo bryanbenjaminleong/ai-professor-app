@@ -1,5 +1,5 @@
 import { Metadata } from 'next';
-import { db } from '@/lib/supabase';
+import { getSupabaseAdmin } from '@/lib/supabase';
 import type { Simulation } from '@/lib/simulation/types';
 
 export const metadata: Metadata = {
@@ -12,7 +12,7 @@ export const dynamic = 'force-dynamic';
 export default async function SimulationsPage() {
   let sims: Simulation[] = [];
   try {
-    const admin = db.supabase;
+    const admin = getSupabaseAdmin();
     const { data } = await admin
       .from('simulations')
       .select('*')
