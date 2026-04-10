@@ -1,0 +1,8 @@
+Channel,Your Gross Margin,Your Net Margin,Notes
+Direct (online),75-85%,20-30%,Highest margin channel
+Reseller,50-65%,10-20%,Shared revenue with partner
+Distributor,40-55%,8-15%,Volume-based discounting
+White Label,25-40%,5-10%,Lowest margin but highest volume
+
+Rule: Never let net margin drop below 10% on any channel
+If it does: raise base price or reduce discount tier

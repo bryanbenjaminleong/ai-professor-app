@@ -15,6 +15,7 @@ const navLinks = [
   { href: '/breaking', label: 'Breaking', highlight: true },
   { href: '/news', label: 'AI News' },
   { href: '/paths', label: 'Programs' },
+  { href: '/simulations', label: 'Simulations' },
   { href: '/courses', label: 'Modules' },
   { href: '/pricing', label: 'Pricing' },
 ];

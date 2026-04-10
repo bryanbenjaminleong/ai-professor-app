@@ -9,7 +9,13 @@
 // ============================================
 
 export * from './types/content';
-export * from './types/ai';
+export {
+  type ResearchRequest as AIResearchRequest,
+  type ResearchResult as AIResearchResult,
+  type ResearchSourceType as AIResearchSourceType,
+  type ResearchedSource as AIResearchedSource,
+  type Trend as AITrend,
+} from './types/ai';
 
 // ============================================
 // Generator Exports

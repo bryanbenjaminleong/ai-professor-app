@@ -1,0 +1,9 @@
+Cost Layer,What to Include,Typical % of Revenue,Your Estimate
+COGS,Hosting + APIs (OpenAI/Perplexity) + Supabase + CDN,15-25%,
+Support,Customer success + onboarding,5-10%,
+R&D,Dev + product + AI costs,20-30%,
+Sales & Marketing,CAC + content + ads,20-40%,
+G&A,Legal + accounting + ops,5-10%,
+
+Target Gross Margin,70-80%,SaaS benchmark,
+Target Net Margin,15-25%,at scale,

@@ -1,0 +1,25 @@
+Cost Category,Monthly Cost (SGD),% of Revenue,Notes
+Hosting (Vercel/AWS),,INPUT,Next.js hosting / serverless
+Supabase,,INPUT,Database + auth + storage
+OpenAI API,,INPUT,GPT-4 for content generation
+Perplexity API,,INPUT,Research agent
+CDN / Media Storage,,INPUT,Images / audio / assets
+Email (SendGrid/Resend),,INPUT,Transactional + marketing
+Stripe Fees,,INPUT,2.9% + $0.30 per txn
+Domain & SSL,,INPUT,cxoacademy.co etc
+Monitoring (Sentry/etc),,INPUT,Error tracking
+TOTAL COGS,,=SUM,Sum of above
+Support / CS,,INPUT,Onboarding + helpdesk
+R&D / Development,,INPUT,Dev team + AI costs
+Sales & Marketing,,INPUT,CAC + content + ads
+G&A,,INPUT,Legal + accounting
+TOTAL OPEX,,=SUM,All costs combined
+
+Industry Benchmarks (% of Revenue)
+Category,Low,Typical,High,Best Practice
+COGS,15%,20%,25%,<20%
+Gross Margin,75%,80%,85%,>80%
+R&D,15%,20%,30%,15-20%
+Sales & Marketing,20%,30%,40%,<30%
+G&A,5%,8%,10%,<8%
+Net Margin (at scale),10%,20%,30%,>20%

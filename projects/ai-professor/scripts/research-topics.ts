@@ -24,7 +24,7 @@ import type { ResearchSourceType } from '../types/ai';
 // Configuration
 // ============================================
 
-interface ResearchConfig {
+export interface ResearchConfig {
   openaiApiKey: string;
   perplexityApiKey?: string;
   outputDir: string;
@@ -32,7 +32,7 @@ interface ResearchConfig {
   depth: 'shallow' | 'medium' | 'deep';
 }
 
-interface ResearchReport {
+export interface ResearchReport {
   timestamp: Date;
   topicsResearched: number;
   trendsIdentified: Trend[];
@@ -41,7 +41,7 @@ interface ResearchReport {
   recommendations: string[];
 }
 
-interface ContentOpportunity {
+export interface ContentOpportunity {
   topic: string;
   category: TopicCategory;
   reason: string;
@@ -50,7 +50,7 @@ interface ContentOpportunity {
   estimatedDemand: number;
 }
 
-interface KnowledgeGap {
+export interface KnowledgeGap {
   existingContent: string;
   missingTopic: string;
   category: TopicCategory;

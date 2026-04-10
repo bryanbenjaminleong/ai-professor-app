@@ -26,7 +26,7 @@ export default function HomePage() {
   const [stats, setStats] = useState<Stats>({
     articles: 100,  // Fallback values
     guides: 24,
-    courses: 48,
+    courses: 68,
   })
 
   useEffect(() => {
@@ -161,15 +161,14 @@ export default function HomePage() {
                 title: 'Executive Education — Where Theory Meets the War Room',
                 subtitle: 'Immersive, executive decision-making simulations for sitting C-level and directors.',
                 description: 'Boardroom scenarios, AI adversary mode, branching consequences, and capstone projects with auto-marking. Nothing like this exists in ASEAN.',
-                link: '/paths',
+                link: '/simulations',
                 color: 'from-amber-500 to-orange-500',
-                cta: 'Coming Soon',
-                disabled: true
+                cta: 'Explore Simulations'
               },
               {
                 icon: BookOpen,
                 title: 'Modules',
-                description: '48 individual modules across all levels. Pick what you need, learn at your pace.',
+                description: '68 individual modules across all levels. Pick what you need, learn at your pace.',
                 link: '/courses',
                 color: 'from-teal-500 to-cyan-500',
                 cta: 'Browse Modules'

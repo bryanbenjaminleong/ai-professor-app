@@ -1,0 +1,16 @@
+Channel Tier,Discount off List,Your Gross Margin,Your Net Margin,Min Commitment,Typical Terms,Who Gets It
+Direct (Online),0%,75-85%,20-30%,None,Monthly/Annual,End customers via website
+Referral Partner,10-15% commission,70-80%,18-28%,None,Commission payout,Consultants / influencers
+Authorized Reseller,20-30% discount,55-65%,12-20%,$5-10K/yr,Annual agreement,Training companies / tech partners
+Distributor,30-45% discount,45-55%,8-15%,$25-50K/yr,Regional exclusivity,Regional distributors / VARs
+OEM / White Label,50-60% discount,30-40%,5-10%,$50K+/yr,Multi-year / volume,Platforms embedding your product
+
+RULE: Never drop below 10% net margin on any channel
+
+Pricing Formula
+Formula,Calculation
+End Customer Price,= Base Price x Region Multiplier
+Distributor Price,= End Customer Price x (1 - Discount)
+Your Revenue,= Distributor Price
+Your Cost,= COGS % x Your Revenue
+Your Margin,= Your Revenue - Your Cost

@@ -24,7 +24,7 @@ import type {
 // Configuration
 // ============================================
 
-interface ContentUpdaterConfig {
+export interface ContentUpdaterConfig {
   openaiApiKey: string;
   perplexityApiKey?: string;
   contentDir: string;
@@ -33,7 +33,7 @@ interface ContentUpdaterConfig {
   dryRun: boolean;
 }
 
-interface ContentAudit {
+export interface ContentAudit {
   totalContent: number;
   needsUpdate: number;
   critical: number;
@@ -45,7 +45,7 @@ interface ContentAudit {
   }>;
 }
 
-interface UpdateReport {
+export interface UpdateReport {
   timestamp: Date;
   audited: number;
   updated: number;

@@ -29,7 +29,7 @@ import type {
 // Configuration
 // ============================================
 
-interface WeeklyGeneratorConfig {
+export interface WeeklyGeneratorConfig {
   openaiApiKey: string;
   perplexityApiKey?: string;
   topics: Array<{
@@ -41,7 +41,7 @@ interface WeeklyGeneratorConfig {
   notifyOnComplete?: (summary: WeeklySummary) => Promise<void>;
 }
 
-interface WeeklySummary {
+export interface WeeklySummary {
   week: number;
   year: number;
   tasksCompleted: number;

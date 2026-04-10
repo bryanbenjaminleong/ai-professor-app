@@ -1,0 +1,26 @@
+Formula,Calculation
+End Customer Price,= Base Price x Region Multiplier
+Distributor Price,= End Customer Price x (1 - Distributor Discount)
+Your Revenue,= Distributor Price
+Your Cost,= COGS % x Your Revenue
+Your Margin,= Your Revenue - Your Cost
+
+Example (Singapore Direct):
+Base Price,$99
+Region Multiplier,1.0x
+End Customer Price,$99
+Distributor Discount,0%
+Your Revenue,$99
+COGS (20%),$19.80
+Your Margin,$79.20
+Margin %,80%
+
+Example (Malaysia Distributor):
+Base Price,$99
+Region Multiplier,0.8x
+End Customer Price,$79.20
+Distributor Discount,35%
+Your Revenue,$51.48
+COGS (20%),$10.30
+Your Margin,$41.18
+Margin %,80%

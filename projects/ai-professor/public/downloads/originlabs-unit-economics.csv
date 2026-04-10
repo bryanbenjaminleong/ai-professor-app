@@ -1,0 +1,20 @@
+Input,Value,Notes
+Base Price (SGD/month),99,monthly subscription
+Annual Discount,15%,discount for annual billing
+COGS % of Revenue,20%,hosting + APIs + infra
+Monthly Churn Rate,5%,subscriber churn
+Avg Seats per Account,1,for per-seat model
+
+Calculated,Value,Formula
+Annual Price,84.15,=Base Price x (1 - Discount)
+COGS per month,19.80,=Base Price x COGS%
+Gross Profit per user,79.20,=Base Price - COGS
+Customer Lifetime (months),20,=1 / Churn Rate
+Customer Lifetime Value,1584.00,=Lifetime x Gross Profit
+
+Scenario: 1000 Subscribers,Value,Formula
+Monthly Revenue,99000,=1000 x Base Price
+Monthly COGS,19800,=Revenue x COGS%
+Monthly Gross Profit,79200,=Revenue - COGS
+Annual Revenue,1188000,=Monthly x 12
+Annual Gross Profit,950400,=Monthly GP x 12

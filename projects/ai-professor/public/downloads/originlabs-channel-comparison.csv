@@ -1,0 +1,6 @@
+Channel,Discount,End Price,Your Revenue,COGS (20%),Your Margin,Net Margin %
+Direct,0%,$99,$99.00,$19.80,$79.20,80%
+Referral Partner,12%,$99,$87.00,$17.40,$69.60,80%
+Reseller,25%,$99,$74.25,$14.85,$59.40,80%
+Distributor,40%,$99,$59.40,$11.88,$47.52,80%
+White Label,55%,$99,$44.55,$8.91,$35.64,80%

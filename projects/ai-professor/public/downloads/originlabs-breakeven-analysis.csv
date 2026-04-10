@@ -1,0 +1,14 @@
+Scenario,Subscribers,Monthly Revenue,Monthly COGS,Monthly Gross Profit,Annual Revenue,Break-even Months
+Conservative,100,$9900,$1980,$7920,$95040,3
+Slow Growth,500,$49500,$9900,$39600,$475200,2
+Moderate,1000,$99000,$19800,$79200,$950400,1
+Aggressive,2500,$247500,$49500,$198000,$2376000,1
+Scale,5000,$495000,$99000,$297000,$3564000,1
+
+Assumptions:
+Base Price,$99/month
+COGS,20% of revenue
+Fixed Monthly Costs (est),$8000,hosting + tools + services
+
+Break-even = Fixed Costs / Gross Profit per subscriber
+$8000 / $79.20 = 101 subscribers to break even
