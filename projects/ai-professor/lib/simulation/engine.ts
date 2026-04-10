@@ -25,7 +25,7 @@ export async function loadSimulation(simulationId: string): Promise<{
 
   const { data: scenarios, error: scenError } = await admin
     .from('scenarios')
-    .select('*, choices:scenario_choices(*)')
+    .select('*, choices:scenario_choices!scenario_choices_scenario_id_fkey(*)')
     .eq('simulation_id', simulationId)
     .order('sequence_order');
 
