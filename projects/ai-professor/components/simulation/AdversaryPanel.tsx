@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { motion } from 'framer-motion';
 
 interface AdversaryPanelProps {
@@ -8,11 +8,35 @@ interface AdversaryPanelProps {
   prompt: string;
 }
 
+const RESPONSES: Record<string, string[]> = {
+  'hostile board member': [
+    "That's a convenient answer, but it doesn't address the core issue. Your shareholders are watching.",
+    "I've seen this approach fail before. What makes you think this time is different?",
+    "Are you making this decision based on data, or are you just buying time?",
+  ],
+  'regulator': [
+    "I hope you understand the regulatory implications of what you're proposing.",
+    "MAS will need full disclosure within 24 hours. Can you guarantee that?",
+    "This approach may not meet our compliance standards. Walk me through your reasoning.",
+  ],
+  'default': [
+    "Interesting choice. But let me push back — what's your contingency if this fails?",
+    "You're assuming best-case scenario. What happens when things go wrong?",
+    "The board isn't going to like this. How do you justify the risk?",
+  ],
+};
+
+function pickResponse(personality: string): string {
+  const key = personality.toLowerCase();
+  const pool = RESPONSES[key] || RESPONSES['default'];
+  return pool[Math.floor(Math.random() * pool.length)];
+}
+
 export function AdversaryPanel({ personality, prompt }: AdversaryPanelProps) {
   const [displayedText, setDisplayedText] = useState('');
   const [isTyping, setIsTyping] = useState(true);
 
-  const adversaryText = generateAdversaryText(personality, prompt);
+  const adversaryText = useMemo(() => pickResponse(personality), [personality]);
 
   useEffect(() => {
     let i = 0;
@@ -21,13 +45,13 @@ export function AdversaryPanel({ personality, prompt }: AdversaryPanelProps) {
 
     const interval = setInterval(() => {
       if (i < adversaryText.length) {
-        setDisplayedText(adversaryText.slice(0, i + 1));
         i++;
+        setDisplayedText(adversaryText.slice(0, i));
       } else {
         setIsTyping(false);
         clearInterval(interval);
       }
-    }, 30);
+    }, 25);
 
     return () => clearInterval(interval);
   }, [adversaryText]);
@@ -48,27 +72,4 @@ export function AdversaryPanel({ personality, prompt }: AdversaryPanelProps) {
       </p>
     </motion.div>
   );
-}
-
-function generateAdversaryText(personality: string, _prompt: string): string {
-  const responses: Record<string, string[]> = {
-    'hostile board member': [
-      "That's a convenient answer, but it doesn't address the core issue. Your shareholders are watching.",
-      "I've seen this approach fail before. What makes you think this time is different?",
-      "Are you making this decision based on data, or are you just buying time?",
-    ],
-    regulator: [
-      "I hope you understand the regulatory implications of what you're proposing.",
-      "MAS will need full disclosure within 24 hours. Can you guarantee that?",
-      "This approach may not meet our compliance standards. Walk me through your reasoning.",
-    ],
-    default: [
-      "Interesting choice. But let me push back — what's your contingency if this fails?",
-      "You're assuming best-case scenario. What happens when things go wrong?",
-      "The board isn't going to like this. How do you justify the risk?",
-    ],
-  };
-
-  const pool = responses[personality.toLowerCase()] || responses['default'];
-  return pool[Math.floor(Math.random() * pool.length)];
 }
