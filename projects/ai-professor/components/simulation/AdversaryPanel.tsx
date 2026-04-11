@@ -6,9 +6,10 @@ import { motion } from 'framer-motion';
 interface AdversaryPanelProps {
   personality: string;
   prompt: string;
+  onTypingComplete?: () => void;
 }
 
-export function AdversaryPanel({ personality, prompt }: AdversaryPanelProps) {
+export function AdversaryPanel({ personality, prompt, onTypingComplete }: AdversaryPanelProps) {
   const [displayedText, setDisplayedText] = useState('');
   const [isTyping, setIsTyping] = useState(true);
 
@@ -29,11 +30,12 @@ export function AdversaryPanel({ personality, prompt }: AdversaryPanelProps) {
       } else {
         setIsTyping(false);
         clearInterval(interval);
+        onTypingComplete?.();
       }
     }, 20);
 
     return () => clearInterval(interval);
-  }, [prompt]);
+  }, [prompt, onTypingComplete]);
 
   if (!prompt) return null;
 
