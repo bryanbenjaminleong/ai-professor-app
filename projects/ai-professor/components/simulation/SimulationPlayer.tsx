@@ -25,6 +25,15 @@ interface ChoiceRecord {
   adversaryScore?: number;
 }
 
+interface PeerData {
+  hasPeers: boolean;
+  totalParticipants?: number;
+  avgWeightedScore?: number;
+  gradeDistribution?: Record<string, number>;
+  peerChoices?: Record<string, { percentOptimal: number; totalResponses: number }>;
+  rubricAvgs?: Record<string, number>;
+}
+
 type Phase = 'choosing' | 'consequences' | 'adversary_challenge' | 'adversary_respond' | 'adversary_feedback' | 'loading_review' | 'review';
 
 interface ReviewData {
@@ -59,6 +68,7 @@ export function SimulationPlayer({ simulationId }: SimulationPlayerProps) {
   const [loadError, setLoadError] = useState<string | null>(null);
   const [choicesMade, setChoicesMade] = useState<ChoiceRecord[]>([]);
   const [reviewData, setReviewData] = useState<ReviewData | null>(null);
+  const [peerData, setPeerData] = useState<PeerData | null>(null);
 
   useEffect(() => {
     async function load() {
@@ -142,19 +152,48 @@ export function SimulationPlayer({ simulationId }: SimulationPlayerProps) {
   const generateReview = useCallback(async () => {
     setPhase('loading_review');
     try {
-      const res = await fetch('/api/simulations/board-review', {
-        method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          simulationTitle: simulation?.title || 'Executive Simulation',
-          choices: choicesMade,
-          adversaryScores: choicesMade.filter((c) => c.adversaryScore).map((c) => c.adversaryScore!),
+      const [reviewRes, peerRes] = await Promise.all([
+        fetch('/api/simulations/board-review', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            simulationTitle: simulation?.title || 'Executive Simulation',
+            choices: choicesMade,
+            adversaryScores: choicesMade.filter((c) => c.adversaryScore).map((c) => c.adversaryScore!),
+          }),
         }),
-      });
-      const data = await res.json();
-      setReviewData(data.data || null);
+        fetch(`/api/simulations/peer-compare?simulationId=${simulationId}`),
+      ]);
+      const reviewJson = await reviewRes.json();
+      setReviewData(reviewJson.data || null);
+      const peerJson = await peerRes.json();
+      setPeerData(peerJson.data || null);
+
+      if (reviewJson.data) {
+        const totalPoints = choicesMade.reduce((s, c) => s + c.points, 0);
+        const adversaryTotal = choicesMade.reduce((s, c) => s + (c.adversaryScore || 0), 0);
+        const avgRubric: Record<string, number> = {};
+        const keys = ['strategic_thinking', 'stakeholder_awareness', 'decision_quality', 'communication_clarity', 'asean_context', 'ethical_judgment'];
+        for (const key of keys) {
+          let sum = 0, count = 0;
+          for (const c of choicesMade) {
+            const val = (c.rubricScores as Record<string, number>)[key];
+            if (val) { sum += val; count++; }
+          }
+          avgRubric[key] = count > 0 ? sum / count : 0;
+        }
+        fetch('/api/simulations/peer-compare', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            simulationId, userId: choicesMade[0]?.scenarioId || 'anon',
+            choicesMade: choicesMade.map((c) => ({ scenarioId: c.scenarioId, choiceId: c.choiceId, outcomeType: c.outcomeType })),
+            rubricScores: avgRubric, totalScore: totalPoints, adversaryTotal,
+            weightedScore: reviewJson.data.weightedScore, grade: reviewJson.data.grade?.grade || 'Competent',
+          }),
+        }).catch(() => {});
+      }
     } catch { setReviewData(null); }
     setPhase('review');
-  }, [simulation, choicesMade]);
+  }, [simulation, choicesMade, simulationId]);
 
   const resetAll = useCallback(() => {
     setCurrentIndex(0); setPhase('choosing'); setConsequenceData(null);
@@ -214,8 +253,7 @@ export function SimulationPlayer({ simulationId }: SimulationPlayerProps) {
 
             {reviewData ? (
               <>
-                <div className="grid grid-cols-3 gap-4 mb-8">
-                  <div className="bg-gray-900 border border-gray-800 rounded-xl p-5 text-center">
+                <div className="grid grid-cols-3 gap-4 mb-8">                  <div className="bg-gray-900 border border-gray-800 rounded-xl p-5 text-center">
                     <p className="text-xs text-gray-500 mb-1">Overall Score</p>
                     <p className="text-3xl font-bold text-amber-400">{reviewData.weightedScore.toFixed(1)}<span className="text-lg text-gray-600">/5.0</span></p>
                   </div>
@@ -301,22 +339,80 @@ export function SimulationPlayer({ simulationId }: SimulationPlayerProps) {
                     ))}
                   </div>
                 </div>
+
+                {peerData?.hasPeers && (
+                  <div className="bg-gray-900 border border-gray-800 rounded-xl p-6 mb-8">
+                    <h3 className="text-sm font-bold text-amber-400 uppercase tracking-wide mb-4">Peer Comparison</h3>
+                    <p className="text-xs text-gray-500 mb-4">Based on {peerData.totalParticipants} executives who completed this simulation.</p>
+                    <div className="grid grid-cols-2 gap-4 mb-4">
+                      <div className="bg-gray-800/50 rounded-lg p-4 text-center">
+                        <p className="text-xs text-gray-500 mb-1">Your Score</p>
+                        <p className="text-2xl font-bold text-amber-400">{reviewData?.weightedScore.toFixed(1)}/5.0</p>
+                      </div>
+                      <div className="bg-gray-800/50 rounded-lg p-4 text-center">
+                        <p className="text-xs text-gray-500 mb-1">Cohort Average</p>
+                        <p className="text-2xl font-bold text-gray-400">{peerData.avgWeightedScore?.toFixed(1)}/5.0</p>
+                      </div>
+                    </div>
+                    {peerData.gradeDistribution && (
+                      <div className="space-y-2">
+                        <p className="text-xs text-gray-500">Grade Distribution</p>
+                        {Object.entries(peerData.gradeDistribution).sort((a, b) => b[1] - a[1]).map(([grade, count]) => {
+                          const pct = peerData.totalParticipants ? Math.round((count / peerData.totalParticipants) * 100) : 0;
+                          return (
+                            <div key={grade} className="flex items-center gap-3">
+                              <span className="text-xs text-gray-400 w-36">{grade}</span>
+                              <div className="flex-1 bg-gray-800 rounded-full h-3">
+                                <div className={`h-3 rounded-full ${grade === 'Distinguished' ? 'bg-green-500' : grade === 'Commendable' ? 'bg-blue-500' : grade === 'Competent' ? 'bg-yellow-500' : 'bg-red-500'}`} style={{ width: `${pct}%` }} />
+                              </div>
+                              <span className="text-xs text-gray-500 w-16 text-right">{count} ({pct}%)</span>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    )}
+                    {peerData.peerChoices && Object.keys(peerData.peerChoices).length > 0 && (
+                      <div className="mt-4 pt-4 border-t border-gray-800">
+                        <p className="text-xs text-gray-500 mb-3">How others decided:</p>
+                        {choicesMade.map((c, i) => {
+                          const peer = peerData.peerChoices?.[c.scenarioId];
+                          if (!peer) return null;
+                          const wasOptimal = c.outcomeType === 'positive';
+                          return (
+                            <div key={i} className="flex items-center justify-between text-sm py-1">
+                              <span className="text-gray-400">{c.scenarioTitle}</span>
+                              <span className="text-gray-500">
+                                {peer.percentOptimal}% chose the strong option
+                                {!wasOptimal && <span className="text-yellow-400 ml-1">(you didn't)</span>}
+                                {wasOptimal && <span className="text-green-400 ml-1">(you did too)</span>}
+                              </span>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                <div className="flex justify-center gap-4">
+                  <a href="/simulations" className="bg-amber-500 hover:bg-amber-600 text-gray-900 font-bold px-8 py-3 rounded-lg transition">
+                    Back to Simulations
+                  </a>
+                  <button onClick={resetAll} className="border border-gray-700 hover:border-amber-500/50 text-gray-300 font-semibold px-8 py-3 rounded-lg transition">
+                    Play Again
+                  </button>
+                </div>
               </>
             ) : (
               <div className="bg-gray-900 border border-gray-800 rounded-xl p-8 mb-8 text-center">
                 <p className="text-gray-400 mb-2">Total Score: {totalPoints + adversaryTotal}</p>
-                <p className="text-gray-600 text-sm">Board review could not be generated. Your scores have been recorded.</p>
+                <p className="text-gray-600 text-sm">Board review could not be generated.</p>
+                <div className="flex justify-center gap-4 mt-6">
+                  <a href="/simulations" className="bg-amber-500 hover:bg-amber-600 text-gray-900 font-bold px-8 py-3 rounded-lg transition">Back to Simulations</a>
+                  <button onClick={resetAll} className="border border-gray-700 text-gray-300 font-semibold px-8 py-3 rounded-lg transition">Play Again</button>
+                </div>
               </div>
             )}
-
-            <div className="flex justify-center gap-4">
-              <a href="/simulations" className="bg-amber-500 hover:bg-amber-600 text-gray-900 font-bold px-8 py-3 rounded-lg transition">
-                Back to Simulations
-              </a>
-              <button onClick={resetAll} className="border border-gray-700 hover:border-amber-500/50 text-gray-300 font-semibold px-8 py-3 rounded-lg transition">
-                Play Again
-              </button>
-            </div>
           </motion.div>
         </div>
       </div>

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 
 interface AdversaryPanelProps {
@@ -12,6 +12,8 @@ interface AdversaryPanelProps {
 export function AdversaryPanel({ personality, prompt, onTypingComplete }: AdversaryPanelProps) {
   const [displayedText, setDisplayedText] = useState('');
   const [isTyping, setIsTyping] = useState(true);
+  const callbackRef = useRef(onTypingComplete);
+  callbackRef.current = onTypingComplete;
 
   useEffect(() => {
     let i = 0;
@@ -30,12 +32,12 @@ export function AdversaryPanel({ personality, prompt, onTypingComplete }: Advers
       } else {
         setIsTyping(false);
         clearInterval(interval);
-        onTypingComplete?.();
+        callbackRef.current?.();
       }
     }, 20);
 
     return () => clearInterval(interval);
-  }, [prompt, onTypingComplete]);
+  }, [prompt]);
 
   if (!prompt) return null;
 
