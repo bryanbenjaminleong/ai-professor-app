@@ -19,15 +19,35 @@ export async function GET(
 
     const { data: scenarios, error: scenError } = await admin
       .from('scenarios')
-      .select('*, choices:scenario_choices!scenario_choices_scenario_id_fkey(*)')
+      .select('*')
       .eq('simulation_id', params.id)
       .order('sequence_order');
 
     if (scenError) throw scenError;
 
+    const scenarioIds = (scenarios || []).map((s: any) => s.id);
+
+    const { data: choices, error: choiceError } = await admin
+      .from('scenario_choices')
+      .select('*')
+      .in('scenario_id', scenarioIds);
+
+    if (choiceError) throw choiceError;
+
+    const choicesByScenario: Record<string, any[]> = {};
+    for (const ch of choices || []) {
+      if (!choicesByScenario[ch.scenario_id]) choicesByScenario[ch.scenario_id] = [];
+      choicesByScenario[ch.scenario_id].push(ch);
+    }
+
+    const scenariosWithChoices = (scenarios || []).map((s: any) => ({
+      ...s,
+      choices: choicesByScenario[s.id] || [],
+    }));
+
     return createSuccessResponse({
       simulation: sim,
-      scenarios: scenarios || [],
+      scenarios: scenariosWithChoices,
     });
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : 'Failed to load simulation';
