@@ -8,6 +8,7 @@ import { ChoiceSelector } from './ChoiceSelector';
 import { AdversaryPanel } from './AdversaryPanel';
 import { ProgressTracker } from './ProgressTracker';
 import { BranchIndicator } from './BranchIndicator';
+import { CrossFunctionalCollision } from './CrossFunctionalCollision';
 
 interface SimulationPlayerProps {
   simulationId: string;
@@ -452,6 +453,15 @@ export function SimulationPlayer({ simulationId }: SimulationPlayerProps) {
             )}
             <ScenarioCard scenario={currentScenario} />
 
+            {currentScenario.sequence_order === 6 && currentScenario.title.includes('Countermove') && (
+              <CrossFunctionalCollision
+                conflictingRole="CFO"
+                theirDecision="Freeze the cybersecurity budget. Redirect $8M to marketing and sales recovery. Phase security investment over 18 months."
+                theirRationale="Revenue is down 22%. Customer acquisition has stalled. We cannot afford to burn $12M on security while the core business is bleeding. A phased approach keeps us compliant while protecting revenue."
+                impact="Your CISO threatens to resign, citing the board commitment you made. MAS compliance timeline is now at risk. The board meeting is in 48 hours."
+              />
+            )}
+
             {phase === 'choosing' && (
               <ChoiceSelector choices={currentScenario.choices || []} onSelect={handleChoice} disabled={false} />
             )}
@@ -477,7 +487,7 @@ export function SimulationPlayer({ simulationId }: SimulationPlayerProps) {
               );
             })()}
 
-            {phase === 'adversary_challenge' && currentScenario.adversary_prompt && (
+            {(phase === 'adversary_challenge' || phase === 'adversary_respond' || phase === 'adversary_feedback') && currentScenario.adversary_prompt && (
               <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
                 <AdversaryPanel personality={currentScenario.adversary_personality || 'Board Member'} prompt={currentScenario.adversary_prompt} onTypingComplete={handleAdversaryDone} />
               </motion.div>
