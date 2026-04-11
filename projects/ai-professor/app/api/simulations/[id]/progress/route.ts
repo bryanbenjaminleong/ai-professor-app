@@ -16,7 +16,7 @@ async function resolveUserId(req: NextRequest): Promise<string | null> {
 
   const admin = getSupabaseAdmin();
   const { data } = await admin.from('users').select('id').eq('email', email).single();
-  return data?.id || null;
+  return (data as any)?.id || null;
 }
 
 export async function GET(
