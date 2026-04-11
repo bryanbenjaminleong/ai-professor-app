@@ -35,7 +35,7 @@ export async function GET(
     if (choiceError) throw choiceError;
 
     const choicesByScenario: Record<string, any[]> = {};
-    for (const ch of choices || []) {
+    for (const ch of (choices || []) as any[]) {
       if (!choicesByScenario[ch.scenario_id]) choicesByScenario[ch.scenario_id] = [];
       choicesByScenario[ch.scenario_id].push(ch);
     }
