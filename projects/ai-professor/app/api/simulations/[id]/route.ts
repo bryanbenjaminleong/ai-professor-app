@@ -52,6 +52,9 @@ export async function GET(
       choices: choicesByScenario[s.id] || [],
     }));
 
+    const envKey = process.env.SUPABASE_SERVICE_ROLE_KEY || '';
+    const envUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
+
     return noCache(createSuccessResponse({
       simulation: sim,
       scenarios: scenariosWithChoices,
@@ -59,8 +62,10 @@ export async function GET(
         simulationId: params.id,
         rawScenarioCount: (scenarios || []).length,
         rawChoiceCount: (choices || []).length,
-        scenarioIds: scenarioIds,
+        scenarioIds,
         timestamp: new Date().toISOString(),
+        envKeyPrefix: envKey.substring(0, 20) + '...',
+        envUrl,
       },
     }) as unknown as NextResponse);
   } catch (err: unknown) {
