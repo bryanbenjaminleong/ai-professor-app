@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getSupabaseAdmin } from '@/lib/supabase';
 import { createSuccessResponse, createErrorResponse } from '@/lib/auth';
 
 function noCache(response: NextResponse): NextResponse {
@@ -14,32 +13,34 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   try {
-    const admin = getSupabaseAdmin();
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+    const headers: Record<string, string> = {
+      'apikey': supabaseKey!,
+      'Authorization': `Bearer ${supabaseKey}`,
+      'Content-Type': 'application/json',
+      'Prefer': 'count=exact',
+    };
 
-    const { data: sim, error: simError } = await admin
-      .from('simulations')
-      .select('*')
-      .eq('id', params.id)
-      .single();
+    const [simRes, scenariosRes] = await Promise.all([
+      fetch(`${supabaseUrl}/rest/v1/simulations?id=eq.${params.id}&select=*`, { headers }),
+      fetch(`${supabaseUrl}/rest/v1/scenarios?simulation_id=eq.${params.id}&select=*&order=sequence_order.asc`, { headers }),
+    ]);
 
-    if (simError) throw simError;
+    const simData = await simRes.json();
+    if (!simData || simData.length === 0) throw new Error('Simulation not found');
+    const sim = simData[0];
 
-    const { data: scenarios, error: scenError } = await admin
-      .from('scenarios')
-      .select('*')
-      .eq('simulation_id', params.id)
-      .order('sequence_order');
+    const scenarios = await scenariosRes.json();
+    const contentRange = scenariosRes.headers.get('content-range') || '';
 
-    if (scenError) throw scenError;
+    const scenarioIds: string[] = (scenarios || []).map((s: any) => s.id);
 
-    const scenarioIds = (scenarios || []).map((s: any) => s.id);
-
-    const { data: choices, error: choiceError } = await admin
-      .from('scenario_choices')
-      .select('*')
-      .in('scenario_id', scenarioIds);
-
-    if (choiceError) throw choiceError;
+    const choicesRes = await fetch(
+      `${supabaseUrl}/rest/v1/scenario_choices?scenario_id=in.(${scenarioIds.join(',')})&select=*`,
+      { headers }
+    );
+    const choices = await choicesRes.json();
 
     const choicesByScenario: Record<string, any[]> = {};
     for (const ch of (choices || []) as any[]) {
@@ -52,9 +53,6 @@ export async function GET(
       choices: choicesByScenario[s.id] || [],
     }));
 
-    const envKey = process.env.SUPABASE_SERVICE_ROLE_KEY || '';
-    const envUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
-
     return noCache(createSuccessResponse({
       simulation: sim,
       scenarios: scenariosWithChoices,
@@ -63,9 +61,8 @@ export async function GET(
         rawScenarioCount: (scenarios || []).length,
         rawChoiceCount: (choices || []).length,
         scenarioIds,
+        contentRange,
         timestamp: new Date().toISOString(),
-        envKeyPrefix: envKey.substring(0, 20) + '...',
-        envUrl,
       },
     }) as unknown as NextResponse);
   } catch (err: unknown) {
