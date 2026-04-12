@@ -55,6 +55,13 @@ export async function GET(
     return noCache(createSuccessResponse({
       simulation: sim,
       scenarios: scenariosWithChoices,
+      _debug: {
+        simulationId: params.id,
+        rawScenarioCount: (scenarios || []).length,
+        rawChoiceCount: (choices || []).length,
+        scenarioIds: scenarioIds,
+        timestamp: new Date().toISOString(),
+      },
     }) as unknown as NextResponse);
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : 'Failed to load simulation';
