@@ -1,6 +1,13 @@
-import { NextRequest } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { getSupabaseAdmin } from '@/lib/supabase';
 import { createSuccessResponse, createErrorResponse } from '@/lib/auth';
+
+function noCache(response: NextResponse): NextResponse {
+  response.headers.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+  response.headers.set('CDN-Cache-Control', 'no-store');
+  response.headers.set('Vercel-CDN-Cache-Control', 'no-store');
+  return response;
+}
 
 export async function GET(
   _req: NextRequest,
@@ -45,12 +52,12 @@ export async function GET(
       choices: choicesByScenario[s.id] || [],
     }));
 
-    return createSuccessResponse({
+    return noCache(createSuccessResponse({
       simulation: sim,
       scenarios: scenariosWithChoices,
-    });
+    }) as unknown as NextResponse);
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : 'Failed to load simulation';
-    return createErrorResponse(err instanceof Error ? err : new Error(message));
+    return noCache(createErrorResponse(err instanceof Error ? err : new Error(message)) as unknown as NextResponse);
   }
 }
