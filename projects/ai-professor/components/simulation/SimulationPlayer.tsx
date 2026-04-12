@@ -74,7 +74,7 @@ export function SimulationPlayer({ simulationId }: SimulationPlayerProps) {
   useEffect(() => {
     async function load() {
       try {
-        const res = await fetch(`/api/simulations/${simulationId}`, { cache: 'no-store' });
+        const res = await fetch(`/api/simulations/${simulationId}?_t=${Date.now()}`, { cache: 'no-store' });
         const data = await res.json();
         if (!res.ok || (!data.data && !data.simulation)) { setLoadError('Failed to load simulation.'); return; }
         const sim = data.data?.simulation || data.simulation;
