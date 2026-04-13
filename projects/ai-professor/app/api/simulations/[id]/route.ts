@@ -19,14 +19,11 @@ export async function GET(
       'apikey': supabaseKey!,
       'Authorization': `Bearer ${supabaseKey}`,
       'Content-Type': 'application/json',
-      'Prefer': 'count=exact',
-      'Cache-Control': 'no-cache',
     };
-    const cacheBust = `&_t=${Date.now()}`;
 
     const [simRes, scenariosRes] = await Promise.all([
-      fetch(`${supabaseUrl}/rest/v1/simulations?id=eq.${params.id}&select=*${cacheBust}`, { headers, cache: 'no-store' }),
-      fetch(`${supabaseUrl}/rest/v1/scenarios?simulation_id=eq.${params.id}&select=*&order=sequence_order.asc${cacheBust}`, { headers, cache: 'no-store' }),
+      fetch(`${supabaseUrl}/rest/v1/simulations?id=eq.${params.id}&select=*`, { headers, cache: 'no-store' }),
+      fetch(`${supabaseUrl}/rest/v1/scenarios?simulation_id=eq.${params.id}&select=*&order=sequence_order.asc`, { headers, cache: 'no-store' }),
     ]);
 
     const simData = await simRes.json();
@@ -34,12 +31,11 @@ export async function GET(
     const sim = simData[0];
 
     const scenarios = await scenariosRes.json();
-    const contentRange = scenariosRes.headers.get('content-range') || '';
 
     const scenarioIds: string[] = (scenarios || []).map((s: any) => s.id);
 
     const choicesRes = await fetch(
-      `${supabaseUrl}/rest/v1/scenario_choices?scenario_id=in.(${scenarioIds.join(',')})&select=*&_t=${Date.now()}`,
+      `${supabaseUrl}/rest/v1/scenario_choices?scenario_id=in.(${scenarioIds.join(',')})&select=*`,
       { headers, cache: 'no-store' }
     );
     const choices = await choicesRes.json();
