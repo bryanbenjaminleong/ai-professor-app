@@ -20,11 +20,13 @@ export async function GET(
       'Authorization': `Bearer ${supabaseKey}`,
       'Content-Type': 'application/json',
       'Prefer': 'count=exact',
+      'Cache-Control': 'no-cache',
     };
+    const cacheBust = `&_t=${Date.now()}`;
 
     const [simRes, scenariosRes] = await Promise.all([
-      fetch(`${supabaseUrl}/rest/v1/simulations?id=eq.${params.id}&select=*`, { headers }),
-      fetch(`${supabaseUrl}/rest/v1/scenarios?simulation_id=eq.${params.id}&select=*&order=sequence_order.asc`, { headers }),
+      fetch(`${supabaseUrl}/rest/v1/simulations?id=eq.${params.id}&select=*${cacheBust}`, { headers, cache: 'no-store' }),
+      fetch(`${supabaseUrl}/rest/v1/scenarios?simulation_id=eq.${params.id}&select=*&order=sequence_order.asc${cacheBust}`, { headers, cache: 'no-store' }),
     ]);
 
     const simData = await simRes.json();
@@ -37,8 +39,8 @@ export async function GET(
     const scenarioIds: string[] = (scenarios || []).map((s: any) => s.id);
 
     const choicesRes = await fetch(
-      `${supabaseUrl}/rest/v1/scenario_choices?scenario_id=in.(${scenarioIds.join(',')})&select=*`,
-      { headers }
+      `${supabaseUrl}/rest/v1/scenario_choices?scenario_id=in.(${scenarioIds.join(',')})&select=*&_t=${Date.now()}`,
+      { headers, cache: 'no-store' }
     );
     const choices = await choicesRes.json();
 
@@ -56,14 +58,6 @@ export async function GET(
     return noCache(createSuccessResponse({
       simulation: sim,
       scenarios: scenariosWithChoices,
-      _debug: {
-        simulationId: params.id,
-        rawScenarioCount: (scenarios || []).length,
-        rawChoiceCount: (choices || []).length,
-        scenarioIds,
-        contentRange,
-        timestamp: new Date().toISOString(),
-      },
     }) as unknown as NextResponse);
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : 'Failed to load simulation';
